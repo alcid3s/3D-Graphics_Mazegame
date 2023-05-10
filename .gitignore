@@ -3,6 +3,16 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#custom
+*.exec
+
+lib/glew-2.1.0/doc
+*.html
+
+
+
+#end custom
+
 # User-specific files
 *.rsuser
 *.suo
