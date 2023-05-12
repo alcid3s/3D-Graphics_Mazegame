@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "FpsCam.h"
 #include "CubeCreator.h"
+#include <vector>
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -13,6 +14,8 @@ using tigl::Vertex;
 GLFWwindow* window;
 FpsCam* cam;
 CubeCreator* cubeCreator;
+
+std::vector<Texture> textures;
 
 int width = 1400, height = 800;
 
@@ -35,10 +38,6 @@ int main(void)
     tigl::init();
 
     init();
-
-    cam = new FpsCam(window);
-    cubeCreator = new CubeCreator();
-
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -66,6 +65,14 @@ void init()
             ::width = width;
             ::height = height;
         });
+
+    cam = new FpsCam(window);
+    cubeCreator = new CubeCreator();
+    textures.push_back(Texture("resource/textures/floor.png"));
+    textures.push_back(Texture("resource/textures/floor.png"));
+
+    for (auto texture : textures)
+        texture.Bind();
 }
 
 void update() {
@@ -84,8 +91,9 @@ void draw()
     tigl::shader->setViewMatrix(cam->getMatrix());
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
     tigl::shader->enableColor(true);
+    tigl::shader->enableTexture(true);
 
     glEnable(GL_DEPTH_TEST);
 
-    cubeCreator->AddCube(glm::vec3(10.f, 0.1f, 10.f), glm::vec3(0, -1, 0));
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(0, -1, 0), textures[0]);
 }
