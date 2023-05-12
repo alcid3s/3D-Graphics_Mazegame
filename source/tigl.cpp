@@ -47,7 +47,7 @@ namespace tigl
 			setUniform(Uniform::fogType, 2);
 			setUniform(Uniform::fogExpDensity, density);
 		}
-		void setFogColor(const glm::vec3 &color) { setUniform(Uniform::fogColor, color); }
+		void setFogColor(const glm::vec3& color) { setUniform(Uniform::fogColor, color); }
 
 	private:
 		void addShader(int shaderProgram, GLenum shaderType, const std::string& shader);
@@ -182,10 +182,10 @@ namespace tigl
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, vbo->id);
 
-			glVertexAttribPointer(tigl::attributePosition, 3, GL_FLOAT, false, sizeof(Vertex),	(void*) ((char*)&tmpVertex.position - (char*)&tmpVertex));
-			glVertexAttribPointer(tigl::attributeColor, 4, GL_FLOAT, false, sizeof(Vertex),		(void*) ((char*)&tmpVertex.color - (char*)&tmpVertex));
-			glVertexAttribPointer(tigl::attributeTexcoord, 2, GL_FLOAT, false, sizeof(Vertex),	(void*) ((char*)&tmpVertex.texcoord - (char*)&tmpVertex));
-			glVertexAttribPointer(tigl::attributeNormal, 3, GL_FLOAT, false, sizeof(Vertex),	(void*) ((char*)&tmpVertex.normal - (char*)&tmpVertex));
+			glVertexAttribPointer(tigl::attributePosition, 3, GL_FLOAT, false, sizeof(Vertex), (void*)((char*)&tmpVertex.position - (char*)&tmpVertex));
+			glVertexAttribPointer(tigl::attributeColor, 4, GL_FLOAT, false, sizeof(Vertex), (void*)((char*)&tmpVertex.color - (char*)&tmpVertex));
+			glVertexAttribPointer(tigl::attributeTexcoord, 2, GL_FLOAT, false, sizeof(Vertex), (void*)((char*)&tmpVertex.texcoord - (char*)&tmpVertex));
+			glVertexAttribPointer(tigl::attributeNormal, 3, GL_FLOAT, false, sizeof(Vertex), (void*)((char*)&tmpVertex.normal - (char*)&tmpVertex));
 			glDrawArrays(shape, 0, (GLsizei)vbo->size);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
@@ -356,7 +356,7 @@ void main()
 		uniforms[Uniform::useTexture] = glGetUniformLocation(programId, "useTexture");
 		uniforms[Uniform::useLighting] = glGetUniformLocation(programId, "useLighting");
 		uniforms[Uniform::lightCount] = glGetUniformLocation(programId, "lightCount");
-		
+
 		uniforms[Uniform::useAlphaTest] = glGetUniformLocation(programId, "useAlphaTest");
 		uniforms[Uniform::useFog] = glGetUniformLocation(programId, "useFog");
 		uniforms[Uniform::colorMult] = glGetUniformLocation(programId, "colorMult");
