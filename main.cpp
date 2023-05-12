@@ -69,10 +69,7 @@ void init()
     cam = new FpsCam(window);
     cubeCreator = new CubeCreator();
     textures.push_back(Texture("resource/textures/floor.png"));
-    textures.push_back(Texture("resource/textures/floor.png"));
-
-    for (auto texture : textures)
-        texture.Bind();
+    //textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 
 void update() {

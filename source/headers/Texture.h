@@ -14,8 +14,8 @@ public:
 	inline int GetWidth() const { return t_Width; }
 	inline int GetHeight() const { return t_Height; }
 private:
-	unsigned int t_RendererID;
+	unsigned int t_TextureID;
 	std::string t_Path;
-	unsigned char* t_LocalBuffer;
+	unsigned char* t_Buffer;
 	int t_Width, t_Height, t_BPP;
 };
