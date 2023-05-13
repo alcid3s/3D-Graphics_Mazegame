@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "FpsCam.h"
 #include "CubeCreator.h"
+#include <vector>
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -13,6 +14,8 @@ using tigl::Vertex;
 GLFWwindow* window;
 FpsCam* cam;
 CubeCreator* cubeCreator;
+
+std::vector<Texture> textures;
 
 int width = 1400, height = 800;
 
@@ -36,10 +39,6 @@ int main(void)
 
     init();
 
-    cam = new FpsCam(window);
-    cubeCreator = new CubeCreator();
-
-
 	while (!glfwWindowShouldClose(window))
 	{
 		update();
@@ -48,6 +47,9 @@ int main(void)
 		glfwPollEvents();
 	}
 
+    for (auto texture : textures) {
+        texture.~Texture();
+    }
 	glfwTerminate();
 
     return 0;
@@ -66,6 +68,11 @@ void init()
             ::width = width;
             ::height = height;
         });
+
+    cam = new FpsCam(window);
+    cubeCreator = new CubeCreator();
+    textures.push_back(Texture("resource/textures/Floor.png"));
+    //textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 
 void update() {
@@ -84,8 +91,11 @@ void draw()
     tigl::shader->setViewMatrix(cam->getMatrix());
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
     tigl::shader->enableColor(true);
+    tigl::shader->enableTexture(true);
 
     glEnable(GL_DEPTH_TEST);
 
-    cubeCreator->AddCube(glm::vec3(10.f, 0.1f, 10.f), glm::vec3(0, -1, 0));
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 0, -10), textures[0]);
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, -5, -10), textures[0]);
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 5, -10), textures[0]);
 }

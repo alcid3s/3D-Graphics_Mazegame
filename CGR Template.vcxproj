@@ -91,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,15 +159,20 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\CubeCreator.cpp" />
     <ClCompile Include="source\FpsCam.cpp" />
+    <ClCompile Include="source\stb\stb_image.cpp" />
+    <ClCompile Include="source\Texture.cpp" />
     <ClCompile Include="source\tigl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeCreator.h" />
     <ClInclude Include="FpsCam.h" />
+    <ClInclude Include="source\headers\texture.h" />
+    <ClInclude Include="source\stb\stb_image.h" />
     <ClInclude Include="tigl.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\textures\Bush_Texture.jpg" />
+    <Image Include="resource\textures\Floor.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

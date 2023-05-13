@@ -38,7 +38,7 @@ void FpsCam::update(GLFWwindow* window) {
 	moveCam(window, 0.01f);
 }
 
-void FpsCam::moveCam(GLFWwindow* window, float speed) {
+void FpsCam::moveCam(GLFWwindow* window, const float& speed) {
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		move(0, speed);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
