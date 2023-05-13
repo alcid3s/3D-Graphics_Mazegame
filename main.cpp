@@ -39,6 +39,15 @@ int main(void)
 
     init();
 
+    // create some random cubes
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 0, -10), textures[0]);
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, -5, -10), textures[0]);
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 5, -10), textures[0]);
+
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(-2, 0, -10));
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(-2, -5, -10));
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(-2, 5, -10));
+
 	while (!glfwWindowShouldClose(window))
 	{
 		update();
@@ -90,12 +99,14 @@ void draw()
     tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(80.0f), (float)width / height, 0.1f, 100.0f));
     tigl::shader->setViewMatrix(cam->getMatrix());
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
     tigl::shader->enableColor(true);
+    tigl::shader->enableLighting(false);
+    tigl::shader->enableFog(false);
+
+    glDisable(GL_DEPTH_TEST);
     tigl::shader->enableTexture(true);
 
-    glEnable(GL_DEPTH_TEST);
-
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 0, -10), textures[0]);
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, -5, -10), textures[0]);
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 5, -10), textures[0]);
+    // draw all cubes
+    cubeCreator->DrawCubes();
 }

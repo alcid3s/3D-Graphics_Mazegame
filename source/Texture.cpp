@@ -39,7 +39,9 @@ Texture::~Texture()
 
 void Texture::Bind(unsigned int slot)
 {
-	glActiveTexture(GL_TEXTURE0 + slot);
+	//glActiveTexture(GL_TEXTURE0 + slot);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glBindTexture(GL_TEXTURE_2D, t_TextureID);
 }
 

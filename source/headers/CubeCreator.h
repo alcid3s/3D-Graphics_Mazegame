@@ -4,6 +4,7 @@
 #include "Texture.h"
 
 struct Cube {
+	Texture* texture;
 	glm::vec3 transform;
 	glm::vec3 translate;
 };
@@ -11,6 +12,7 @@ struct Cube {
 class CubeCreator {
 public:
 	CubeCreator();
+	void DrawCubes();
 	void AddCube(const glm::vec3& transform, const glm::vec3& translate, Texture& texture);
 	void AddCube(const glm::vec3& transform, const glm::vec3& translate);
 	std::vector<Cube> getCubes();
