@@ -47,6 +47,9 @@ int main(void)
 		glfwPollEvents();
 	}
 
+    for (auto texture : textures) {
+        texture.~Texture();
+    }
 	glfwTerminate();
 
     return 0;
@@ -68,7 +71,7 @@ void init()
 
     cam = new FpsCam(window);
     cubeCreator = new CubeCreator();
-    textures.push_back(Texture("resource/textures/test.png"));
+    textures.push_back(Texture("resource/textures/Floor.png"));
     //textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 
