@@ -76,7 +76,7 @@ void init()
 
     cam = new FpsCam(window);
     cubeCreator = new CubeCreator();
-    textures.push_back(Texture("resource/textures/Floor.png"));
+    textures.push_back(Texture("resource/textures/Floor4.png"));
     // textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 

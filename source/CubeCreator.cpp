@@ -20,7 +20,7 @@ void CubeCreator::DrawCubes() {
         if (cube.texture != nullptr) {
             cube.texture->Bind();
             if(cube.type == Type::Floor)
-                DrawCubePT(cube.transform, *cube.texture, 30);
+                DrawCubePT(cube.transform, *cube.texture, 25);
             else
                 DrawCubePT(cube.transform, *cube.texture, 1);
         } else {
