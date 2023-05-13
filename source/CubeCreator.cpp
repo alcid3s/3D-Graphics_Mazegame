@@ -19,10 +19,13 @@ void CubeCreator::DrawCubes() {
         // if the cube has a texture it should draw the texture on the cube. Otherwise just draw a cube.
         if (cube.texture != nullptr) {
             cube.texture->Bind();
-            if(cube.type == Type::Floor)
+            if (cube.type == Type::Floor) {
                 DrawCubePT(cube.transform, *cube.texture, 25);
-            else
+            }
+            else if(cube.type == Type::Bush) {
                 DrawCubePT(cube.transform, *cube.texture, 1);
+            }
+            cube.texture->Unbind();
         } else {
             DrawCubePC(cube.transform);
         }

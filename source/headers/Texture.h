@@ -5,16 +5,16 @@
 
 class Texture {
 public:
-	Texture(const std::string& path);
+	Texture(const std::string& path, unsigned int slot);
 	~Texture();
 
-	// apparently 1 is the first texture. Not 0.
-	void Bind(unsigned int slot = 1);
+	void Bind();
 	void Unbind();
 
 	inline int GetWidth() const { return t_Width; }
 	inline int GetHeight() const { return t_Height; }
 private:
+	unsigned int t_slot;
 	unsigned int t_TextureID;
 	std::string t_Path;
 	unsigned char* t_Buffer;

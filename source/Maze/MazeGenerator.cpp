@@ -9,8 +9,8 @@ std::vector<Texture> textures;
 MazeGenerator::MazeGenerator() {
 	cubeCreator = new CubeCreator();
 
-	textures.push_back(Texture("resource/textures/Floor4.png"));
-	// textures.push_back(Texture("resource/textures/Bush_Texture.png"));
+	textures.push_back(Texture("resource/textures/Floor4.png", 1));
+	textures.push_back(Texture("resource/textures/Bush_Texture.png", 2));
 }
 
 MazeGenerator::~MazeGenerator() {
@@ -33,7 +33,7 @@ void MazeGenerator::PlaceBush(const float& x, const float& z) {
 	cubeCreator->AddCube(
 		glm::vec3(.5f, 1.f, .5f),
 		glm::vec3(x, 0.f, z),
-		textures[0],
+		textures[1],
 		Type::Bush
 	);
 }
