@@ -1,6 +1,7 @@
 #include "FpsCam.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 FpsCam::FpsCam(GLFWwindow* window) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -29,8 +30,13 @@ void FpsCam::update(GLFWwindow* window) {
 	static double lastX = x;
 	static double lastY = y;
 
-	rotation.x -= (float)(lastY - y) / 100.f;
+	float tempX = rotation.x - (float)(lastY - y) / 100.f;
+	if (tempX < 0.5f && tempX > -0.5f) {
+		rotation.x = tempX;
+	}
 	rotation.y -= (float)(lastX - x) / 100.f;
+
+	std::cout << "rot.x: " << rotation.x << "\n";
 
 	lastX = x;
 	lastY = y;
@@ -39,12 +45,29 @@ void FpsCam::update(GLFWwindow* window) {
 }
 
 void FpsCam::moveCam(GLFWwindow* window, const float& speed) {
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+
+	// left
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		move(0, speed);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	}
+
+	// right
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		move(180, speed);
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		move(90, speed);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	}
+
+	// forward
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+
+		// run faster with shift
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) 
+			move(90, speed * 2.5f);
+		else 
+			move(90, speed);
+	}
+
+	// backward
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		move(-90, speed);
+	}
 }
