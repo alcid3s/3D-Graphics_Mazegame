@@ -56,9 +56,6 @@ int main(void)
 		glfwPollEvents();
 	}
 
-    for (auto texture : textures) {
-        texture.~Texture();
-    }
 	glfwTerminate();
 
     return 0;

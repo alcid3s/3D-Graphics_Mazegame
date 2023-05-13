@@ -18,6 +18,7 @@ void CubeCreator::DrawCubes() {
 
         // if the cube has a texture it should draw the texture on the cube. Otherwise just draw a cube.
         if (cube.texture != nullptr) {
+            cube.texture->Bind(1);
             DrawCubePT(cube.transform, *cube.texture);
         } else {
             DrawCubePC(cube.transform);
