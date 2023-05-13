@@ -1,6 +1,5 @@
 #include "Texture.h"
 #include "stb/stb_image.h"
-#include <iostream>
 
 Texture::Texture(const std::string& path)
 	: t_TextureID(0), t_Path(path), t_Buffer(nullptr),
@@ -10,11 +9,7 @@ Texture::Texture(const std::string& path)
 	stbi_set_flip_vertically_on_load(1);
 	t_Buffer = stbi_load(path.c_str(), &t_Width, &t_Height, &t_BPP, 4);
 
-	std::cout << "w: " << t_Width << "h: " << t_Height << "\n";
-
 	glGenTextures(1, &t_TextureID);
-	glBindTexture(GL_TEXTURE_2D, t_TextureID);
-
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, t_Width, t_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, t_Buffer);
 
@@ -22,10 +17,8 @@ Texture::Texture(const std::string& path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// S and T are like X and Y for textures.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	if (t_Buffer) {
 		stbi_image_free(t_Buffer);
