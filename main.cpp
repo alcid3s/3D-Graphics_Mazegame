@@ -39,6 +39,14 @@ int main(void)
 
     init();
 
+    // creating a floor
+    cubeCreator->AddCube(
+        glm::vec3(100.f, 0.1f, 100.f), 
+        glm::vec3(0.f, -2.f, 0.f), 
+        textures[0], 
+        Type::Floor
+    );
+
 	while (!glfwWindowShouldClose(window))
 	{
 		update();
@@ -47,9 +55,6 @@ int main(void)
 		glfwPollEvents();
 	}
 
-    for (auto texture : textures) {
-        texture.~Texture();
-    }
 	glfwTerminate();
 
     return 0;
@@ -71,8 +76,8 @@ void init()
 
     cam = new FpsCam(window);
     cubeCreator = new CubeCreator();
-    textures.push_back(Texture("resource/textures/Floor.png"));
-    //textures.push_back(Texture("resource/textures/Bush_Texture.png"));
+    textures.push_back(Texture("resource/textures/Floor4.png"));
+    // textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 
 void update() {
@@ -90,12 +95,14 @@ void draw()
     tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(80.0f), (float)width / height, 0.1f, 100.0f));
     tigl::shader->setViewMatrix(cam->getMatrix());
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
     tigl::shader->enableColor(true);
+    tigl::shader->enableLighting(false);
+    tigl::shader->enableFog(false);
+
+    glDisable(GL_DEPTH_TEST);
     tigl::shader->enableTexture(true);
 
-    glEnable(GL_DEPTH_TEST);
-
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 0, -10), textures[0]);
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, -5, -10), textures[0]);
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 5, -10), textures[0]);
+    // draw all cubes
+    cubeCreator->DrawCubes();
 }

@@ -8,7 +8,8 @@ public:
 	Texture(const std::string& path);
 	~Texture();
 
-	void Bind(unsigned int slot = 0);
+	// apparently 1 is the first texture. Not 0.
+	void Bind(unsigned int slot = 1);
 	void Unbind();
 
 	inline int GetWidth() const { return t_Width; }
