@@ -39,14 +39,13 @@ int main(void)
 
     init();
 
-    // create some random cubes
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 0, -10), textures[0]);
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, -5, -10), textures[0]);
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 5, -10), textures[0]);
-
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(-2, 0, -10));
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(-2, -5, -10));
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(-2, 5, -10));
+    // creating a floor
+    cubeCreator->AddCube(
+        glm::vec3(100.f, 0.1f, 100.f), 
+        glm::vec3(0.f, -2.f, 0.f), 
+        textures[0], 
+        Type::Floor
+    );
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -77,8 +76,8 @@ void init()
 
     cam = new FpsCam(window);
     cubeCreator = new CubeCreator();
-    textures.push_back(Texture("resource/textures/test.png"));
-    //textures.push_back(Texture("resource/textures/Bush_Texture.png"));
+    textures.push_back(Texture("resource/textures/Floor.png"));
+    // textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 
 void update() {

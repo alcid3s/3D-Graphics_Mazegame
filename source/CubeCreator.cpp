@@ -18,76 +18,81 @@ void CubeCreator::DrawCubes() {
 
         // if the cube has a texture it should draw the texture on the cube. Otherwise just draw a cube.
         if (cube.texture != nullptr) {
-            cube.texture->Bind(1);
-            DrawCubePT(cube.transform, *cube.texture);
+            cube.texture->Bind();
+            if(cube.type == Type::Floor)
+                DrawCubePT(cube.transform, *cube.texture, 30);
+            else
+                DrawCubePT(cube.transform, *cube.texture, 1);
         } else {
             DrawCubePC(cube.transform);
         }
     }
 }
 
-void CubeCreator::AddCube(const glm::vec3& transform, const glm::vec3& translate, Texture& texture) {
+void CubeCreator::AddCube(const glm::vec3& transform, const glm::vec3& translate, Texture& texture, Type type) {
     Cube cube;
     cube.transform = transform;
     cube.translate = translate;
     cube.texture = &texture;
+    cube.type = type;
 
     cubes.push_back(cube);
 }
 
-void CubeCreator::AddCube(const glm::vec3& transform, const glm::vec3& translate) {
+void CubeCreator::AddCube(const glm::vec3& transform, const glm::vec3& translate, Type type) {
     Cube cube;
     cube.transform = transform;
     cube.translate = translate;
     cube.texture = nullptr;
+    cube.type = type;
     cubes.push_back(cube);
 }
 
-void CubeCreator::DrawCubePT(const glm::vec3& size, Texture& texture) {
+void CubeCreator::DrawCubePT(const glm::vec3& size, Texture& texture, const int& texMultiplier) {
     tigl::shader->enableTexture(true);
     tigl::begin(GL_QUADS);
 
     // test for textures
-    tigl::addVertex(Vertex::PT(glm::vec3(0, 0, 0), glm::vec2(0,0)));
-    tigl::addVertex(Vertex::PT(glm::vec3(0, 1, 0), glm::vec2(0,1)));
-    tigl::addVertex(Vertex::PT(glm::vec3(1, 1, 0), glm::vec2(1,1)));
-    tigl::addVertex(Vertex::PT(glm::vec3(1, 0, 0), glm::vec2(1,0)));
+    //tigl::addVertex(Vertex::PT(glm::vec3(0, 0, 0), glm::vec2(0,0)));
+    //tigl::addVertex(Vertex::PT(glm::vec3(0, 1, 0), glm::vec2(0,1)));
+    //tigl::addVertex(Vertex::PT(glm::vec3(1, 1, 0), glm::vec2(1,1)));
+    //tigl::addVertex(Vertex::PT(glm::vec3(1, 0, 0), glm::vec2(1,0)));
 
-    //// achterkant z
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 1)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1, 1)));
+    // achterkant z
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 1 * texMultiplier)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1 * texMultiplier, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1 * texMultiplier, 1 * texMultiplier)));
 
-    //// voorkant z
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, size.z / 2), glm::vec2(0, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, size.z / 2), glm::vec2(0, 1)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, size.z / 2), glm::vec2(1, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, size.z / 2), glm::vec2(1, 1)));
+    // voorkant z
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, size.z / 2), glm::vec2(0, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, size.z / 2), glm::vec2(0, 1 * texMultiplier)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, size.z / 2), glm::vec2(1 * texMultiplier, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, size.z / 2), glm::vec2(1 * texMultiplier, 1 * texMultiplier)));
 
-    //// onderkant y
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(1, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, size.z / 2), glm::vec2(0, 1)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, size.z / 2), glm::vec2(1, 0)));
+    // onderkant y
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(1 * texMultiplier, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, size.z / 2), glm::vec2(0, 1 * texMultiplier)));
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, size.z / 2), glm::vec2(1 * texMultiplier, 1 * texMultiplier)));
 
-    //// bovenkant y
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, -size.z / 2), glm::vec2(0, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, size.z / 2), glm::vec2(0, 1)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, size.z / 2), glm::vec2(1, 1)));
+    // bovenkant y
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, -size.z / 2), glm::vec2(0, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1 * texMultiplier, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, size.z / 2), glm::vec2(0, 1 * texMultiplier)));
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, size.z / 2), glm::vec2(1 * texMultiplier, 1 * texMultiplier)));
 
-    //// linkerkant x
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, size.z / 2), glm::vec2(0, 1)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, size.z / 2), glm::vec2(1, 1)));
+    // linkerkant x
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1 * texMultiplier, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, size.y / 2, size.z / 2), glm::vec2(0, 1 * texMultiplier)));
+    tigl::addVertex(Vertex::PT(glm::vec3(-size.x / 2, -size.y / 2, size.z / 2), glm::vec2(1 * texMultiplier, 1 * texMultiplier)));
 
-    //// rechterkant x
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1, 0)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, size.z / 2), glm::vec2(0, 1)));
-    //tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, size.z / 2), glm::vec2(1, 1)));
+    // rechterkant x
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, -size.z / 2), glm::vec2(0, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, -size.z / 2), glm::vec2(1 * texMultiplier, 0)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, size.y / 2, size.z / 2), glm::vec2(0, 1 * texMultiplier)));
+    tigl::addVertex(Vertex::PT(glm::vec3(size.x / 2, -size.y / 2, size.z / 2), glm::vec2(1 * texMultiplier, 1 * texMultiplier)));
 
     tigl::end();
     tigl::shader->enableTexture(false);
