@@ -54,9 +54,7 @@ int main(void)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
 	glfwTerminate();
-
     return 0;
 }
 
