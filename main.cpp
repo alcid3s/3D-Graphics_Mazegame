@@ -68,7 +68,7 @@ void init()
 
     cam = new FpsCam(window);
     cubeCreator = new CubeCreator();
-    textures.push_back(Texture("resource/textures/floor.png"));
+    textures.push_back(Texture("resource/textures/test.png"));
     //textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 
@@ -92,5 +92,7 @@ void draw()
 
     glEnable(GL_DEPTH_TEST);
 
-    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(0, -1, 0), textures[0]);
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 0, -10), textures[0]);
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, -5, -10), textures[0]);
+    cubeCreator->AddCube(glm::vec3(1.f, 1.1f, 1.f), glm::vec3(2, 5, -10), textures[0]);
 }
