@@ -1,7 +1,6 @@
 #include "FpsCam.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 FpsCam::FpsCam(GLFWwindow* window) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -35,8 +34,6 @@ void FpsCam::update(GLFWwindow* window) {
 		rotation.x = tempX;
 	}
 	rotation.y -= (float)(lastX - x) / 100.f;
-
-	std::cout << "rot.x: " << rotation.x << "\n";
 
 	lastX = x;
 	lastY = y;

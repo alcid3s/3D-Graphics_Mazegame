@@ -159,6 +159,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\CubeCreator.cpp" />
     <ClCompile Include="source\FpsCam.cpp" />
+    <ClCompile Include="source\Maze\MazeGenerator.cpp" />
     <ClCompile Include="source\stb\stb_image.cpp" />
     <ClCompile Include="source\Texture.cpp" />
     <ClCompile Include="source\tigl.cpp" />
@@ -166,6 +167,8 @@
   <ItemGroup>
     <ClInclude Include="CubeCreator.h" />
     <ClInclude Include="FpsCam.h" />
+    <ClInclude Include="source\headers\enumType.h" />
+    <ClInclude Include="source\headers\Maze\MazeGenerator.h" />
     <ClInclude Include="source\headers\texture.h" />
     <ClInclude Include="source\stb\stb_image.h" />
     <ClInclude Include="tigl.h" />

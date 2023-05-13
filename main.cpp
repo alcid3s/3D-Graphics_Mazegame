@@ -3,7 +3,7 @@
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "FpsCam.h"
-#include "CubeCreator.h"
+#include "Maze/MazeGenerator.h"
 #include <vector>
 using tigl::Vertex;
 
@@ -13,9 +13,7 @@ using tigl::Vertex;
 
 GLFWwindow* window;
 FpsCam* cam;
-CubeCreator* cubeCreator;
-
-std::vector<Texture> textures;
+MazeGenerator* mazeGen;
 
 int width = 1400, height = 800;
 
@@ -39,14 +37,8 @@ int main(void)
 
     init();
 
-    // creating a floor
-    cubeCreator->AddCube(
-        glm::vec3(100.f, 0.1f, 100.f), 
-        glm::vec3(0.f, -2.f, 0.f), 
-        textures[0], 
-        Type::Floor
-    );
-
+    // generate a maze
+    mazeGen->Generate();
 	while (!glfwWindowShouldClose(window))
 	{
 		update();
@@ -73,9 +65,7 @@ void init()
         });
 
     cam = new FpsCam(window);
-    cubeCreator = new CubeCreator();
-    textures.push_back(Texture("resource/textures/Floor4.png"));
-    // textures.push_back(Texture("resource/textures/Bush_Texture.png"));
+    mazeGen = new MazeGenerator();
 }
 
 void update() {
@@ -94,13 +84,5 @@ void draw()
     tigl::shader->setViewMatrix(cam->getMatrix());
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
-    tigl::shader->enableColor(true);
-    tigl::shader->enableLighting(false);
-    tigl::shader->enableFog(false);
-
-    glDisable(GL_DEPTH_TEST);
-    tigl::shader->enableTexture(true);
-
-    // draw all cubes
-    cubeCreator->DrawCubes();
+    mazeGen->DrawMaze();
 }
