@@ -32,11 +32,11 @@ void CubeCreator::DrawCubes() {
     }
 }
 
-void CubeCreator::AddCube(const glm::vec3& transform, const glm::vec3& translate, Texture& texture, Type type) {
+void CubeCreator::AddCube(const glm::vec3& transform, const glm::vec3& translate, Texture* texture, Type type) {
     Cube cube;
     cube.transform = transform;
     cube.translate = translate;
-    cube.texture = &texture;
+    cube.texture = texture;
     cube.type = type;
 
     cubes.push_back(cube);

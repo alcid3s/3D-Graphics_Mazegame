@@ -5,7 +5,7 @@
 
 class Texture {
 public:
-	Texture(const std::string& path, unsigned int slot);
+	Texture(const std::string& path);
 	~Texture();
 
 	void Bind();

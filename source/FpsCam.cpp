@@ -42,7 +42,9 @@ void FpsCam::update(GLFWwindow* window) {
 }
 
 void FpsCam::moveCam(GLFWwindow* window, const float& speed) {
-
+	float mult = 1;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		mult *= 2.5f;
 	// left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		move(0, speed);
@@ -55,16 +57,11 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed) {
 
 	// forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-
-		// run faster with shift
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) 
-			move(90, speed * 2.5f);
-		else 
-			move(90, speed);
+		move(90, speed * mult);
 	}
 
 	// backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		move(-90, speed);
+		move(-90, speed * mult);
 	}
 }

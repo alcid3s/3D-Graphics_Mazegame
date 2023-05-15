@@ -1,16 +1,21 @@
 #include "Texture.h"
 #include "stb/stb_image.h"
+#include <iostream>
 
-Texture::Texture(const std::string& path, unsigned int slot)
+Texture::Texture(const std::string& path)
 	: t_TextureID(0), t_Path(path), t_Buffer(nullptr),
-	t_Width(0), t_Height(0), t_BPP(0), t_slot(slot)
+	t_Width(0), t_Height(0), t_BPP(0)
 {
 	// flips texture vertically. Bottom left of image is 0,0 for OpenGL
 	stbi_set_flip_vertically_on_load(1);
 	t_Buffer = stbi_load(path.c_str(), &t_Width, &t_Height, &t_BPP, 4);
+	if (t_Buffer == nullptr)
+	{
+		std::cout << stbi_failure_reason() << std::endl;
+	}
 
 	glGenTextures(1, &t_TextureID);
-	// glBindTexture(GL_TEXTURE_2D, t_TextureID);
+	glBindTexture(GL_TEXTURE_2D, t_TextureID);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, t_Width, t_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, t_Buffer);
 
@@ -35,7 +40,6 @@ Texture::~Texture()
 
 void Texture::Bind()
 {
-	glActiveTexture(GL_TEXTURE0 + t_slot);
 	glBindTexture(GL_TEXTURE_2D, t_TextureID);
 }
 

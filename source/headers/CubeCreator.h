@@ -16,7 +16,7 @@ public:
 	CubeCreator();
 	~CubeCreator();
 	void DrawCubes();
-	void AddCube(const glm::vec3& transform, const glm::vec3& translate, Texture& texture, Type type);
+	void AddCube(const glm::vec3& transform, const glm::vec3& translate, Texture* texture, Type type);
 	void AddCube(const glm::vec3& transform, const glm::vec3& translate, Type type);
 	std::vector<Cube> getCubes();
 private:
