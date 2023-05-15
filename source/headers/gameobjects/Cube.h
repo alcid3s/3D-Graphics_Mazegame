@@ -7,7 +7,7 @@ class Texture;
 
 class Cube : public Gameobject {
 public:
-	Cube(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti);
+	Cube(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle = 0);
 	~Cube();
 
 	void DrawCubePT();
@@ -16,12 +16,5 @@ public:
 	void update() override;
 	void draw() override;
 private:
-	glm::vec3 transform;
-	glm::vec3 rotate;
-	glm::vec3 translate;
 
-	Texture* texture;
-	Type type;
-
-	int textureMulti;
 };

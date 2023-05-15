@@ -5,8 +5,8 @@
 #include "tigl.h"
 using tigl::Vertex;
 
-Cube::Cube(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti) 
-    : Gameobject(), transform(transf), rotate(rot), translate(transl), texture(tex), textureMulti(textMulti)
+Cube::Cube(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle) 
+    : Gameobject(transf, rot, transl, tex, textMulti, angle)
 {
 
 }
@@ -20,6 +20,10 @@ void Cube::update() {
 }
 
 void Cube::draw() {
+    tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.0f), translate));
+    if (angle != 0)
+        tigl::shader->setModelMatrix(glm::rotate(glm::mat4(1.0f), glm::radians(angle), rotate));
+
     if (texture) {
         texture->Bind();
         DrawCubePT();
@@ -30,7 +34,6 @@ void Cube::draw() {
 }
 
 void Cube::DrawCubePT() {
-    tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.0f), translate));
     tigl::shader->enableTexture(true);
     tigl::begin(GL_QUADS);
 

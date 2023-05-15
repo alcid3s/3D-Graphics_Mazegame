@@ -78,7 +78,7 @@ void update() {
 void draw() {
 
     glViewport(0, 0, width, height);
-    glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     int viewport[4];

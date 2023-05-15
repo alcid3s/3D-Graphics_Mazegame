@@ -5,8 +5,8 @@
 #include "tigl.h"
 using tigl::Vertex;
 
-Plane::Plane(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti)
-	: Gameobject(), transform(glm::vec3(transf.x, 0.0f, transf.z)), rotate(rot), translate(transl), texture(tex), textureMulti(textMulti) 
+Plane::Plane(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle)
+	: Gameobject(transf, rot, transl, tex, textMulti, angle)
 {
 
 }
@@ -18,7 +18,6 @@ Plane::~Plane()
 
 void Plane::drawPlanePT()
 {
-	tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.0f), translate));
 	tigl::shader->enableTexture(true);
 	tigl::begin(GL_QUADS);
 	
@@ -53,6 +52,10 @@ void Plane::update()
 
 void Plane::draw()
 {
+	tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.0f), translate));
+	if(angle != 0)
+		tigl::shader->setModelMatrix(glm::rotate(glm::mat4(1.0f), glm::radians(angle), rotate));
+
 	if (texture) {
 		texture->Bind();
 		drawPlanePT();

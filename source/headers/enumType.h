@@ -2,6 +2,8 @@
 
 enum Type {
 	Floor = 0,
-	Bush = 1,
+	Wall = 1,
 	SpawnPoint = 2,
+	Skybox = 4,
+	None = -1
 };
