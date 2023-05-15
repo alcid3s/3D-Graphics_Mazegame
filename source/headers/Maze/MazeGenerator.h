@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
-#include "enumType.h"
+#include <glm/gtc/matrix_transform.hpp>
+enum Type;
 
 class CubeCreator;
 class Texture;
@@ -10,8 +11,10 @@ public:
 	MazeGenerator();
 	~MazeGenerator();
 
-	void Generate(const int& x = 10, const int& y = 10);
+	void Generate(const float& x = 10.f, const float& y = 10.f);
 	void DrawMaze();
+
+	glm::vec3 spawnPoint = glm::vec3(0, 0, 0);
 private:
 	int x,y;
 	std::vector<std::vector<Type>> maze;

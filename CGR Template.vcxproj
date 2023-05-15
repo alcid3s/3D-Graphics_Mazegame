@@ -163,6 +163,7 @@
     <ClCompile Include="source\stb\stb_image.cpp" />
     <ClCompile Include="source\Texture.cpp" />
     <ClCompile Include="source\tigl.cpp" />
+    <ClCompile Include="source\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeCreator.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="source\headers\enumType.h" />
     <ClInclude Include="source\headers\Maze\MazeGenerator.h" />
     <ClInclude Include="source\headers\texture.h" />
+    <ClInclude Include="source\headers\Tile.h" />
     <ClInclude Include="source\stb\stb_image.h" />
     <ClInclude Include="tigl.h" />
   </ItemGroup>

@@ -5,7 +5,8 @@ using tigl::Vertex;
 
 std::vector<Cube> cubes;
 
-CubeCreator::CubeCreator() {
+CubeCreator::CubeCreator(const int& textureMulti, const int& floorTextureMulti) : 
+    textureMultiplier(textureMulti), floorTextureMultiplier(floorTextureMulti) {
     if (!tigl::shader)
         tigl::init();
 }
@@ -18,13 +19,18 @@ void CubeCreator::DrawCubes() {
 
         // if the cube has a texture it should draw the texture on the cube. Otherwise just draw a cube.
         if (cube.texture != nullptr) {
+            
+            // binding texture
             cube.texture->Bind();
+
             if (cube.type == Type::Floor) {
-                DrawCubePT(cube.transform, *cube.texture, 25);
+                DrawCubePT(cube.transform, *cube.texture, floorTextureMultiplier);
             }
             else if(cube.type == Type::Bush) {
-                DrawCubePT(cube.transform, *cube.texture, 1);
+                DrawCubePT(cube.transform, *cube.texture, textureMultiplier);
             }
+
+            // unbinding texture
             cube.texture->Unbind();
         } else {
             DrawCubePC(cube.transform);
@@ -49,6 +55,11 @@ void CubeCreator::AddCube(const glm::vec3& transform, const glm::vec3& translate
     cube.texture = nullptr;
     cube.type = type;
     cubes.push_back(cube);
+}
+
+std::vector<Cube> CubeCreator::getCubes()
+{
+    return cubes;
 }
 
 void CubeCreator::DrawCubePT(const glm::vec3& size, Texture& texture, const int& texMultiplier) {
@@ -143,9 +154,4 @@ void CubeCreator::DrawCubePC(const glm::vec3& size) {
 
     tigl::end();
     tigl::shader->enableColor(false);
-}
-
-std::vector<Cube> CubeCreator::getCubes()
-{
-    return cubes;
 }

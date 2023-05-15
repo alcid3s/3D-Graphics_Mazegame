@@ -1,26 +1,48 @@
 #include "Maze/MazeGenerator.h"
 #include "CubeCreator.h"
 #include "Texture.h"
-
-#include <iostream>
+#include "enumType.h"
+#include "Tile.h"
+#include <vector>
+#include <random>
 
 MazeGenerator::MazeGenerator() {
 	cubeCreator = new CubeCreator();
 
+	// added pointer of Texture to the vector.
 	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
-	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture.png"));
+	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
 }
 
 MazeGenerator::~MazeGenerator() {
 
 }
 
-void MazeGenerator::Generate(const int& x, const int& z) {
+void MazeGenerator::Generate(const float& x, const float& z) {
+	srand(time(NULL));
+
+	// constants that will always be on this location no matter the size.
+	const glm::vec2 leftFront = glm::vec2(((x * -1) / 2) + .25f, ((z * -1) / 2) + .25f);
+	const glm::vec2 rightFront = glm::vec2((x / 2) - .25f, ((z * -1) / 2) + .25f);
+	const glm::vec2 leftBack = glm::vec2(((x * -1) / 2) + .25f, (z / 2) - .25f);
+	const glm::vec2 rightBack = glm::vec2((x / 2) - .25f, (z / 2) - .25f);
+
+	// placing floor.
 	PlaceFloor((float)x, (float)z);
 
-	PlaceBush((x / 2) - .25f, (z / 2) - .25f);
-	PlaceBush(-1 * (x / 2) - .25f, (z / 2) - .25f);
-	PlaceBush((x / 2) - .25f, -1 * (z / 2) - .25f);
+	spawnPoint = glm::vec3(rand() % (int)(x / 2) - 2, 0, rand() % (int)(z / 2) - 2);
+
+	std::vector<std::vector<Tile>> maze;
+
+	for (float posY = leftFront.y; posY <= rightBack.y; posY += .5f) {
+		for (float posX = leftFront.x; posX <= rightBack.x; posX += .5f) {
+
+			// draw edges
+			if (posY == leftFront.y || posY == rightBack.y || posX == leftFront.x || posX == rightBack.x) {
+				PlaceBush(posX, posY);
+			}
+		}
+	}
 }
 
 void MazeGenerator::DrawMaze() {

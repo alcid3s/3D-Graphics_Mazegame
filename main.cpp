@@ -39,6 +39,9 @@ int main(void)
 
     // generate a maze
     mazeGen->Generate();
+
+    cam->position = &mazeGen->spawnPoint;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		update();
@@ -46,12 +49,12 @@ int main(void)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
 	glfwTerminate();
     return 0;
 }
 
-void init()
-{
+void init() {
     glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         if (key == GLFW_KEY_ESCAPE)
@@ -64,16 +67,17 @@ void init()
             ::height = height;
         });
 
-    cam = new FpsCam(window);
     mazeGen = new MazeGenerator();
+    cam = new FpsCam(window);
 }
 
 void update() {
     cam->update(window);
 }
 
-void draw()
-{
+void draw() {
+
+    glViewport(0, 0, width, height);
     glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -83,6 +87,9 @@ void draw()
     tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(80.0f), (float)width / height, 0.1f, 100.0f));
     tigl::shader->setViewMatrix(cam->getMatrix());
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
+    // to don't get a weird effect and all faces drawn to the screen.
+    glEnable(GL_DEPTH_TEST);
 
     mazeGen->DrawMaze();
 }
