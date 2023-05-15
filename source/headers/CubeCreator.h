@@ -4,12 +4,12 @@
 #include "Texture.h"
 #include "enumType.h"
 
-struct Cube {
-	Texture* texture;
-	Type type;
-	glm::vec3 transform;
-	glm::vec3 translate;
-};
+//struct Cube {
+//	Texture* texture;
+//	Type type;
+//	glm::vec3 transform;
+//	glm::vec3 translate;
+//};
 
 class CubeCreator {
 public:
