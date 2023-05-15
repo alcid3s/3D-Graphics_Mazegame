@@ -69,10 +69,7 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	//		), Type::Skybox));
 	//	}
 	//	maze.push_back(skybox);
-	}
-	
-
-
+	// }
 }
 
 void MazeGenerator::DrawMaze() {
