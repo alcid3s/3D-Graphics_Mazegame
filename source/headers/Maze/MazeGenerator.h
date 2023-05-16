@@ -22,6 +22,6 @@ private:
 
 	std::vector<Texture*> mazeTextures;
 
-	void PlaceBush(const float& sizeX, const float& sizeZ, const float& x, const float& y);
-	void PlaceFloor(const float& sizeX, const float& sizeZ, const float& x, const float& y);
+	Tile* PlaceWall(const float& x, const float& z);
+	Tile* PlaceBush(const float& x, const float& z);
 };

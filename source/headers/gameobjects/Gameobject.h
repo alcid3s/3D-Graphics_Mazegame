@@ -9,7 +9,8 @@ public:
 	Gameobject(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle);
 	~Gameobject();
 
-	virtual  void update() = 0;
+	// abstract functions
+	virtual void update() = 0;
 	virtual void draw() = 0;
 
 protected:
