@@ -28,43 +28,33 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 
 	// set an empty maze with walls to work with.
 	for (int z = 0; z <= sizeOfMazeZ; z++) {
-		std::vector<Cell*> file;
+		std::vector<Tile*> file;
 		for (int x = 0; x <= sizeOfMazeX; x++) {
-			Cell cell = { nullptr, false };
 
 			// check if it's an edge. If so, place Wall.
 			if (IsEdge(x, z, sizeOfMazeX, sizeOfMazeZ)) {
-				cell.tile = PlaceWall((float)x, (float)z);
-				cell.visited = true;
-				file.push_back(&cell);
+				file.push_back(PlaceWall((float)x, (float)z, Type::Edge, true));
 			}
 			// not an edge
 			else {
-				file.push_back(&cell);
+				file.push_back(PlaceEmptyGameobject(x, z));
 			}
 		}
 		maze.push_back(file);
 	}
-	WalkMaze();
-
 }
 
-void MazeGenerator::WalkMaze() {
-	Cell* spawnCell = maze[(int)spawnPoint.x * -1][(int)spawnPoint.z * -1];
-	GetUnvisitedNeighbors(spawnCell);
-}
-
-std::vector<Cell*> MazeGenerator::GetUnvisitedNeighbors(Cell* cell) {
-	std::vector<Cell*> neighbours;
+std::vector<Tile*> MazeGenerator::GetUnvisitedNeighbours(Tile * tile) {
+	std::vector<Tile*> neighbours;
 
 	return neighbours;
 }
 
 void MazeGenerator::DrawMaze() {
 	for (auto file : maze) {
-		for (auto cell : file) {
-			if (cell->tile) {
-				cell->tile->draw();
+		for (auto tile : file) {
+			if (tile) {
+				tile->draw();
 			}
 		}
 	}
@@ -97,7 +87,17 @@ bool MazeGenerator::IsEdge(const int& x, const int& z, const int& sizeX, const i
 	return (x == sizeX || x == 0 || z == 0 || z == sizeZ);
 }
 
-Tile* MazeGenerator::PlaceWall(const float &x, const float &z)
+Tile* MazeGenerator::PlaceEmptyGameobject(const int& x, const int& z) {
+	return new Tile(new Cube(
+		glm::vec3(0.f, 0.f, 0.f),
+		glm::vec3(0.f, 0.f, 0.f),
+		glm::vec3(x, -.5f, z),
+		nullptr,
+		1
+	), Type::Empty, glm::vec3(x, -5.f, z), false);
+}
+
+Tile* MazeGenerator::PlaceWall(const float &x, const float &z, Type type, bool visited)
 {
 	return new Tile(new Cube(
 		glm::vec3(1, 2, 1),
@@ -105,10 +105,10 @@ Tile* MazeGenerator::PlaceWall(const float &x, const float &z)
 		glm::vec3(x, -.5f, z),
 		mazeTextures[1],
 		1
-	), Type::Wall);
+	), type, glm::vec3(x, -.5f, z), visited);
 }
 
-Tile* MazeGenerator::PlaceFloor(const float& x, const float& z)
+Tile* MazeGenerator::PlaceFloor(const float& x, const float& z, bool visited)
 {
 	return new Tile(new Plane(
 		glm::vec3(1, 0, 1),
@@ -116,5 +116,5 @@ Tile* MazeGenerator::PlaceFloor(const float& x, const float& z)
 		glm::vec3(x, -.5f, z),
 		mazeTextures[0],
 		1
-	), Type::Floor);
+	), Type::Floor, glm::vec3(x, -.5f, z), visited);
 }

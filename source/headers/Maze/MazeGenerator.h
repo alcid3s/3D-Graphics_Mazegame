@@ -5,11 +5,7 @@
 class Tile;
 class Cube;
 class Texture;
-
-struct Cell {
-	Tile* tile;
-	bool visited;
-};
+enum Type;
 
 class MazeGenerator {
 public:
@@ -24,7 +20,7 @@ public:
 	// private variables
 private:
 	int x,y;
-	std::vector<std::vector<Cell*>> maze;
+	std::vector<std::vector<Tile*>> maze;
 	std::vector<Texture*> mazeTextures;
 
 	// private functions to setup the maze
@@ -33,11 +29,11 @@ private:
 	bool NextToEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ);
 
 	glm::vec3 SetSpawnPoint(const int&, const int&);
-	Tile* PlaceWall(const float& x, const float& z);
-	Tile* PlaceFloor(const float& x, const float& z);
+	Tile* PlaceEmptyGameobject(const int& x, const int& z);
+	Tile* PlaceWall(const float& x, const float& z, Type type, bool visited);
+	Tile* PlaceFloor(const float& x, const float& z, bool visited);
 
 	// functions to walk the maze and apply prims algorithm
 private:
-	void WalkMaze();
-	std::vector<Cell*> GetUnvisitedNeighbors(Cell* cell);
+	std::vector<Tile*> GetUnvisitedNeighbours(Tile* tile);
 };

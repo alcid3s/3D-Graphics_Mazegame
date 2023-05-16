@@ -159,6 +159,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\FpsCam.cpp" />
     <ClCompile Include="source\gameobjects\Cube.cpp" />
+    <ClCompile Include="source\gameobjects\EmptyGameobject.cpp" />
     <ClCompile Include="source\gameobjects\Gameobject.cpp" />
     <ClCompile Include="source\gameobjects\Plane.cpp" />
     <ClCompile Include="source\Maze\MazeGenerator.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="source\headers\gameobjects\Cube.h" />
     <ClInclude Include="source\headers\gameobjects\Gameobject.h" />
     <ClInclude Include="source\headers\gameobjects\Plane.h" />
+    <ClInclude Include="source\headers\gameobject\EmptyGameobject.h" />
     <ClInclude Include="source\headers\Maze\MazeGenerator.h" />
     <ClInclude Include="source\headers\texture.h" />
     <ClInclude Include="source\headers\Tile.h" />
