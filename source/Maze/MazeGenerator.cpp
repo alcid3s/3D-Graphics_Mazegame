@@ -24,49 +24,48 @@ MazeGenerator::~MazeGenerator() {
 void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	srand(time(NULL));
 
-	// constants that will always be on this location no matter the size.
-	const glm::vec2 leftFront = glm::vec2(0, 0);
-	const glm::vec2 rightFront = glm::vec2(sizeOfMazeX, 0);
-	const glm::vec2 leftBack = glm::vec2(0, sizeOfMazeZ);
-	const glm::vec2 rightBack = glm::vec2(sizeOfMazeX, sizeOfMazeZ);
-
 	spawnPoint = SetSpawnPoint(sizeOfMazeX, sizeOfMazeZ);
 
+	// set an empty maze with walls to work with.
 	for (int z = 0; z <= sizeOfMazeZ; z++) {
-		std::vector<Tile*> file;
+		std::vector<Cell*> file;
 		for (int x = 0; x <= sizeOfMazeX; x++) {
+			Cell cell = { nullptr, false };
 
 			// check if it's an edge. If so, place Wall.
 			if (IsEdge(x, z, sizeOfMazeX, sizeOfMazeZ)) {
-				file.push_back(PlaceWall((float)x, (float)z));
+				cell.tile = PlaceWall((float)x, (float)z);
+				cell.visited = true;
+				file.push_back(&cell);
 			}
 			// not an edge
 			else {
-				file.push_back(PlaceFloor((float)x, (float)z));
+				file.push_back(&cell);
 			}
 		}
 		maze.push_back(file);
 	}
+	WalkMaze();
 
-	//for (int i = 0; i < 1000; i += 10) {
-	//	std::vector<Tile*> skybox;
-	//	for (int j = 0; j < 1000; j += 10) {
-	//		skybox.push_back(new Tile(new Plane(
-	//			glm::vec3(10.f, 0.f, 10.f),
-	//			glm::vec3(0.f, 0.f, 0.f),
-	//			glm::vec3(j, 10.f, i),
-	//			mazeTextures[2],
-	//			1
-	//		), Type::Skybox));
-	//	}
-	//	maze.push_back(skybox);
-	// }
+}
+
+void MazeGenerator::WalkMaze() {
+	Cell* spawnCell = maze[(int)spawnPoint.x * -1][(int)spawnPoint.z * -1];
+	GetUnvisitedNeighbors(spawnCell);
+}
+
+std::vector<Cell*> MazeGenerator::GetUnvisitedNeighbors(Cell* cell) {
+	std::vector<Cell*> neighbours;
+
+	return neighbours;
 }
 
 void MazeGenerator::DrawMaze() {
 	for (auto file : maze) {
-		for (auto tile : file) {
-			tile->draw();
+		for (auto cell : file) {
+			if (cell->tile) {
+				cell->tile->draw();
+			}
 		}
 	}
 }
@@ -96,14 +95,6 @@ bool MazeGenerator::NextToEdge(const int& x, const int& z, const int& sizeX, con
 
 bool MazeGenerator::IsEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ) {
 	return (x == sizeX || x == 0 || z == 0 || z == sizeZ);
-}
-
-bool MazeGenerator::IsCorner(const int& x, const int& z, 
-	const glm::vec2& lf, const glm::vec2& lb, 
-	const glm::vec2& rf, const glm::vec2& rb) {
-
-	glm::vec2 xy = glm::vec2(x, y);
-	return xy == lf || xy == lb || xy == rf || xy == rb;
 }
 
 Tile* MazeGenerator::PlaceWall(const float &x, const float &z)

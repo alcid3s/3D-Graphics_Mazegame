@@ -6,6 +6,11 @@ class Tile;
 class Cube;
 class Texture;
 
+struct Cell {
+	Tile* tile;
+	bool visited;
+};
+
 class MazeGenerator {
 public:
 	MazeGenerator();
@@ -15,19 +20,24 @@ public:
 	void DrawMaze();
 
 	glm::vec3 spawnPoint = glm::vec3(0, 0, 0);
+
+	// private variables
 private:
 	int x,y;
-
-	std::vector<std::vector<Tile*>> maze;
-
+	std::vector<std::vector<Cell*>> maze;
 	std::vector<Texture*> mazeTextures;
 
-	bool IsCorner(const int& x, const int& z, const glm::vec2& lf, const glm::vec2& lb, const glm::vec2& rf, const glm::vec2& rb);
+	// private functions to setup the maze
+private:
 	bool IsEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ);
 	bool NextToEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ);
 
 	glm::vec3 SetSpawnPoint(const int&, const int&);
-
 	Tile* PlaceWall(const float& x, const float& z);
 	Tile* PlaceFloor(const float& x, const float& z);
+
+	// functions to walk the maze and apply prims algorithm
+private:
+	void WalkMaze();
+	std::vector<Cell*> GetUnvisitedNeighbors(Cell* cell);
 };
