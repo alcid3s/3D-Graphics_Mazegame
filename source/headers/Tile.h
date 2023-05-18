@@ -10,10 +10,13 @@ public:
 
 	void draw();
 
+	void setGameobject(Gameobject*);
+
 	bool visited;
+	Type type;
 	inline glm::vec3 GetPosition() const { return position; }
 private:
 	glm::vec3 position;
-	Type type;
+
 	Gameobject* gameobject;
 };

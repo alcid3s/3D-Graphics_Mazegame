@@ -13,6 +13,10 @@ Tile::~Tile() {
 
 }
 
+void Tile::setGameobject(Gameobject* gameobject) {
+	this->gameobject = gameobject;
+}
+
 void Tile::draw() {
 	gameobject->draw();
 }
