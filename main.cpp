@@ -113,9 +113,10 @@ void update() {
 
 glm::vec3 color = glm::vec3(0.05f, 0.05f, 0.05f);
 void draw() {
-
     glViewport(0, 0, width, height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glClearColor(color.r, color.g, color.b, 1.0f);
 
     int viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);

@@ -32,10 +32,10 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	spawnTile->setGameobject(PlaceFloor(spawnTile->GetPosition().x, spawnTile->GetPosition().z));
 	std::vector<Tile*> visitedTiles;
 
-	DepthFirstSearch(spawnTile, &visitedTiles, amountOfTiles);
+	DepthFirstSearch(spawnTile, &visitedTiles);
 }
 
-void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles, int tilesToVisit) {
+void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {
 	// std::cout << "checking tile: (" << tile->GetPosition().x << "," << tile->GetPosition().z << "). ";
 	tile->visited = true;
 
@@ -50,7 +50,7 @@ void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTile
 
 		visitedTiles->push_back(tile);
 
-		DepthFirstSearch(nextTile, visitedTiles, tilesToVisit - 1);
+		DepthFirstSearch(nextTile, visitedTiles);
 
 		neighbours = GetUnvisitedNeighbours(tile);
 	}
@@ -70,7 +70,7 @@ void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTile
 	}
 
 	if (backtrackTile) {
-		DepthFirstSearch(backtrackTile, visitedTiles, tilesToVisit - 1);
+		DepthFirstSearch(backtrackTile, visitedTiles);
 	}
 }
 

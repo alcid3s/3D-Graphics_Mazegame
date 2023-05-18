@@ -41,7 +41,7 @@ private:
 
 	// functions to walk the maze and apply prims algorithm
 private:
-	void DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles, int tilesToVisit);
+	void DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles);
 	std::vector<Tile*> GetUnvisitedNeighbours(Tile* tile);
 	bool NextToFloor(Tile* tile);
 	std::vector<Tile*> GetNeighbours(Tile* tile);

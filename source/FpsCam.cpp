@@ -87,10 +87,10 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		position->y -= speed * 2.f;
+		position->y -= speed * 0.1f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
-		position->y += speed * 2.f;
+		position->y += speed * 0.1f;
 	}
 }
