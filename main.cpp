@@ -87,7 +87,6 @@ void generateMaze(int width, int height) {
 }
 
 void update() {
-
     if (!creatingMaze) {
         creatingMaze = true;
         std::thread mazeThread(generateMaze, 40, 40);
@@ -101,7 +100,6 @@ void update() {
         cam->update(window);
     }
 }
-
 
 glm::vec3 color = glm::vec3(0.05f, 0.05f, 0.05f);
 void draw() {
