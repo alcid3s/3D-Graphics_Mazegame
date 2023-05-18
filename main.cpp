@@ -3,7 +3,7 @@
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "FpsCam.h"
-#include "CubeCreator.h"
+#include "Maze/MazeGenerator.h"
 #include <vector>
 using tigl::Vertex;
 
@@ -13,9 +13,7 @@ using tigl::Vertex;
 
 GLFWwindow* window;
 FpsCam* cam;
-CubeCreator* cubeCreator;
-
-std::vector<Texture> textures;
+MazeGenerator* mazeGen;
 
 int width = 1400, height = 800;
 
@@ -39,13 +37,10 @@ int main(void)
 
     init();
 
-    // creating a floor
-    cubeCreator->AddCube(
-        glm::vec3(100.f, 0.1f, 100.f), 
-        glm::vec3(0.f, -2.f, 0.f), 
-        textures[0], 
-        Type::Floor
-    );
+    // generate a maze
+    mazeGen->Generate(40,40);
+
+    cam->position = &mazeGen->spawnPoint;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -56,12 +51,10 @@ int main(void)
 	}
 
 	glfwTerminate();
-
     return 0;
 }
 
-void init()
-{
+void init() {
     glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         if (key == GLFW_KEY_ESCAPE)
@@ -74,19 +67,18 @@ void init()
             ::height = height;
         });
 
+    mazeGen = new MazeGenerator();
     cam = new FpsCam(window);
-    cubeCreator = new CubeCreator();
-    textures.push_back(Texture("resource/textures/Floor4.png"));
-    // textures.push_back(Texture("resource/textures/Bush_Texture.png"));
 }
 
 void update() {
     cam->update(window);
 }
 
-void draw()
-{
-    glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
+void draw() {
+
+    glViewport(0, 0, width, height);
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     int viewport[4];
@@ -96,13 +88,8 @@ void draw()
     tigl::shader->setViewMatrix(cam->getMatrix());
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
-    tigl::shader->enableColor(true);
-    tigl::shader->enableLighting(false);
-    tigl::shader->enableFog(false);
+    // to don't get a weird effect and all faces drawn to the screen.
+    glEnable(GL_DEPTH_TEST);
 
-    glDisable(GL_DEPTH_TEST);
-    tigl::shader->enableTexture(true);
-
-    // draw all cubes
-    cubeCreator->DrawCubes();
+    mazeGen->DrawMaze();
 }

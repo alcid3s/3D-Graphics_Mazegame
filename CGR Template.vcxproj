@@ -91,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,16 +157,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="source\CubeCreator.cpp" />
     <ClCompile Include="source\FpsCam.cpp" />
+    <ClCompile Include="source\gameobjects\Cube.cpp" />
+    <ClCompile Include="source\gameobjects\EmptyGameobject.cpp" />
+    <ClCompile Include="source\gameobjects\Gameobject.cpp" />
+    <ClCompile Include="source\gameobjects\Plane.cpp" />
+    <ClCompile Include="source\Maze\MazeGenerator.cpp" />
     <ClCompile Include="source\stb\stb_image.cpp" />
     <ClCompile Include="source\Texture.cpp" />
     <ClCompile Include="source\tigl.cpp" />
+    <ClCompile Include="source\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CubeCreator.h" />
     <ClInclude Include="FpsCam.h" />
+    <ClInclude Include="source\headers\enumType.h" />
+    <ClInclude Include="source\headers\gameobjects\Cube.h" />
+    <ClInclude Include="source\headers\gameobjects\Gameobject.h" />
+    <ClInclude Include="source\headers\gameobjects\Plane.h" />
+    <ClInclude Include="source\headers\gameobject\EmptyGameobject.h" />
+    <ClInclude Include="source\headers\Maze\MazeGenerator.h" />
     <ClInclude Include="source\headers\texture.h" />
+    <ClInclude Include="source\headers\Tile.h" />
     <ClInclude Include="source\stb\stb_image.h" />
     <ClInclude Include="tigl.h" />
   </ItemGroup>
