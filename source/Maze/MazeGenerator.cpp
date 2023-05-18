@@ -174,21 +174,22 @@ void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 }
 
 glm::vec3 MazeGenerator::SetSpawnPoint(const int& sizeX, const int& sizeZ) {
-	const int edgesOfMaze = (sizeX - 4) * (sizeZ - 4);
+	const int mazeWithoutEdge = (sizeX - 4) * (sizeZ - 4);
+	const int mazeWithoutEdgeWithoutEdge = (sizeX - 8) * (sizeZ - 8);
 
 	// create a number between the edges of the maze and 4. (standard 36 if maze is 10x10).
-	int iterator = (rand() % edgesOfMaze) + 4;
+	int iterator = (rand() % (mazeWithoutEdge - mazeWithoutEdgeWithoutEdge));
 
 	for (int x = 0; x <= sizeX; x++)
 		for (int z = 0; z <= sizeZ; z++) {
 			if (NextToEdge(x, z, sizeX, sizeZ))
 				iterator--;
 			if (iterator == 0) {
-				std::cout << "spawnPoint: (" << x << "," << z << ")\n";
+				// std::cout << "spawnPoint: (" << x << "," << z << ")\n";
 				return glm::vec3(x * -1, 0, z * -1);
 			}
 		}
-	return glm::vec3(1.f, 0.f, 1.f);
+	return glm::vec3(-1.f, 0.f, -1.f);
 }
 
 bool MazeGenerator::NextToEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ) {

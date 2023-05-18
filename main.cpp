@@ -38,7 +38,7 @@ int main(void)
     init();
 
     // generate a maze
-    mazeGen->Generate();
+    mazeGen->Generate(40,40);
 
     cam->position = &mazeGen->spawnPoint;
 

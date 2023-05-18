@@ -68,4 +68,12 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed) {
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		move(-90, speed);
 	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		position->y -= speed * 2.f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		position->y += speed * 2.f;
+	}
 }
