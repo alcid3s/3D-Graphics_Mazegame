@@ -51,8 +51,14 @@
     <ClCompile Include="source\gameobjects\Cube.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameobjects\Plane.cpp">
+    <ClCompile Include="source\gameobjects\EmptyGameobject.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LoadingScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameobjects\Plane.cpp">
+      <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\gameobjects\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\gameobject\EmptyGameobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\LoadingScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

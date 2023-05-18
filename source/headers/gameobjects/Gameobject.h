@@ -13,6 +13,9 @@ public:
 	virtual void update() = 0;
 	virtual void draw() = 0;
 
+	inline glm::vec3 GetTransform() const { return transform; }
+	inline glm::vec3 GetRotation() const { return rotate; }
+	inline glm::vec3 GetTranslate() const { return translate; }
 protected:
 	glm::vec3 transform;
 	glm::vec3 rotate;
