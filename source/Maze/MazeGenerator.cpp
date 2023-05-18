@@ -91,6 +91,7 @@ std::vector<Tile*> MazeGenerator::GetNeighbours(Tile* tile) {
 	Tile* neighbour;
 
 	// get north neighbour
+	//std::cout << "North: (" << tile->GetPosition().x << "," << tile->GetPosition().z - 1 << "), \n";
 	neighbour = maze[tile->GetPosition().z - 1][tile->GetPosition().x];
 	if (neighbour) {
 		// std::cout << "north: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
@@ -98,6 +99,7 @@ std::vector<Tile*> MazeGenerator::GetNeighbours(Tile* tile) {
 	}
 
 	// get east neighbour
+	//std::cout << "East: (" << tile->GetPosition().x + 1<< "," << tile->GetPosition().z << "), \n";
 	neighbour = maze[tile->GetPosition().z][tile->GetPosition().x + 1];
 	if (neighbour) {
 		// std::cout << "east: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
@@ -105,14 +107,15 @@ std::vector<Tile*> MazeGenerator::GetNeighbours(Tile* tile) {
 	}
 
 	// get south neighbour
+	//std::cout << "South: (" << tile->GetPosition().x << "," << tile->GetPosition().z + 1<< "), \n";
 	neighbour = maze[tile->GetPosition().z + 1][tile->GetPosition().x];
 	if (neighbour) {
-		std::cout << "south: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), \n";
+		// std::cout << "south: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), \n";
 		neighbours.push_back(neighbour);
 	}
-	
 
 	// get west neighbour
+	//std::cout << "West: (" << tile->GetPosition().x - 1 << "," << tile->GetPosition().z << "), \n";
 	neighbour = maze[tile->GetPosition().z][tile->GetPosition().x - 1];
 	if (neighbour) {
 		// std::cout << "west: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << ")\n";
@@ -153,6 +156,7 @@ void MazeGenerator::DrawMaze() {
 
 void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	spawnPoint = SetSpawnPoint(sizeOfMazeX, sizeOfMazeZ);
+	std::cout << "Spawnpoint: (" << spawnPoint.x << "," << spawnPoint.z << ")\n";
 
 	// set an empty maze with walls to work with.
 	for (int z = 0; z <= sizeOfMazeZ; z++) {
@@ -174,27 +178,35 @@ void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 }
 
 glm::vec3 MazeGenerator::SetSpawnPoint(const int& sizeX, const int& sizeZ) {
-	const int mazeWithoutEdge = (sizeX - 4) * (sizeZ - 4);
-	const int mazeWithoutEdgeWithoutEdge = (sizeX - 8) * (sizeZ - 8);
-
-	// create a number between the edges of the maze and 4. (standard 36 if maze is 10x10).
-	int iterator = (rand() % (mazeWithoutEdge - mazeWithoutEdgeWithoutEdge));
-
-	for (int x = 0; x <= sizeX; x++)
+	std::vector<glm::vec3*> possibleSpawnPoints;
+	for (int x = 0; x <= sizeX; x++) {
 		for (int z = 0; z <= sizeZ; z++) {
-			if (NextToEdge(x, z, sizeX, sizeZ))
-				iterator--;
-			if (iterator == 0) {
-				// std::cout << "spawnPoint: (" << x << "," << z << ")\n";
-				return glm::vec3(x * -1, 0, z * -1);
+			if (NextToEdge(x, z, sizeX, sizeZ)) {
+				std::cout << "possible pos: (" << x << "," << z << ")\n";
+				possibleSpawnPoints.push_back(new glm::vec3((float)x, 0.f, (float)z));
 			}
 		}
-	return glm::vec3(-1.f, 0.f, -1.f);
+	}
+	glm::vec3 sPoint = *possibleSpawnPoints.at(rand() % possibleSpawnPoints.size());
+	sPoint.x *= -1;
+	sPoint.z *= -1;
+	return sPoint;
 }
 
 bool MazeGenerator::NextToEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ) {
-	return (x == (sizeX - 1) && x != 0 || x == 1 || z == (sizeZ - 1) && z != 0 || z == 1);
-
+	// if on north or south edge of maze.
+	if (z == (sizeZ - 1) || z == 1) {
+		if (x > 0 && x < sizeX) {
+			return true;
+		}
+	}
+	// if at east or west edge.
+	else if (x == (sizeX - 1) || x == 1) {
+		if (z > 0 && z < sizeZ) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool MazeGenerator::IsEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ) {

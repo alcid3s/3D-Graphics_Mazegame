@@ -20,7 +20,7 @@ MazeGenerator* mazeGen;
 LoadingScreen* loadingScreen;
 
 int width = 1400, height = 800;
-
+double lastFrameTime = 0;
 bool creatingMaze = false;
 
 // used to communicate between threads.
@@ -103,7 +103,11 @@ void update() {
         loadingScreen->update();
     }
     else {
-        cam->update(window);
+        double frameTime = glfwGetTime();
+        float deltaTime = lastFrameTime - frameTime;
+        lastFrameTime = frameTime;
+
+        cam->update(window, deltaTime);
     }
 }
 
@@ -116,7 +120,7 @@ void draw() {
     int viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(80.0f), (float)width / height, 0.1f, 100.0f));
+    // setting model matrix.
     tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
     // to don't get a weird effect and all faces drawn to the screen.
@@ -124,6 +128,10 @@ void draw() {
 
     // while the maze generation thread is busy
     if (!mazeGenerated) {
+
+        // set projection matrix. Influences Fov.
+        tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(80.0f), (float)width / height, 0.1f, 100.0f));
+
         color = glm::vec3(0.f, 0.f, 0.f);
         tigl::shader->setViewMatrix(loadingScreen->GetMatrix());
         loadingScreen->draw();
@@ -132,6 +140,7 @@ void draw() {
     // maze is generated.
     else {
         color = glm::vec3(0.05f, 0.05f, 0.05f);
+        tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(cam->GetFov()), (float)width / height, 0.1f, 100.0f));
         tigl::shader->setViewMatrix(cam->getMatrix());
         mazeGen->DrawMaze();
     }
