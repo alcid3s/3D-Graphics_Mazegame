@@ -8,7 +8,6 @@
 #include <vector>
 #include <random>
 #include <algorithm>
-
 #include <iostream>
 
 MazeGenerator::MazeGenerator() : x(0), y(0) {
@@ -108,7 +107,7 @@ std::vector<Tile*> MazeGenerator::GetNeighbours(Tile* tile) {
 	// get south neighbour
 	neighbour = maze[tile->GetPosition().z + 1][tile->GetPosition().x];
 	if (neighbour) {
-		// std::cout << "south: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
+		std::cout << "south: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), \n";
 		neighbours.push_back(neighbour);
 	}
 	
