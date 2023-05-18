@@ -92,39 +92,32 @@ std::vector<Tile*> MazeGenerator::GetNeighbours(Tile* tile) {
 	Tile* neighbour;
 
 	// get north neighbour
-	if (maze.size() > tile->GetPosition().z - 1) {
-		neighbour = maze[tile->GetPosition().z - 1][tile->GetPosition().x];
-		if (neighbour) {
-			// std::cout << "north: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
-			neighbours.push_back(neighbour);
-		}
+	neighbour = maze[tile->GetPosition().z - 1][tile->GetPosition().x];
+	if (neighbour) {
+		// std::cout << "north: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
+		neighbours.push_back(neighbour);
 	}
+
 	// get east neighbour
-	if (maze.size() > tile->GetPosition().x + 1) {
-		neighbour = maze[tile->GetPosition().z][tile->GetPosition().x + 1];
-		if (neighbour) {
-			// std::cout << "east: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
-			neighbours.push_back(neighbour);
-		}
+	neighbour = maze[tile->GetPosition().z][tile->GetPosition().x + 1];
+	if (neighbour) {
+		// std::cout << "east: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
+		neighbours.push_back(neighbour);
 	}
 
 	// get south neighbour
-	if (maze.size() > tile->GetPosition().z + 1) {
-		neighbour = maze[tile->GetPosition().z + 1][tile->GetPosition().x];
-		if (neighbour) {
-			// std::cout << "south: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
-			neighbours.push_back(neighbour);
-		}
+	neighbour = maze[tile->GetPosition().z + 1][tile->GetPosition().x];
+	if (neighbour) {
+		// std::cout << "south: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << "), ";
+		neighbours.push_back(neighbour);
 	}
 	
 
 	// get west neighbour
-	if (maze.size() > tile->GetPosition().x - 1) {
-		neighbour = maze[tile->GetPosition().z][tile->GetPosition().x - 1];
-		if (neighbour) {
-			// std::cout << "west: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << ")\n";
-			neighbours.push_back(neighbour);
-		}
+	neighbour = maze[tile->GetPosition().z][tile->GetPosition().x - 1];
+	if (neighbour) {
+		// std::cout << "west: (" << neighbour->GetPosition().x << "," << neighbour->GetPosition().z << ")\n";
+		neighbours.push_back(neighbour);
 	}
 
 	return neighbours;
@@ -222,9 +215,9 @@ Cube* MazeGenerator::PlaceEmptyGameobject(const int& x, const int& z) {
 Cube* MazeGenerator::PlaceWall(const float& x, const float& z)
 {
 	return new Cube(
-		glm::vec3(1, 2, 1),
+		glm::vec3(1, 1, 1),
 		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(x, -.5f, z),
+		glm::vec3(x, 0.f, z),
 		mazeTextures[1],
 		1
 	);

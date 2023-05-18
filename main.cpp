@@ -22,6 +22,8 @@ LoadingScreen* loadingScreen;
 int width = 1400, height = 800;
 
 bool creatingMaze = false;
+
+// used to communicate between threads.
 std::atomic<bool> mazeGenerated(false);
 
 void init();
@@ -89,7 +91,11 @@ void generateMaze(int width, int height) {
 void update() {
     if (!creatingMaze) {
         creatingMaze = true;
-        std::thread mazeThread(generateMaze, 40, 40);
+
+        // create thread to create maze. Because this can take a while depending on the size.
+        std::thread mazeThread(generateMaze, 10, 10);
+
+        // detach so mainthread can run normally.
         mazeThread.detach();
     }
 
@@ -105,7 +111,6 @@ glm::vec3 color = glm::vec3(0.05f, 0.05f, 0.05f);
 void draw() {
 
     glViewport(0, 0, width, height);
-    glClearColor(color.r, color.g, color.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     int viewport[4];
