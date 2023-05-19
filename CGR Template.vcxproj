@@ -91,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,6 +164,7 @@
     <ClCompile Include="source\gameobjects\Plane.cpp" />
     <ClCompile Include="source\LoadingScreen.cpp" />
     <ClCompile Include="source\Maze\MazeGenerator.cpp" />
+    <ClCompile Include="source\modelLoader\ObjModel.cpp" />
     <ClCompile Include="source\stb\stb_image.cpp" />
     <ClCompile Include="source\Texture.cpp" />
     <ClCompile Include="source\tigl.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="source\headers\gameobject\EmptyGameobject.h" />
     <ClInclude Include="source\headers\LoadingScreen.h" />
     <ClInclude Include="source\headers\Maze\MazeGenerator.h" />
+    <ClInclude Include="source\headers\modelLoader\ObjModel.h" />
     <ClInclude Include="source\headers\texture.h" />
     <ClInclude Include="source\headers\Tile.h" />
     <ClInclude Include="source\stb\stb_image.h" />

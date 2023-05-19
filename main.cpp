@@ -21,10 +21,15 @@ LoadingScreen* loadingScreen;
 
 int width = 1400, height = 800;
 double lastFrameTime = 0;
-bool creatingMaze = false;
+
+int mazeSizeX = 10, mazeSizeZ = 10;
+
+bool creatingMaze1 = false;
+bool creatingMaze2 = false;
 
 // used to communicate between threads.
 std::atomic<bool> mazeGenerated(false);
+std::atomic<bool> maze2Generated(false);
 
 void init();
 void update();
@@ -84,16 +89,22 @@ void generateMaze(int width, int height) {
     // set camera on spawnpoint
     cam->position = &mazeGen->spawnPoint;
 
+    // give the endPoint to the camera. When cam is at endPoint game is won.
+    cam->setEndpoint(mazeGen->endPoint);
+
     // atomic boolean set to true
     mazeGenerated = true;
 }
 
 void update() {
-    if (!creatingMaze) {
-        creatingMaze = true;
+    if (!creatingMaze1) {
+        creatingMaze1 = true;
+
+        // setting to false if it was true
+        mazeGenerated = false;
 
         // create thread to create maze. Because this can take a while depending on the size.
-        std::thread mazeThread(generateMaze, 10, 10);
+        std::thread mazeThread(generateMaze, mazeSizeX, mazeSizeZ);
 
         // detach so mainthread can run normally.
         mazeThread.detach();

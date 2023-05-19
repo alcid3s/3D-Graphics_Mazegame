@@ -5,6 +5,7 @@
 #include "gameobjects/Gameobject.h"
 #include "gameobjects/Cube.h"
 #include "gameobjects/Plane.h"
+#include "modelLoader/ObjModel.h"
 #include <vector>
 #include <random>
 #include <algorithm>
@@ -14,6 +15,8 @@ MazeGenerator::MazeGenerator() : x(0), y(0) {
 	// added pointer of Texture to the vector.
 	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
 	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
+
+	altar = new ObjModel("resource/models/altar/Altar.obj");
 }
 
 MazeGenerator::~MazeGenerator() {
@@ -21,6 +24,10 @@ MazeGenerator::~MazeGenerator() {
 }
 
 void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
+	if (sizeOfMazeX < 5 || sizeOfMazeZ < 5) {
+		return;
+	}
+
 	srand(time(NULL));
 
 	// setup maze to traverse.
@@ -33,6 +40,11 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	std::vector<Tile*> visitedTiles;
 
 	DepthFirstSearch(spawnTile, &visitedTiles);
+
+	Tile* endPointTile = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
+	endPointTile->type = Type::Endpoint;
+	endPointTile->setModel(altar);
+	endPoint = endPointTile->GetPosition();
 }
 
 void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {
@@ -156,7 +168,7 @@ void MazeGenerator::DrawMaze() {
 
 void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	spawnPoint = SetSpawnPoint(sizeOfMazeX, sizeOfMazeZ);
-	std::cout << "Spawnpoint: (" << spawnPoint.x << "," << spawnPoint.z << ")\n";
+	std::cout << "Spawnpoint: (" << -spawnPoint.x << "," << -spawnPoint.z << ")\n";
 
 	// set an empty maze with walls to work with.
 	for (int z = 0; z <= sizeOfMazeZ; z++) {
@@ -182,7 +194,6 @@ glm::vec3 MazeGenerator::SetSpawnPoint(const int& sizeX, const int& sizeZ) {
 	for (int x = 0; x <= sizeX; x++) {
 		for (int z = 0; z <= sizeZ; z++) {
 			if (NextToEdge(x, z, sizeX, sizeZ)) {
-				std::cout << "possible pos: (" << x << "," << z << ")\n";
 				possibleSpawnPoints.push_back(new glm::vec3((float)x, 0.f, (float)z));
 			}
 		}
@@ -243,4 +254,9 @@ Plane* MazeGenerator::PlaceFloor(const float& x, const float& z)
 		mazeTextures[0],
 		1
 	);
+}
+
+ObjModel* MazeGenerator::PlaceAltar()
+{
+	return altar;
 }

@@ -38,12 +38,12 @@ Texture::~Texture()
 	glDeleteTextures(1, &t_TextureID);
 }
 
-void Texture::Bind()
+void Texture::bind()
 {
 	glBindTexture(GL_TEXTURE_2D, t_TextureID);
 }
 
-void Texture::Unbind()
+void Texture::unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
