@@ -3,10 +3,26 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false){
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false), isJumping (false){
+	srand(time(NULL));
+
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwRawMouseMotionSupported()) {
 		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	}
+	for (int i = 1; i <= 7; i++) {
+		sf::Sound* sound = new sf::Sound();;
+		sf::SoundBuffer* buffer = new sf::SoundBuffer();
+
+		std::string file = "resource/sounds/footsteps/wav/footstep" + std::to_string(i) + ".wav";
+
+		std::cout << "load file successfull: " << (buffer->loadFromFile(file) ? "true" : "false") << "\n";
+		sound->setPitch(1.f);
+		sound->setVolume(20.f);
+		sound->setBuffer(*buffer);
+		sound->setMinDistance(5.f);
+		sound->setAttenuation(0.5f);
+		footsteps.push_back(std::make_tuple(*sound, *buffer));
 	}
 }
 
@@ -18,9 +34,12 @@ glm::mat4 FpsCam::getMatrix() {
 	return ret;
 }
 
+int soundPosition, i = 0;
 void FpsCam::move(float angle, float fac, float deltaTime) {
 	position->x += ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
 	position->z += ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+
+	PlayFootstep();
 }
 
 void FpsCam::update(GLFWwindow* window, float deltaTime) {
@@ -45,6 +64,36 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 
 	if (isAtEndpoint(0.9f)) {
 		endPointReached = true;
+	}
+}
+
+void FpsCam::PlayFootstep() {
+	// gettings sound from tuple
+	sf::Sound* sound = &std::get<sf::Sound>(footsteps[soundPosition]);
+
+	// check if sound is playing
+	if (sound->getStatus() != sf::Sound::Playing) {
+
+		// set position of listener
+		sf::Listener::setDirection(position->x, position->y, position->z);
+
+		// get random walk sound
+		soundPosition = rand() % footsteps.size();
+
+		// if running. Play sound twice as fast.
+		if (shiftPressed) {
+			sound->setVolume(sound->getVolume() + 10.f);
+			sound->setPitch(1.5f);
+		}
+
+		// give sound the data for the sound from buffer in tuple.
+		sound->setBuffer(std::get<sf::SoundBuffer>(footsteps[soundPosition]));
+
+		// set origin from the sound
+		sound->setPosition(position->x, position->y, position->z);
+
+		// play the sound
+		sound->play();
 	}
 }
 
@@ -80,7 +129,7 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 	}
 	else
 		shiftPressed = false;
-		
+
 
 	// left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {

@@ -8,6 +8,9 @@
 #include <thread>
 #include <atomic>
 #include <vector>
+#include <tuple>
+#include <iostream>
+#include "SFML/Audio.hpp"
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -19,21 +22,29 @@ FpsCam* cam;
 MazeGenerator* mazeGen;
 LoadingScreen* loadingScreen;
 
+// sound controls
+sf::Music backgroundAmbience;
+
+// randomsounds the player could make at any moment.
+std::vector<std::tuple<sf::Sound*, sf::SoundBuffer*>> randomSounds;
+const int randomness = 1000;
+
 int width = 1400, height = 800;
 double lastFrameTime = 0;
 
 int mazeSizeX = 10, mazeSizeZ = 10;
 
 bool creatingMaze = false;
-bool creatingMaze2 = false;
 
 // used to communicate between threads.
 std::atomic<bool> mazeGenerated(false);
-std::atomic<bool> maze2Generated(false);
 
 void init();
 void update();
 void draw();
+
+void soundsSetup();
+void playRandomSound();
 
 int main(void)
 {
@@ -50,6 +61,8 @@ int main(void)
     tigl::init();
 
     init();
+
+    soundsSetup();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -79,6 +92,10 @@ void init() {
     loadingScreen = new LoadingScreen();
     mazeGen = new MazeGenerator();
     cam = new FpsCam(window);
+
+    backgroundAmbience.openFromFile("resource/sounds/ambience.wav");
+    backgroundAmbience.setVolume(5.f);
+    backgroundAmbience.setPitch(1.f);
 }
 
 void generateMaze(int width, int height) {
@@ -96,6 +113,26 @@ void generateMaze(int width, int height) {
     mazeGenerated = true;
 }
 
+void soundsSetup() {
+    for (int i = 1; i <= 2; i++) {
+        sf::Sound* sound = new sf::Sound();;
+        sf::SoundBuffer* buffer = new sf::SoundBuffer();
+
+        std::string file = "resource/sounds/characterSounds/randomSound" + std::to_string(i) + ".wav";
+
+        std::cout << "load randomSound successfull: " << (buffer->loadFromFile(file) ? "true" : "false") << "\n";
+        sound->setPitch(1.f);
+        sound->setVolume(100.f);
+        sound->setBuffer(*buffer);
+        sound->setMinDistance(5.f);
+        sound->setAttenuation(0.5f);
+        randomSounds.push_back(std::make_tuple(sound, buffer));
+    }
+}
+
+void playRandomSound() {
+
+}
 void update() {
     if (!creatingMaze) {
         creatingMaze = true;
@@ -108,21 +145,45 @@ void update() {
 
         // detach so mainthread can run normally.
         mazeThread.detach();
+
+        // play music
+        backgroundAmbience.play();
     }
 
     if (!mazeGenerated) {
+
+    // setting model matrix.
+    tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
+    // to don't get a weird effect and all faces drawn to the screen.
+    glEnable(GL_DEPTH_TEST);
+
         loadingScreen->update();
     }
+
+    // all things that need updating in the maze must be here
     else {
         double frameTime = glfwGetTime();
         float deltaTime = lastFrameTime - frameTime;
         lastFrameTime = frameTime;
 
         cam->update(window, deltaTime);
+
+        if (rand() % randomness == 0) {
+            int randomPos = rand() % randomSounds.size();
+            sf::Sound* sound = std::get<sf::Sound*>(randomSounds[randomPos]);
+
+            if (sound->getStatus() != sf::Sound::Playing) {
+                sf::Listener::setDirection(cam->position->x, cam->position->y, cam->position->z);
+
+                sound->setPosition(cam->position->x, cam->position->y, cam->position->z);
+                sound->play();
+            }
+        }
     }
 
     if (cam->endPointReached) {
-        exit(0);
+        //exit(0);
     }
 }
 
@@ -135,13 +196,6 @@ void draw() {
 
     int viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-
-    // setting model matrix.
-    tigl::shader->setModelMatrix(glm::mat4(1.0f));
-
-    // to don't get a weird effect and all faces drawn to the screen.
-    glEnable(GL_DEPTH_TEST);
-
     // while the maze generation thread is busy
     if (!mazeGenerated) {
 
