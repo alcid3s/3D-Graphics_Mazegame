@@ -4,9 +4,28 @@
 
 #include <iostream>
 FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false){
+	srand(time(NULL));
+
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwRawMouseMotionSupported()) {
 		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	}
+
+	for (int i = 1; i <= 10; i++) {
+		sf::Sound sound;
+		sf::SoundBuffer buffer;
+
+		std::string file = "resource/sounds/footsteps/footstep" + std::to_string(i);
+		file += ".wav";
+
+		std::cout << "loading: " << file << "\n";
+		buffer.loadFromFile(file);
+		sound.setPitch(1.f);
+		sound.setVolume(100.f);
+		sound.setBuffer(buffer);
+		sound.setMinDistance(5.f);
+		sound.setAttenuation(0.5f);
+		footsteps.push_back(sound);
 	}
 }
 
@@ -21,6 +40,13 @@ glm::mat4 FpsCam::getMatrix() {
 void FpsCam::move(float angle, float fac, float deltaTime) {
 	position->x += ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
 	position->z += ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+	if (!sf::Sound::Playing) {
+		sf::Listener::setDirection(position->x, position->y, position->z);
+		int random = rand() % footsteps.size();
+		footsteps[random].setPosition(position->x, position->y, position->z);
+		footsteps[random].play();
+	}
+
 }
 
 void FpsCam::update(GLFWwindow* window, float deltaTime) {
@@ -39,6 +65,8 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 
 	lastX = x;
 	lastY = y;
+
+	
 
 	moveCam(window, .75f, deltaTime);
 	changeFov(deltaTime);

@@ -23,7 +23,7 @@ LoadingScreen* loadingScreen;
 
 // sound controls
 sf::Music backgroundAmbience;
-std::vector<sf::Sound> sounds;
+
 
 int width = 1400, height = 800;
 double lastFrameTime = 0;
@@ -128,7 +128,7 @@ void update() {
         mazeThread.detach();
 
         // play music
-        backgroundAmbience.play();
+        //backgroundAmbience.play();
     }
 
     if (!mazeGenerated) {
