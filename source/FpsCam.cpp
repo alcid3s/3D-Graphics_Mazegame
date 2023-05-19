@@ -85,6 +85,10 @@ void FpsCam::PlayFootstep() {
 			sound->setVolume(sound->getVolume() + 10.f);
 			sound->setPitch(1.5f);
 		}
+		else {
+			sound->setVolume(20.f);
+			sound->setPitch(1.f);
+		}
 
 		// give sound the data for the sound from buffer in tuple.
 		sound->setBuffer(std::get<sf::SoundBuffer>(footsteps[soundPosition]));
