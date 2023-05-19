@@ -39,12 +39,17 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	spawnTile->setGameobject(PlaceFloor(spawnTile->GetPosition().x, spawnTile->GetPosition().z));
 	std::vector<Tile*> visitedTiles;
 
+	// create maze with DFS algorithm
 	DepthFirstSearch(spawnTile, &visitedTiles);
 
+	// create a random endpoint somewhere not close to the spawnPoint.
 	Tile* endPointTile = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
 	endPointTile->type = Type::Endpoint;
 	endPointTile->setModel(altar);
 	endPoint = endPointTile->GetPosition();
+
+	// Fill empty spots with Walls.
+	FillMaze(sizeOfMazeX, sizeOfMazeZ);
 }
 
 void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {
@@ -162,6 +167,19 @@ void MazeGenerator::DrawMaze() {
 		for (auto& tile : file) {
 			if (tile)
 				tile->draw();
+		}
+	}
+}
+
+void MazeGenerator::FillMaze(const int& sizeX, const int& sizeZ) {
+	for (int z = 0; z < sizeZ; z++) {
+		for (int x = 0; x < sizeX; x++)
+		{
+			Tile* tile = maze[z][x];
+			if (tile->type == Type::Empty) {
+				tile->type == Type::Wall;
+				tile->setGameobject(PlaceWall(x, z));
+			}
 		}
 	}
 }

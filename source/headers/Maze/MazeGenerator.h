@@ -49,4 +49,5 @@ private:
 	std::vector<Tile*> GetUnvisitedNeighbours(Tile* tile);
 	bool NextToFloor(Tile* tile);
 	std::vector<Tile*> GetNeighbours(Tile* tile);
+	void FillMaze(const int& sizeX, const int& sizeZ);
 };
