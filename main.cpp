@@ -98,6 +98,7 @@ void init() {
     backgroundAmbience.setPitch(1.f);
 }
 
+#include "Tile.h"
 void generateMaze(int width, int height) {
 
     // generate a maze
@@ -108,6 +109,10 @@ void generateMaze(int width, int height) {
 
     // give the endPoint to the camera. When cam is at endPoint game is won.
     cam->setEndpoint(mazeGen->endPoint);
+
+    // give cam access to spawnTile
+    cam->setSpawnTile(mazeGen->spawnTile);
+    std::cout << "setSpawnTile: (" << mazeGen->spawnTile->GetPosition().x << "," << mazeGen->spawnTile->GetPosition().z << ")\n";
 
     // atomic boolean set to true
     mazeGenerated = true;

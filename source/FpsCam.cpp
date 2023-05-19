@@ -1,9 +1,12 @@
 #include "FpsCam.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Tile.h"
+#include "enumType.h"
+#include "Maze/MazeGenerator.h"
 
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false), isJumping (false){
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false), isJumping(false) {
 	srand(time(NULL));
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -34,12 +37,36 @@ glm::mat4 FpsCam::getMatrix() {
 	return ret;
 }
 
-int soundPosition, i = 0;
 void FpsCam::move(float angle, float fac, float deltaTime) {
+	if (!tile)
+		return;
+
+	const float edge = .4f;
+
+	float x = tile->GetPosition().x;
+	float z = tile->GetPosition().z;
+	bool foundNewTile = false;
+
+	// Check if camera is leaving the current tile
+	if (!(x - edge < -position->x && -position->x < x + edge && z - edge < -position->z && -position->z < z + edge)) {
+		std::vector<Tile*> neighbours = GetNeighbours(tile);
+		for (auto& neighbour : neighbours) {
+				x = neighbour->GetPosition().x;
+				z = neighbour->GetPosition().z;
+				if (x - edge < -position->x && -position->x < x + edge && z - edge < -position->z && -position->z < z + edge) {
+					this->tile = neighbour;
+					foundNewTile = true;
+					std::cout << "new tile: (" << x << "," << z << "\n";
+					break;
+				}
+		}
+	}
+
 	position->x += ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
 	position->z += ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
 
 	PlayFootstep();
+	
 }
 
 void FpsCam::update(GLFWwindow* window, float deltaTime) {
@@ -167,4 +194,8 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 void FpsCam::setEndpoint(glm::vec3 endPoint)
 {
 	this->endPoint = endPoint;
+}
+
+void FpsCam::setSpawnTile(Tile* tile) {
+	this->tile = tile;
 }

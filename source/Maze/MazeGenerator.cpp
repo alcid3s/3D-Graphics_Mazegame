@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <iostream>
 
+std::vector<std::vector<Tile*>> maze;
+
 MazeGenerator::MazeGenerator() : x(0), y(0) {
 	// added pointer of Texture to the vector.
 	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
@@ -34,7 +36,7 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	SetupMaze(sizeOfMazeX, sizeOfMazeZ);
 
 	// getting the starting tile.
-	Tile* spawnTile = maze[(int)spawnPoint.z * -1][(int)spawnPoint.x * -1];
+	spawnTile = maze[(int)spawnPoint.z * -1][(int)spawnPoint.x * -1];
 	spawnTile->type = Type::Floor;
 	spawnTile->setGameobject(PlaceFloor(spawnTile->GetPosition().x, spawnTile->GetPosition().z));
 	std::vector<Tile*> visitedTiles;
@@ -91,7 +93,7 @@ void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTile
 	}
 }
 
-bool MazeGenerator::NextToFloor(Tile* tile) {
+bool NextToFloor(Tile* tile) {
 	int connections = 0;
 	std::vector<Tile*> neighbours = GetNeighbours(tile);
 	for (auto& tile : neighbours) {
@@ -103,7 +105,7 @@ bool MazeGenerator::NextToFloor(Tile* tile) {
 	return connections > 1;
 }
 
-std::vector<Tile*> MazeGenerator::GetNeighbours(Tile* tile) {
+std::vector<Tile*> GetNeighbours(Tile* tile) {
 	std::vector<Tile*> neighbours;
 	Tile* neighbour;
 
@@ -142,7 +144,7 @@ std::vector<Tile*> MazeGenerator::GetNeighbours(Tile* tile) {
 	return neighbours;
 }
 
-std::vector<Tile*> MazeGenerator::GetUnvisitedNeighbours(Tile* tile) {
+std::vector<Tile*> GetUnvisitedNeighbours(Tile* tile) {
 	std::vector<Tile*> neighbours = GetNeighbours(tile);
 
 	/*std::cout << "NN: (" << neighbours[0]->GetPosition().x << "," << neighbours[0]->GetPosition().z << "), ";
