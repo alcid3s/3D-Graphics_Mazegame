@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <vector>
+#include <tuple>
 #include "SFML/Audio.hpp"
 struct GLFWwindow;
 
@@ -25,6 +26,7 @@ private:
 	void moveCam(GLFWwindow* window, const float& speed, float deltaTime);
 	void changeFov(float deltaTime);
 	bool isAtEndpoint(float tolerance);
+	void PlayFootstep();
 
-	std::vector<sf::Sound> footsteps;
+	std::vector<std::tuple<sf::Sound, sf::SoundBuffer>> footsteps;
 };

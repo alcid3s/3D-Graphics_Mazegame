@@ -108,6 +108,16 @@ void generateMaze(int width, int height) {
 
     // atomic boolean set to true
     mazeGenerated = true;
+
+    sf::Sound sound;
+    sf::SoundBuffer buffer;
+    buffer.loadFromFile("resource/sounds/demonic_scream.ogg");
+    sound.setPitch(1.f);
+    sound.setVolume(100.f);
+    sound.setBuffer(buffer);
+    sound.setMinDistance(5.f);
+    sound.setAttenuation(0.5f);
+    sound.play();
 }
 
 void soundsSetup() {
@@ -128,10 +138,17 @@ void update() {
         mazeThread.detach();
 
         // play music
-        //backgroundAmbience.play();
+        backgroundAmbience.play();
     }
 
     if (!mazeGenerated) {
+
+    // setting model matrix.
+    tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
+    // to don't get a weird effect and all faces drawn to the screen.
+    glEnable(GL_DEPTH_TEST);
+
         loadingScreen->update();
     }
     else {
@@ -144,7 +161,7 @@ void update() {
     }
 
     if (cam->endPointReached) {
-        exit(0);
+        //exit(0);
     }
 }
 
@@ -157,13 +174,6 @@ void draw() {
 
     int viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-
-    // setting model matrix.
-    tigl::shader->setModelMatrix(glm::mat4(1.0f));
-
-    // to don't get a weird effect and all faces drawn to the screen.
-    glEnable(GL_DEPTH_TEST);
-
     // while the maze generation thread is busy
     if (!mazeGenerated) {
 
