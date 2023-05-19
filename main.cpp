@@ -8,6 +8,8 @@
 #include <thread>
 #include <atomic>
 #include <vector>
+
+#include "SFML/Audio.hpp"
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -18,6 +20,10 @@ GLFWwindow* window;
 FpsCam* cam;
 MazeGenerator* mazeGen;
 LoadingScreen* loadingScreen;
+
+// sound controls
+sf::Music backgroundAmbience;
+std::vector<sf::Sound> sounds;
 
 int width = 1400, height = 800;
 double lastFrameTime = 0;
@@ -35,6 +41,8 @@ void init();
 void update();
 void draw();
 
+void soundsSetup();
+
 int main(void)
 {
     if (!glfwInit())
@@ -50,6 +58,8 @@ int main(void)
     tigl::init();
 
     init();
+
+    soundsSetup();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -79,6 +89,10 @@ void init() {
     loadingScreen = new LoadingScreen();
     mazeGen = new MazeGenerator();
     cam = new FpsCam(window);
+
+    backgroundAmbience.openFromFile("resource/sounds/ambience.wav");
+    backgroundAmbience.setVolume(10.f);
+    backgroundAmbience.setPitch(1.f);
 }
 
 void generateMaze(int width, int height) {
@@ -96,6 +110,10 @@ void generateMaze(int width, int height) {
     mazeGenerated = true;
 }
 
+void soundsSetup() {
+ 
+}
+
 void update() {
     if (!creatingMaze) {
         creatingMaze = true;
@@ -108,12 +126,16 @@ void update() {
 
         // detach so mainthread can run normally.
         mazeThread.detach();
+
+        // play music
+        backgroundAmbience.play();
     }
 
     if (!mazeGenerated) {
         loadingScreen->update();
     }
     else {
+
         double frameTime = glfwGetTime();
         float deltaTime = lastFrameTime - frameTime;
         lastFrameTime = frameTime;
