@@ -24,7 +24,7 @@ double lastFrameTime = 0;
 
 int mazeSizeX = 10, mazeSizeZ = 10;
 
-bool creatingMaze1 = false;
+bool creatingMaze = false;
 bool creatingMaze2 = false;
 
 // used to communicate between threads.
@@ -97,8 +97,8 @@ void generateMaze(int width, int height) {
 }
 
 void update() {
-    if (!creatingMaze1) {
-        creatingMaze1 = true;
+    if (!creatingMaze) {
+        creatingMaze = true;
 
         // setting to false if it was true
         mazeGenerated = false;
@@ -119,6 +119,10 @@ void update() {
         lastFrameTime = frameTime;
 
         cam->update(window, deltaTime);
+    }
+
+    if (cam->endPointReached) {
+        exit(0);
     }
 }
 
