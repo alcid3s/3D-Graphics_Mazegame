@@ -38,6 +38,7 @@ private:
 	Cube* PlaceEmptyGameobject(const int& x, const int& z);
 	Cube* PlaceWall(const float& x, const float& z);
 	Plane* PlaceFloor(const float& x, const float& z);
+	Plane* PlaceEndPoint(const float& x, const float& z);
 
 	// functions to walk the maze and apply prims algorithm
 private:

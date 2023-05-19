@@ -33,6 +33,12 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	std::vector<Tile*> visitedTiles;
 
 	DepthFirstSearch(spawnTile, &visitedTiles);
+
+	//std::cout << "size of visitedTiles: " << visitedTiles.size() << "\n";
+
+	Tile* endPoint = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
+	endPoint->setGameobject(PlaceWall(endPoint->GetPosition().x, endPoint->GetPosition().z));
+	//std::cout << "3/4 of all Tiles: (" << endPoint->GetPosition().x << "," << endPoint->GetPosition().z << ")\n";
 }
 
 void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {
@@ -156,7 +162,7 @@ void MazeGenerator::DrawMaze() {
 
 void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	spawnPoint = SetSpawnPoint(sizeOfMazeX, sizeOfMazeZ);
-	std::cout << "Spawnpoint: (" << spawnPoint.x << "," << spawnPoint.z << ")\n";
+	std::cout << "Spawnpoint: (" << -spawnPoint.x << "," << -spawnPoint.z << ")\n";
 
 	// set an empty maze with walls to work with.
 	for (int z = 0; z <= sizeOfMazeZ; z++) {
@@ -182,7 +188,6 @@ glm::vec3 MazeGenerator::SetSpawnPoint(const int& sizeX, const int& sizeZ) {
 	for (int x = 0; x <= sizeX; x++) {
 		for (int z = 0; z <= sizeZ; z++) {
 			if (NextToEdge(x, z, sizeX, sizeZ)) {
-				std::cout << "possible pos: (" << x << "," << z << ")\n";
 				possibleSpawnPoints.push_back(new glm::vec3((float)x, 0.f, (float)z));
 			}
 		}
@@ -236,6 +241,16 @@ Cube* MazeGenerator::PlaceWall(const float& x, const float& z)
 
 Plane* MazeGenerator::PlaceFloor(const float& x, const float& z)
 {
+	return new Plane(
+		glm::vec3(1, 0, 1),
+		glm::vec3(0.f, 0.f, 0.f),
+		glm::vec3(x, -.5f, z),
+		mazeTextures[0],
+		1
+	);
+}
+
+Plane* MazeGenerator::PlaceEndPoint(const float& x, const float& z) {
 	return new Plane(
 		glm::vec3(1, 0, 1),
 		glm::vec3(0.f, 0.f, 0.f),
