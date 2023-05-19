@@ -80,7 +80,13 @@ void FpsCam::PlayFootstep() {
 		// get random walk sound
 		soundPosition = rand() % footsteps.size();
 
-		// load sound from memory to sound.
+		// if running. Play sound twice as fast.
+		if (shiftPressed) {
+			sound->setVolume(sound->getVolume() + 10.f);
+			sound->setPitch(1.5f);
+		}
+
+		// give sound the data for the sound from buffer in tuple.
 		sound->setBuffer(std::get<sf::SoundBuffer>(footsteps[soundPosition]));
 
 		// set origin from the sound
