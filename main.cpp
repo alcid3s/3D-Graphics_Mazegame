@@ -32,7 +32,7 @@ const int randomness = 1000;
 int width = 1400, height = 800;
 double lastFrameTime = 0;
 
-int mazeSizeX = 10, mazeSizeZ = 10;
+int mazeSizeX = 20, mazeSizeZ = 20;
 
 bool creatingMaze = false;
 
