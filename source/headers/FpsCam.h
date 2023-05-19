@@ -20,8 +20,12 @@ public:
 private:
 	float fov;
 	bool shiftPressed;
+
 	glm::vec3 endPoint;
 	glm::vec2 rotation = glm::vec2(0, 180);
+
+	bool isJumping;
+
 	void move(float angle, float fac, float deltaTime);
 	void moveCam(GLFWwindow* window, const float& speed, float deltaTime);
 	void changeFov(float deltaTime);
