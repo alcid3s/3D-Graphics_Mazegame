@@ -5,6 +5,7 @@
 #include "gameobjects/Gameobject.h"
 #include "gameobjects/Cube.h"
 #include "gameobjects/Plane.h"
+#include "modelLoader/ObjModel.h"
 #include <vector>
 #include <random>
 #include <algorithm>
@@ -14,6 +15,8 @@ MazeGenerator::MazeGenerator() : x(0), y(0) {
 	// added pointer of Texture to the vector.
 	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
 	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
+
+	altar = new ObjModel("resource/models/altar/Altar.obj");
 }
 
 MazeGenerator::~MazeGenerator() {
@@ -21,6 +24,10 @@ MazeGenerator::~MazeGenerator() {
 }
 
 void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
+	if (sizeOfMazeX < 5 || sizeOfMazeZ < 5) {
+		return;
+	}
+
 	srand(time(NULL));
 
 	// setup maze to traverse.
@@ -34,11 +41,10 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 
 	DepthFirstSearch(spawnTile, &visitedTiles);
 
-	//std::cout << "size of visitedTiles: " << visitedTiles.size() << "\n";
-
-	Tile* endPoint = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
-	endPoint->setGameobject(PlaceWall(endPoint->GetPosition().x, endPoint->GetPosition().z));
-	//std::cout << "3/4 of all Tiles: (" << endPoint->GetPosition().x << "," << endPoint->GetPosition().z << ")\n";
+	Tile* endPointTile = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
+	endPointTile->type = Type::Endpoint;
+	endPointTile->setModel(altar);
+	endPoint = endPointTile->GetPosition();
 }
 
 void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {
@@ -250,12 +256,7 @@ Plane* MazeGenerator::PlaceFloor(const float& x, const float& z)
 	);
 }
 
-Plane* MazeGenerator::PlaceEndPoint(const float& x, const float& z) {
-	return new Plane(
-		glm::vec3(1, 0, 1),
-		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(x, -.5f, z),
-		mazeTextures[0],
-		1
-	);
+ObjModel* MazeGenerator::PlaceAltar()
+{
+	return altar;
 }

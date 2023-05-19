@@ -25,9 +25,9 @@ void Cube::draw() {
         tigl::shader->setModelMatrix(glm::rotate(glm::mat4(1.0f), glm::radians(angle), rotate));
 
     if (texture) {
-        texture->Bind();
+        texture->bind();
         DrawCubePT();
-        texture->Unbind();
+        texture->unbind();
     }
     else
         DrawCubePC();

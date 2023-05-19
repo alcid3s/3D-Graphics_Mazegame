@@ -1,4 +1,5 @@
 #include "Tile.h"
+#include "modelLoader/ObjModel.h"
 #include "gameobjects/Gameobject.h"
 #include "gameobjects/Cube.h"
 #include "gameobjects/Plane.h"
@@ -17,6 +18,16 @@ void Tile::setGameobject(Gameobject* gameobject) {
 	this->gameobject = gameobject;
 }
 
+void Tile::setModel(ObjModel* model) {
+	this->model = model;
+}
+
+#include <iostream>
 void Tile::draw() {
 	gameobject->draw();
+
+	if (model) {
+		model->draw();
+	}
+		
 }

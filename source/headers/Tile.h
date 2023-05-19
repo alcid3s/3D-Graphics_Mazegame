@@ -2,6 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 enum Type;
 class Gameobject;
+class ObjModel;
 
 class Tile {
 public:
@@ -11,11 +12,13 @@ public:
 	void draw();
 
 	void setGameobject(Gameobject*);
+	void setModel(ObjModel*);
 
 	bool visited;
 	Type type;
 	inline glm::vec3 GetPosition() const { return position; }
 private:
+	ObjModel* model = nullptr;
 	glm::vec3 position;
 
 	Gameobject* gameobject;

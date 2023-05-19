@@ -202,7 +202,6 @@ void ObjModel::draw()
 			}
 		}
 
-
 		for (auto face : group->faces) {
 			for (auto vertex : face.vertices) {
 				//std::cout << "position: " << vertex.position << ", normal: " << vertex.normal << ", texcoord: " << vertex.texcoord << ".\n";

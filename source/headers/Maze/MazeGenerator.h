@@ -4,6 +4,7 @@
 
 class Cube;
 class Plane;
+class ObjModel;
 
 class Tile;
 class Texture;
@@ -19,6 +20,7 @@ public:
 	void DrawMaze();
 
 	glm::vec3 spawnPoint = glm::vec3(0, 0, 0);
+	glm::vec3 endPoint = glm::vec3(2, 0, 2);
 
 	// private variables
 private:
@@ -27,6 +29,7 @@ private:
 	std::vector<std::vector<Tile*>> maze;
 	std::vector<Texture*> mazeTextures;
 
+	ObjModel* altar;
 	// private functions to setup the maze
 private:
 	bool IsEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ);
@@ -38,7 +41,7 @@ private:
 	Cube* PlaceEmptyGameobject(const int& x, const int& z);
 	Cube* PlaceWall(const float& x, const float& z);
 	Plane* PlaceFloor(const float& x, const float& z);
-	Plane* PlaceEndPoint(const float& x, const float& z);
+	ObjModel* PlaceAltar();
 
 	// functions to walk the maze and apply prims algorithm
 private:

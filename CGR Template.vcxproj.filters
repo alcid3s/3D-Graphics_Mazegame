@@ -22,6 +22,9 @@
     <Filter Include="Source Files\gameobjects">
       <UniqueIdentifier>{bd64fb23-175b-40e9-b77a-1bac504b1a92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\modelloader">
+      <UniqueIdentifier>{dadbb9ee-47db-4313-9cbd-02eb2e62442a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,6 +63,9 @@
     <ClCompile Include="source\gameobjects\Plane.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="source\modelLoader\ObjModel.cpp">
+      <Filter>Source Files\modelloader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">
@@ -96,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\LoadingScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\modelLoader\ObjModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

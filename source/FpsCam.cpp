@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false){
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false){
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwRawMouseMotionSupported()) {
 		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -32,7 +32,7 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 
 	float tempX = rotation.x - (float)(lastY - y) / 100.f;
 
-	if (tempX < 0.5f && tempX > -0.5f)
+	if (tempX < 0.9f && tempX > -0.7f)
 		rotation.x = tempX;
 
 	rotation.y -= (float)(lastX - x) / 100.f;
@@ -41,6 +41,22 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 	lastY = y;
 
 	moveCam(window, .75f, deltaTime);
+	changeFov(deltaTime);
+
+	if (isAtEndpoint(0.9f)) {
+		endPointReached = true;
+	}
+}
+
+bool FpsCam::isAtEndpoint(float tolerance) {
+	//std::cout << "posX: " << position->x << ", posZ: " << position->z << ". EndpointX: " << endPoint.x << ", EndPointZ: " << endPoint.z << "\n";
+	if (-position->x >= endPoint.x - (tolerance / 2) && -position->x <= endPoint.x + (tolerance / 2)) {
+		return -position->z >= endPoint.z - (tolerance / 2) && -position->z <= endPoint.z + (tolerance / 2);
+	}
+	return false;
+}
+
+void FpsCam::changeFov(float deltaTime) {
 
 	if (shiftPressed) {
 		if (fov < 100.f) {
@@ -93,4 +109,9 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 	{
 		position->y += speed * 0.1f;
 	}
+}
+
+void FpsCam::setEndpoint(glm::vec3 endPoint)
+{
+	this->endPoint = endPoint;
 }
