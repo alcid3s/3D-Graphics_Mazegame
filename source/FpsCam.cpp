@@ -41,12 +41,15 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 	if (!tile)
 		return;
 
-	const float edge = .3f;
-	const float tolerance = 0.2f;
+	const float edge = 0.5f;
+	const float tolerance = 0.1f;
 
 	float x = tile->GetPosition().x;
 	float z = tile->GetPosition().z;
 	bool newTile = false;
+
+	float movementX = position->x + ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+	float movementZ = position->z + ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
 
 	bool moveX = true, moveZ = true;
 	// Check if camera is leaving the current tile
@@ -72,43 +75,41 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 			Tile* west = neighbours[3];
 
 			if (north->type != Type::Floor) {
-				if (north->GetPosition().z + tolerance <= -position->z) {
+				if (north->GetPosition().z + tolerance + edge <= movementZ) {
 					std::cout << "Touching north\n";
-					position->z = -north->GetPosition().z - edge - tolerance - .2f;
-					moveZ = false;
+					movementZ -= .1f;
 				}
 			}
 			if (east->type != Type::Floor) {
-				if (east->GetPosition().x + tolerance >= -position->x) {
+				if (east->GetPosition().x - tolerance - edge >= movementX) {
 					std::cout << "Touching east\n";
-					position->x = -east->GetPosition().z + edge + tolerance + .2f;
-					moveX = false;
+					movementX += .1f;
 				}
 			}
 			if (south->type != Type::Floor) {
-				if (south->GetPosition().z + tolerance >= -position->z) {
+				if (south->GetPosition().z - tolerance - edge >= movementZ) {
 					std::cout << "Touching south\n";
-					position->z = -south->GetPosition().z + edge + tolerance + .2f;
-					moveZ = false;
+					movementZ += .1f;
 				}
 			}
 			if (west->type != Type::Floor) {
-				if (west->GetPosition().x + tolerance <= -position->x) {
+				if (west->GetPosition().x + tolerance + edge <= movementX) {
 					std::cout << "Touching west\n";
-					position->x = -west->GetPosition().z - edge - tolerance - .2f;
-					moveX = false;
+					movementX -= .1f;
 				}
 			}
 		}
 	}
 
 	if (moveX) {
-		position->x += ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+		position->x = movementX;
 	}
 	if (moveZ) {
-		position->z += ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+		position->z = movementZ;
 	}
-	PlayFootstep();
+	if (moveZ || moveX) {
+		PlayFootstep();
+	}
 }
 
 void FpsCam::update(GLFWwindow* window, float deltaTime) {
