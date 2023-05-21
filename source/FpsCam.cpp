@@ -37,8 +37,8 @@ glm::mat4 FpsCam::getMatrix() {
 	return ret;
 }
 
-bool closeToEdge = false;
-std::vector<Tile*> neighbours;
+/*This function contains a bug. When the player keeps walking on edges the function wont 
+keep track of the current position anymore and then the player can walk through walls.*/ 
 void FpsCam::move(float angle, float fac, float deltaTime) {
 	if (!tile)
 		return;
@@ -73,7 +73,7 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 		neighbours.clear();
 	}
 
-	// player is close to edge. Check if it crossed the tile
+	// player is close to edge. Check if it crossed the tile.
 	if (!neighbours.empty() && closeToEdge) {
 		for (int i = 0; i < neighbours.size(); i++) {
 			float nx = neighbours.at(i)->GetPosition().x;

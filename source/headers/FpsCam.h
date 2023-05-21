@@ -33,6 +33,11 @@ private:
 
 	bool isJumping;
 
+
+	bool closeToEdge = false;
+	std::vector<Tile*> neighbours;
+
+private:
 	void move(float angle, float fac, float deltaTime);
 	void moveCam(GLFWwindow* window, const float& speed, float deltaTime);
 	void changeFov(float deltaTime);
