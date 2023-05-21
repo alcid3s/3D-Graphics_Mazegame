@@ -86,7 +86,7 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 				closeToEdge = false;
 				//std::cout << "new tile: (" << nx << "," << nz << ")\n";
 			}
-			else if(neighbours.at(i)->type != Type::Floor) {
+			else if(neighbours.at(i)->type != Type::Floor && neighbours.at(i)->type != Type::Endpoint) {
 				const float removedFromEdge = 0.05;
 				if (i == Bearing::South) {
 					if (nz - edge - tolerance <= posZ) {
