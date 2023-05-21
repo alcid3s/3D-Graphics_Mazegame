@@ -127,7 +127,7 @@ void soundsSetup() {
 
         std::cout << "load randomSound successfull: " << (buffer->loadFromFile(file) ? "true" : "false") << "\n";
         sound->setPitch(1.f);
-        sound->setVolume(50.f);
+        sound->setVolume(100.f);
         sound->setBuffer(*buffer);
         sound->setMinDistance(5.f);
         sound->setAttenuation(0.5f);
