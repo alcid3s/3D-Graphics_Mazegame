@@ -5,7 +5,8 @@
 #include "gameobjects/Plane.h"
 #include "enumType.h"
 
-Tile::Tile(Gameobject *gameobject, Type type, glm::vec3 position, bool visited) : gameobject(gameobject), type(type), position(position), visited(visited)
+Tile::Tile(Gameobject *gameobject, Type type, glm::vec3 position, bool visited) : 
+	gameobject(gameobject), type(type), position(position), visited(visited)
 {
 
 }

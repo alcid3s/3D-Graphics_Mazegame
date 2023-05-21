@@ -98,6 +98,7 @@ void init() {
     backgroundAmbience.setPitch(1.f);
 }
 
+#include "Tile.h"
 void generateMaze(int width, int height) {
 
     // generate a maze
@@ -108,6 +109,10 @@ void generateMaze(int width, int height) {
 
     // give the endPoint to the camera. When cam is at endPoint game is won.
     cam->setEndpoint(mazeGen->endPoint);
+
+    // give cam access to spawnTile
+    cam->setSpawnTile(mazeGen->spawnTile);
+    std::cout << "setSpawnTile: (" << mazeGen->spawnTile->GetPosition().x << "," << mazeGen->spawnTile->GetPosition().z << ")\n";
 
     // atomic boolean set to true
     mazeGenerated = true;
@@ -122,7 +127,7 @@ void soundsSetup() {
 
         std::cout << "load randomSound successfull: " << (buffer->loadFromFile(file) ? "true" : "false") << "\n";
         sound->setPitch(1.f);
-        sound->setVolume(100.f);
+        sound->setVolume(50.f);
         sound->setBuffer(*buffer);
         sound->setMinDistance(5.f);
         sound->setAttenuation(0.5f);

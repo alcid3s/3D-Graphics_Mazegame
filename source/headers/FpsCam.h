@@ -5,6 +5,8 @@
 #include "SFML/Audio.hpp"
 struct GLFWwindow;
 
+class Tile;
+
 class FpsCam {
 public:
 	FpsCam(GLFWwindow*);
@@ -12,6 +14,7 @@ public:
 	glm::mat4 getMatrix();
 	void update(GLFWwindow*, float deltaTime);
 	void setEndpoint(glm::vec3);
+	void setSpawnTile(Tile* tile);
 
 	inline float GetFov() const { return fov; }
 	bool endPointReached;
@@ -20,6 +23,10 @@ public:
 private:
 	float fov;
 	bool shiftPressed;
+
+	int soundPosition, i = 0;
+
+	Tile* tile;
 
 	glm::vec3 endPoint;
 	glm::vec2 rotation = glm::vec2(0, 180);

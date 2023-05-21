@@ -6,5 +6,13 @@ enum Type {
 	Edge = 2,
 	Empty = 3,
 	Endpoint = 4,
-	None = -1
+	TypeNone = -1
+};
+
+enum Bearing {
+	North = 0,
+	East = 1,
+	South = 2,
+	West = 3,
+	BearingNone = -1
 };

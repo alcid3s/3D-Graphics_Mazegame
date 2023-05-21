@@ -1,9 +1,12 @@
 #include "FpsCam.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Tile.h"
+#include "enumType.h"
+#include "Maze/MazeGenerator.h"
 
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false), isJumping (false){
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false), isJumping(false) {
 	srand(time(NULL));
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -34,11 +37,90 @@ glm::mat4 FpsCam::getMatrix() {
 	return ret;
 }
 
-int soundPosition, i = 0;
+bool closeToEdge = false;
+std::vector<Tile*> neighbours;
 void FpsCam::move(float angle, float fac, float deltaTime) {
-	position->x += ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
-	position->z += ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+	if (!tile)
+		return;
 
+	const float edge = 0.5f;
+	const float tolerance = 0.1f;
+
+	float x = tile->GetPosition().x;
+	float z = tile->GetPosition().z;
+
+	float movementX = position->x + ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+	float movementZ = position->z + ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+
+	float posX = -position->x;
+	float posZ = -position->z;
+
+	bool moveX = true, moveZ = true;
+
+	// if close to edge
+	if (!(x - edge + tolerance < -position->x && -position->x < x + edge - tolerance && z - edge + tolerance < -position->z && -position->z < z + edge - tolerance)) {
+		if (!closeToEdge) {
+			closeToEdge = true;
+			//std::cout << "close to edge\n";
+			neighbours = GetNeighbours(this->tile);
+		}
+	}
+
+	// not close to edge anymore
+	else if (closeToEdge) {
+		closeToEdge = false;
+		//std::cout << "back on tile\n";
+		neighbours.clear();
+	}
+
+	// player is close to edge. Check if it crossed the tile
+	if (!neighbours.empty() && closeToEdge) {
+		for (int i = 0; i < neighbours.size(); i++) {
+			float nx = neighbours.at(i)->GetPosition().x;
+			float nz = neighbours.at(i)->GetPosition().z;
+
+			// if is inside neighbor's tile and away from the edge of the tile.
+			if ((nx - edge + tolerance < posX && nx + edge - tolerance > posX && nz - edge + tolerance < posZ && nz + edge - tolerance > posZ) && neighbours.at(i)->type == Type::Floor) {
+				this->tile = neighbours.at(i);
+				neighbours.clear();
+				closeToEdge = false;
+				//std::cout << "new tile: (" << nx << "," << nz << ")\n";
+			}
+			else if(neighbours.at(i)->type != Type::Floor) {
+				const float removedFromEdge = 0.05;
+				if (i == Bearing::South) {
+					if (nz - edge - tolerance <= posZ) {
+						movementZ = nz - edge - tolerance - removedFromEdge;
+						movementZ *= -1;
+						//std::cout << "touched south wall\n";
+					}
+				}
+				else if (i == Bearing::North) {
+					if (nz + edge + tolerance >= posZ) {
+						movementZ = nz + edge + tolerance + removedFromEdge;
+						movementZ *= -1;
+						//std::cout << "touched north wall\n";
+					}
+				}
+				else if (i == Bearing::West) {
+					if (nx + edge + tolerance >= posX) {
+						movementX = nx + edge + tolerance + removedFromEdge;
+						movementX *= -1;
+						//std::cout << "touched west wall\n";
+					}
+				}
+				else if (i == Bearing::East) {
+					if (nx - edge - tolerance <= posX) {
+						movementX = nx - edge - tolerance - removedFromEdge;
+						movementX *= -1;
+						//std::cout << " touched east wall\n";
+					}
+				}
+			}
+		}
+	}
+	position->x = movementX;
+	position->z = movementZ;
 	PlayFootstep();
 }
 
@@ -167,4 +249,8 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 void FpsCam::setEndpoint(glm::vec3 endPoint)
 {
 	this->endPoint = endPoint;
+}
+
+void FpsCam::setSpawnTile(Tile* tile) {
+	this->tile = tile;
 }
