@@ -136,7 +136,17 @@ void soundsSetup() {
 }
 
 void playRandomSound() {
+    if (rand() % randomness == 0) {
+        int randomPos = rand() % randomSounds.size();
+        sf::Sound* sound = std::get<sf::Sound*>(randomSounds[randomPos]);
 
+        if (sound->getStatus() != sf::Sound::Playing) {
+            sf::Listener::setDirection(cam->position->x, cam->position->y, cam->position->z);
+
+            sound->setPosition(cam->position->x, cam->position->y, cam->position->z);
+            sound->play();
+        }
+    }
 }
 void update() {
     if (!creatingMaze) {
@@ -174,17 +184,8 @@ void update() {
 
         cam->update(window, deltaTime);
 
-        if (rand() % randomness == 0) {
-            int randomPos = rand() % randomSounds.size();
-            sf::Sound* sound = std::get<sf::Sound*>(randomSounds[randomPos]);
-
-            if (sound->getStatus() != sf::Sound::Playing) {
-                sf::Listener::setDirection(cam->position->x, cam->position->y, cam->position->z);
-
-                sound->setPosition(cam->position->x, cam->position->y, cam->position->z);
-                sound->play();
-            }
-        }
+        if(!cam->playingSpecialSound && !cam->running)
+            playRandomSound();
     }
 
     if (cam->endPointReached) {
