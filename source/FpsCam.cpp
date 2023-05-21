@@ -4,9 +4,13 @@
 #include "Tile.h"
 #include "enumType.h"
 #include "Maze/MazeGenerator.h"
+#include <ctime>
+
+#define maxRunningTime 4
+#define maxRecoverTime 4
 
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false), isJumping(false) {
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), wPressed(false), running(false), endPointReached(false), recovering(false)  {
 	srand(time(NULL));
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -14,7 +18,7 @@ FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointRea
 		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 	}
 	for (int i = 1; i <= 7; i++) {
-		sf::Sound* sound = new sf::Sound();;
+		sf::Sound* sound = new sf::Sound();
 		sf::SoundBuffer* buffer = new sf::SoundBuffer();
 
 		std::string file = "resource/sounds/footsteps/wav/footstep" + std::to_string(i) + ".wav";
@@ -27,6 +31,17 @@ FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointRea
 		sound->setAttenuation(0.5f);
 		footsteps.push_back(std::make_tuple(*sound, *buffer));
 	}
+
+	outOfBreath = new sf::Sound();
+	sf::SoundBuffer* buffer = new sf::SoundBuffer();
+
+	std::cout << "load outOfBreath successfull: " << (buffer->loadFromFile("resource/sounds/characterSounds/outOfBreath.wav") ? "true" : "false") << "\n";
+
+	outOfBreath->setPitch(1.f);
+	outOfBreath->setVolume(40.f);
+	outOfBreath->setBuffer(*buffer);
+	outOfBreath->setMinDistance(5.f);
+	outOfBreath->setAttenuation(0.5f);
 }
 
 glm::mat4 FpsCam::getMatrix() {
@@ -147,6 +162,35 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 	if (isAtEndpoint(0.9f)) {
 		endPointReached = true;
 	}
+
+	MaxRunTime();
+}
+
+// responsible for giving a limit on running.
+void FpsCam::MaxRunTime() {
+	if (wPressed && shiftPressed && !running && !recovering) {
+		timeStarted = clock();
+		running = true;
+	}
+	else if ((!wPressed || !shiftPressed) && running) {
+		running = false;
+	}
+
+	if (clock() - timeStarted > maxRunningTime * CLOCKS_PER_SEC && running && !recovering) {
+		playingSpecialSound = true;
+		outOfBreath->play();
+
+		recovering = true;
+		running = false;
+		recoverTime = clock();
+	}
+
+	if (clock() - recoverTime > maxRecoverTime * CLOCKS_PER_SEC && recovering) {
+		recovering = false;
+	}
+
+	if (playingSpecialSound && outOfBreath->getStatus() != sf::Sound::Playing)
+		playingSpecialSound = false;
 }
 
 void FpsCam::PlayFootstep() {
@@ -193,7 +237,7 @@ bool FpsCam::isAtEndpoint(float tolerance) {
 
 void FpsCam::changeFov(float deltaTime) {
 
-	if (shiftPressed) {
+	if (shiftPressed && wPressed) {
 		if (fov < 100.f) {
 			fov -= 50.f * deltaTime;
 		}
@@ -209,13 +253,12 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 	float mult = 1;
 
 	// multiplier for running
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !recovering) {
 		mult *= 3.f;
 		shiftPressed = true;
 	}
 	else
 		shiftPressed = false;
-
 
 	// left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
@@ -229,8 +272,11 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 
 	// forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		wPressed = true;
 		move(90, speed * mult, deltaTime);
 	}
+	else 
+		wPressed = false;
 
 	// backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
