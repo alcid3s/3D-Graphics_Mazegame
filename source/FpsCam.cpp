@@ -61,17 +61,19 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 	if (!(x - edge + tolerance < -position->x && -position->x < x + edge - tolerance && z - edge + tolerance < -position->z && -position->z < z + edge - tolerance)) {
 		if (!closeToEdge) {
 			closeToEdge = true;
-			std::cout << "close to edge\n";
+			//std::cout << "close to edge\n";
 			neighbours = GetNeighbours(this->tile);
 		}
 	}
+
+	// not close to edge anymore
 	else if (closeToEdge) {
 		closeToEdge = false;
-		std::cout << "back on tile\n";
+		//std::cout << "back on tile\n";
 		neighbours.clear();
 	}
 
-	// player is close to edge.
+	// player is close to edge. Check if it crossed the tile
 	if (!neighbours.empty() && closeToEdge) {
 		for (int i = 0; i < neighbours.size(); i++) {
 			float nx = neighbours.at(i)->GetPosition().x;
@@ -82,27 +84,36 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 				this->tile = neighbours.at(i);
 				neighbours.clear();
 				closeToEdge = false;
-				std::cout << "new tile: (" << nx << "," << nz << ")\n";
+				//std::cout << "new tile: (" << nx << "," << nz << ")\n";
 			}
 			else if(neighbours.at(i)->type != Type::Floor) {
+				const float removedFromEdge = 0.05;
 				if (i == Bearing::South) {
 					if (nz - edge - tolerance <= posZ) {
-						std::cout << "touched south wall\n";
+						movementZ = nz - edge - tolerance - removedFromEdge;
+						movementZ *= -1;
+						//std::cout << "touched south wall\n";
 					}
 				}
 				else if (i == Bearing::North) {
 					if (nz + edge + tolerance >= posZ) {
-						std::cout << "touched north wall\n";
+						movementZ = nz + edge + tolerance + removedFromEdge;
+						movementZ *= -1;
+						//std::cout << "touched north wall\n";
 					}
 				}
 				else if (i == Bearing::West) {
 					if (nx + edge + tolerance >= posX) {
-						std::cout << "touched west wall\n";
+						movementX = nx + edge + tolerance + removedFromEdge;
+						movementX *= -1;
+						//std::cout << "touched west wall\n";
 					}
 				}
 				else if (i == Bearing::East) {
 					if (nx - edge - tolerance <= posX) {
-						std::cout << " touched east wall\n";
+						movementX = nx - edge - tolerance - removedFromEdge;
+						movementX *= -1;
+						//std::cout << " touched east wall\n";
 					}
 				}
 			}
