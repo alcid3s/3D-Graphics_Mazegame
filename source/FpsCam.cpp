@@ -37,6 +37,8 @@ glm::mat4 FpsCam::getMatrix() {
 	return ret;
 }
 
+bool closeToEdge = false;
+std::vector<Tile*> neighbours;
 void FpsCam::move(float angle, float fac, float deltaTime) {
 	if (!tile)
 		return;
@@ -46,70 +48,69 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 
 	float x = tile->GetPosition().x;
 	float z = tile->GetPosition().z;
-	bool newTile = false;
 
 	float movementX = position->x + ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
 	float movementZ = position->z + ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
 
+	float posX = -position->x;
+	float posZ = -position->z;
+
 	bool moveX = true, moveZ = true;
-	// Check if camera is leaving the current tile
-	if (!(x - edge < -position->x && -position->x < x + edge && z - edge < -position->z && -position->z < z + edge)) {
-		std::vector<Tile*> neighbours = GetNeighbours(tile);
-		for (auto* neighbour : neighbours) {
-			if (neighbour->type == Type::Floor) {
-				x = neighbour->GetPosition().x;
-				z = neighbour->GetPosition().z;
-				if (x - edge < -position->x && -position->x < x + edge && z - edge < -position->z && -position->z < z + edge) {
-					this->tile = neighbour;
-					newTile = true;
-					std::cout << "new tile: (" << x << "," << z << "\n";
-					break;
+
+	// if close to edge
+	if (!(x - edge + tolerance < -position->x && -position->x < x + edge - tolerance && z - edge + tolerance < -position->z && -position->z < z + edge - tolerance)) {
+		if (!closeToEdge) {
+			closeToEdge = true;
+			std::cout << "close to edge\n";
+			neighbours = GetNeighbours(this->tile);
+		}
+	}
+	else if (closeToEdge) {
+		closeToEdge = false;
+		std::cout << "back on tile\n";
+		neighbours.clear();
+	}
+
+	// player is close to edge.
+	if (!neighbours.empty() && closeToEdge) {
+		for (int i = 0; i < neighbours.size(); i++) {
+			float nx = neighbours.at(i)->GetPosition().x;
+			float nz = neighbours.at(i)->GetPosition().z;
+
+			// if is inside neighbor's tile and away from the edge of the tile.
+			if ((nx - edge + tolerance < posX && nx + edge - tolerance > posX && nz - edge + tolerance < posZ && nz + edge - tolerance > posZ) && neighbours.at(i)->type == Type::Floor) {
+				this->tile = neighbours.at(i);
+				neighbours.clear();
+				closeToEdge = false;
+				std::cout << "new tile: (" << nx << "," << nz << ")\n";
+			}
+			else if(neighbours.at(i)->type != Type::Floor) {
+				if (i == Bearing::South) {
+					if (nz - edge - tolerance <= posZ) {
+						std::cout << "touched south wall\n";
+					}
+				}
+				else if (i == Bearing::North) {
+					if (nz + edge + tolerance >= posZ) {
+						std::cout << "touched north wall\n";
+					}
+				}
+				else if (i == Bearing::West) {
+					if (nx + edge + tolerance >= posX) {
+						std::cout << "touched west wall\n";
+					}
+				}
+				else if (i == Bearing::East) {
+					if (nx - edge - tolerance <= posX) {
+						std::cout << " touched east wall\n";
+					}
 				}
 			}
 		}
-
-		if (!newTile) {
-			Tile* north = neighbours[0];
-			Tile* east = neighbours[1];
-			Tile* south = neighbours[2];
-			Tile* west = neighbours[3];
-
-			if (north->type != Type::Floor) {
-				if (north->GetPosition().z + tolerance + edge <= movementZ) {
-					std::cout << "Touching north\n";
-					movementZ -= .1f;
-				}
-			}
-			if (east->type != Type::Floor) {
-				if (east->GetPosition().x - tolerance - edge >= movementX) {
-					std::cout << "Touching east\n";
-					movementX += .1f;
-				}
-			}
-			if (south->type != Type::Floor) {
-				if (south->GetPosition().z - tolerance - edge >= movementZ) {
-					std::cout << "Touching south\n";
-					movementZ += .1f;
-				}
-			}
-			if (west->type != Type::Floor) {
-				if (west->GetPosition().x + tolerance + edge <= movementX) {
-					std::cout << "Touching west\n";
-					movementX -= .1f;
-				}
-			}
-		}
 	}
-
-	if (moveX) {
-		position->x = movementX;
-	}
-	if (moveZ) {
-		position->z = movementZ;
-	}
-	if (moveZ || moveX) {
-		PlayFootstep();
-	}
+	position->x = movementX;
+	position->z = movementZ;
+	PlayFootstep();
 }
 
 void FpsCam::update(GLFWwindow* window, float deltaTime) {
