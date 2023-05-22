@@ -172,7 +172,6 @@ void FpsCam::draw() {
 
 	glm::mat4 ret(1.0f);
 	glm::vec3 flashPos = -*this->position;
-	flashPos.y = 0;
 
 	// set matrix on cams current position.
 	ret = glm::translate(ret, flashPos);
@@ -182,7 +181,13 @@ void FpsCam::draw() {
 	ret = glm::rotate(ret, -rotation.y + 2.7f, glm::vec3(0, 1, 0));
 
 	// place camera a bit in front of camera
-	ret = glm::translate(ret, glm::vec3(0,-.1,0.15f));
+	if (running) {
+		ret = glm::translate(ret, glm::vec3(-.03f, -.1, 0.12f));
+	}
+	else {
+		ret = glm::translate(ret, glm::vec3(0, -.1, 0.15f));
+	}
+	
 
 	// rotate camera to point in the right direction
 	ret = glm::rotate(ret, .5f, glm::vec3(0, 1, 0));
