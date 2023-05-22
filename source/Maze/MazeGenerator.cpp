@@ -30,7 +30,7 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 		return;
 	}
 
-	srand(time(NULL));
+	srand(1);
 
 	// setup maze to traverse.
 	SetupMaze(sizeOfMazeX, sizeOfMazeZ);
@@ -51,7 +51,7 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	endPoint = endPointTile->GetPosition();
 
 	// Fill empty spots with Walls.
-	FillMaze(sizeOfMazeX, sizeOfMazeZ);
+	// FillMaze(sizeOfMazeX, sizeOfMazeZ);
 }
 
 void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {

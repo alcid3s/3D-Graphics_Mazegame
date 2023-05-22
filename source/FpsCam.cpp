@@ -1,6 +1,7 @@
 #include "FpsCam.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include "tigl.h"
 #include "Tile.h"
 #include "enumType.h"
 #include "Maze/MazeGenerator.h"
@@ -10,9 +11,7 @@
 #define maxRecoverTime 4
 
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), wPressed(false), running(false), endPointReached(false), recovering(false)  {
-	srand(time(NULL));
-
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), wPressed(false), running(false), endPointReached(false), recovering(false) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwRawMouseMotionSupported()) {
 		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -42,6 +41,8 @@ FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), wPressed(fa
 	outOfBreath->setBuffer(*buffer);
 	outOfBreath->setMinDistance(5.f);
 	outOfBreath->setAttenuation(0.5f);
+
+	flashlight = new ObjModel("resource/models/flashlight/flashlight.obj");
 }
 
 glm::mat4 FpsCam::getMatrix() {
@@ -52,8 +53,8 @@ glm::mat4 FpsCam::getMatrix() {
 	return ret;
 }
 
-/*This function contains a bug. When the player keeps walking on edges the function wont 
-keep track of the current position anymore and then the player can walk through walls.*/ 
+/*This function contains a bug. When the player keeps walking on edges the function wont
+keep track of the current position anymore and then the player can walk through walls.*/
 void FpsCam::move(float angle, float fac, float deltaTime) {
 	if (!tile)
 		return;
@@ -89,51 +90,51 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 	}
 
 	// player is close to edge. Check if it crossed the tile.
-	if (!neighbours.empty() && closeToEdge) {
-		for (int i = 0; i < neighbours.size(); i++) {
-			float nx = neighbours.at(i)->GetPosition().x;
-			float nz = neighbours.at(i)->GetPosition().z;
+	//if (!neighbours.empty() && closeToEdge) {
+	//	for (int i = 0; i < neighbours.size(); i++) {
+	//		float nx = neighbours.at(i)->GetPosition().x;
+	//		float nz = neighbours.at(i)->GetPosition().z;
 
-			// if is inside neighbor's tile and away from the edge of the tile.
-			if ((nx - edge + tolerance < posX && nx + edge - tolerance > posX && nz - edge + tolerance < posZ && nz + edge - tolerance > posZ) && neighbours.at(i)->type == Type::Floor) {
-				this->tile = neighbours.at(i);
-				neighbours.clear();
-				closeToEdge = false;
-				//std::cout << "new tile: (" << nx << "," << nz << ")\n";
-			}
-			else if(neighbours.at(i)->type != Type::Floor && neighbours.at(i)->type != Type::Endpoint) {
-				const float removedFromEdge = 0.05;
-				if (i == Bearing::South) {
-					if (nz - edge - tolerance <= posZ) {
-						movementZ = nz - edge - tolerance - removedFromEdge;
-						movementZ *= -1;
-						//std::cout << "touched south wall\n";
-					}
-				}
-				else if (i == Bearing::North) {
-					if (nz + edge + tolerance >= posZ) {
-						movementZ = nz + edge + tolerance + removedFromEdge;
-						movementZ *= -1;
-						//std::cout << "touched north wall\n";
-					}
-				}
-				else if (i == Bearing::West) {
-					if (nx + edge + tolerance >= posX) {
-						movementX = nx + edge + tolerance + removedFromEdge;
-						movementX *= -1;
-						//std::cout << "touched west wall\n";
-					}
-				}
-				else if (i == Bearing::East) {
-					if (nx - edge - tolerance <= posX) {
-						movementX = nx - edge - tolerance - removedFromEdge;
-						movementX *= -1;
-						//std::cout << " touched east wall\n";
-					}
-				}
-			}
-		}
-	}
+	//		// if is inside neighbor's tile and away from the edge of the tile.
+	//		if ((nx - edge + tolerance < posX && nx + edge - tolerance > posX && nz - edge + tolerance < posZ && nz + edge - tolerance > posZ) && neighbours.at(i)->type == Type::Floor) {
+	//			this->tile = neighbours.at(i);
+	//			neighbours.clear();
+	//			closeToEdge = false;
+	//			//std::cout << "new tile: (" << nx << "," << nz << ")\n";
+	//		}
+	//		else if(neighbours.at(i)->type != Type::Floor && neighbours.at(i)->type != Type::Endpoint) {
+	//			const float removedFromEdge = 0.05;
+	//			if (i == Bearing::South) {
+	//				if (nz - edge - tolerance <= posZ) {
+	//					movementZ = nz - edge - tolerance - removedFromEdge;
+	//					movementZ *= -1;
+	//					//std::cout << "touched south wall\n";
+	//				}
+	//			}
+	//			else if (i == Bearing::North) {
+	//				if (nz + edge + tolerance >= posZ) {
+	//					movementZ = nz + edge + tolerance + removedFromEdge;
+	//					movementZ *= -1;
+	//					//std::cout << "touched north wall\n";
+	//				}
+	//			}
+	//			else if (i == Bearing::West) {
+	//				if (nx + edge + tolerance >= posX) {
+	//					movementX = nx + edge + tolerance + removedFromEdge;
+	//					movementX *= -1;
+	//					//std::cout << "touched west wall\n";
+	//				}
+	//			}
+	//			else if (i == Bearing::East) {
+	//				if (nx - edge - tolerance <= posX) {
+	//					movementX = nx - edge - tolerance - removedFromEdge;
+	//					movementX *= -1;
+	//					//std::cout << " touched east wall\n";
+	//				}
+	//			}
+	//		}
+	//	}
+	// }
 	position->x = movementX;
 	position->z = movementZ;
 	PlayFootstep();
@@ -166,8 +167,41 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 	MaxRunTime();
 }
 
+void FpsCam::draw() {
+	glm::vec3 offset(0.f, 0.f, 0.f);
+
+	glm::mat4 ret(1.0f);
+	glm::vec3 flashPos = -*this->position;
+
+	// set matrix on cams current position.
+	ret = glm::translate(ret, flashPos);
+
+	// rotate camera in right direction.
+	ret = glm::rotate(ret, rotation.x, glm::vec3(1, 0, 0));
+	ret = glm::rotate(ret, -rotation.y + 2.7f, glm::vec3(0, 1, 0));
+
+	// place camera a bit in front of camera
+	if (running) {
+		ret = glm::translate(ret, glm::vec3(-.03f, -.1, 0.12f));
+	}
+	else {
+		ret = glm::translate(ret, glm::vec3(0, -.1, 0.15f));
+	}
+	
+
+	// rotate camera to point in the right direction
+	ret = glm::rotate(ret, .5f, glm::vec3(0, 1, 0));
+
+	// set cursor.
+	tigl::shader->setModelMatrix(ret);
+
+	// draw flashlight
+	flashlight->draw();
+}
+
 // responsible for giving a limit on running.
-void FpsCam::MaxRunTime() {
+void FpsCam::MaxRunTime()
+{
 	if (wPressed && shiftPressed && !running && !recovering) {
 		timeStarted = clock();
 		running = true;
@@ -275,7 +309,7 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 		wPressed = true;
 		move(90, speed * mult, deltaTime);
 	}
-	else 
+	else
 		wPressed = false;
 
 	// backward

@@ -3,6 +3,7 @@
 #include <vector>
 #include <tuple>
 #include "SFML/Audio.hpp"
+#include "modelLoader/ObjModel.h"
 struct GLFWwindow;
 
 class Tile;
@@ -13,12 +14,14 @@ public:
 
 	glm::mat4 getMatrix();
 	void update(GLFWwindow*, float deltaTime);
+	void draw();
 	void setEndpoint(glm::vec3);
 	void setSpawnTile(Tile* tile);
 
 	inline float GetFov() const { return fov; }
 	bool endPointReached;
 
+	// current position
 	glm::vec3* position;
 
 	// if player is making a sound
@@ -27,6 +30,7 @@ public:
 	// variable for indicating when running
 	bool running;
 private:
+	ObjModel *flashlight;
 
 	// current fov.
 	float fov;
