@@ -30,15 +30,20 @@ public:
 	// variable for indicating when running
 	bool running;
 private:
-	ObjModel *flashlight;
+	// flashlight model
+	ObjModel* flashlight = nullptr;
+
+	// flashlight on or off. If off cannot turn back on for x seconds.
+	bool rightClicked = false;
+	clock_t changedLight = 0;
 
 	// current fov.
 	float fov;
 
 	// variables for maximum runtime and fov.
-	bool recovering;
-	bool shiftPressed;
-	bool wPressed;
+	bool recovering = false;
+	bool shiftPressed = false;
+	bool wPressed = false;
 	clock_t timeStarted = 0;
 	clock_t recoverTime = 0;
 	sf::Sound* outOfBreath = nullptr;
@@ -47,7 +52,7 @@ private:
 	int soundPosition, i = 0;
 
 	// current tile position
-	Tile* tile;
+	Tile* tile = nullptr;
 
 	// used to determine if player reached the endpoint
 	glm::vec3 endPoint;
@@ -66,6 +71,8 @@ private:
 	bool isAtEndpoint(float tolerance);
 	void PlayFootstep();
 	void MaxRunTime();
+	std::tuple<glm::mat4, glm::vec3> PositionFlashlight();
+	void DrawLight(glm::vec3 position);
 
 	std::vector<std::tuple<sf::Sound, sf::SoundBuffer>> footsteps;
 };

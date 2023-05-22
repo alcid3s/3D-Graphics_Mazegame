@@ -10,8 +10,10 @@
 #define maxRunningTime 4
 #define maxRecoverTime 4
 
+#define maxFlashlightOffTime 4
+
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), wPressed(false), running(false), endPointReached(false), recovering(false) {
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwRawMouseMotionSupported()) {
 		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -90,51 +92,51 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 	}
 
 	// player is close to edge. Check if it crossed the tile.
-	//if (!neighbours.empty() && closeToEdge) {
-	//	for (int i = 0; i < neighbours.size(); i++) {
-	//		float nx = neighbours.at(i)->GetPosition().x;
-	//		float nz = neighbours.at(i)->GetPosition().z;
+	if (!neighbours.empty() && closeToEdge) {
+		for (int i = 0; i < neighbours.size(); i++) {
+			float nx = neighbours.at(i)->GetPosition().x;
+			float nz = neighbours.at(i)->GetPosition().z;
 
-	//		// if is inside neighbor's tile and away from the edge of the tile.
-	//		if ((nx - edge + tolerance < posX && nx + edge - tolerance > posX && nz - edge + tolerance < posZ && nz + edge - tolerance > posZ) && neighbours.at(i)->type == Type::Floor) {
-	//			this->tile = neighbours.at(i);
-	//			neighbours.clear();
-	//			closeToEdge = false;
-	//			//std::cout << "new tile: (" << nx << "," << nz << ")\n";
-	//		}
-	//		else if(neighbours.at(i)->type != Type::Floor && neighbours.at(i)->type != Type::Endpoint) {
-	//			const float removedFromEdge = 0.05;
-	//			if (i == Bearing::South) {
-	//				if (nz - edge - tolerance <= posZ) {
-	//					movementZ = nz - edge - tolerance - removedFromEdge;
-	//					movementZ *= -1;
-	//					//std::cout << "touched south wall\n";
-	//				}
-	//			}
-	//			else if (i == Bearing::North) {
-	//				if (nz + edge + tolerance >= posZ) {
-	//					movementZ = nz + edge + tolerance + removedFromEdge;
-	//					movementZ *= -1;
-	//					//std::cout << "touched north wall\n";
-	//				}
-	//			}
-	//			else if (i == Bearing::West) {
-	//				if (nx + edge + tolerance >= posX) {
-	//					movementX = nx + edge + tolerance + removedFromEdge;
-	//					movementX *= -1;
-	//					//std::cout << "touched west wall\n";
-	//				}
-	//			}
-	//			else if (i == Bearing::East) {
-	//				if (nx - edge - tolerance <= posX) {
-	//					movementX = nx - edge - tolerance - removedFromEdge;
-	//					movementX *= -1;
-	//					//std::cout << " touched east wall\n";
-	//				}
-	//			}
-	//		}
-	//	}
-	// }
+			// if is inside neighbor's tile and away from the edge of the tile.
+			if ((nx - edge + tolerance < posX && nx + edge - tolerance > posX && nz - edge + tolerance < posZ && nz + edge - tolerance > posZ) && neighbours.at(i)->type == Type::Floor) {
+				this->tile = neighbours.at(i);
+				neighbours.clear();
+				closeToEdge = false;
+				//std::cout << "new tile: (" << nx << "," << nz << ")\n";
+			}
+			else if(neighbours.at(i)->type != Type::Floor && neighbours.at(i)->type != Type::Endpoint) {
+				const float removedFromEdge = 0.05;
+				if (i == Bearing::South) {
+					if (nz - edge - tolerance <= posZ) {
+						movementZ = nz - edge - tolerance - removedFromEdge;
+						movementZ *= -1;
+						//std::cout << "touched south wall\n";
+					}
+				}
+				else if (i == Bearing::North) {
+					if (nz + edge + tolerance >= posZ) {
+						movementZ = nz + edge + tolerance + removedFromEdge;
+						movementZ *= -1;
+						//std::cout << "touched north wall\n";
+					}
+				}
+				else if (i == Bearing::West) {
+					if (nx + edge + tolerance >= posX) {
+						movementX = nx + edge + tolerance + removedFromEdge;
+						movementX *= -1;
+						//std::cout << "touched west wall\n";
+					}
+				}
+				else if (i == Bearing::East) {
+					if (nx - edge - tolerance <= posX) {
+						movementX = nx - edge - tolerance - removedFromEdge;
+						movementX *= -1;
+						//std::cout << " touched east wall\n";
+					}
+				}
+			}
+		}
+	 }
 	position->x = movementX;
 	position->z = movementZ;
 	PlayFootstep();
@@ -167,9 +169,7 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 	MaxRunTime();
 }
 
-void FpsCam::draw() {
-	glm::vec3 offset(0.f, 0.f, 0.f);
-
+std::tuple<glm::mat4, glm::vec3> FpsCam::PositionFlashlight() {
 	glm::mat4 ret(1.0f);
 	glm::vec3 flashPos = -*this->position;
 
@@ -177,23 +177,47 @@ void FpsCam::draw() {
 	ret = glm::translate(ret, flashPos);
 
 	// rotate camera in right direction.
-	ret = glm::rotate(ret, rotation.x, glm::vec3(1, 0, 0));
+	ret = glm::rotate(ret, glm::radians(rotation.x), glm::vec3(1, 0, 0));
 	ret = glm::rotate(ret, -rotation.y + 2.7f, glm::vec3(0, 1, 0));
 
 	// place camera a bit in front of camera
+	glm::vec3 pos;
 	if (running) {
-		ret = glm::translate(ret, glm::vec3(-.03f, -.1, 0.12f));
+		pos = glm::vec3(-.03f, -.1, 0.12f);
 	}
 	else {
-		ret = glm::translate(ret, glm::vec3(0, -.1, 0.15f));
+		pos = glm::vec3(-.03f, -.1, 0.12f);
 	}
-	
+	ret = glm::translate(ret, pos);
 
 	// rotate camera to point in the right direction
 	ret = glm::rotate(ret, .5f, glm::vec3(0, 1, 0));
 
+	return std::make_tuple(ret, pos + flashPos);
+}
+
+void FpsCam::DrawLight(glm::vec3 position)
+{
+	position.y += 1.f;
+	position.z += .75f;
+	tigl::shader->enableLighting(true);
+	tigl::shader->setLightCount(1);
+	tigl::shader->setLightDirectional(1, true);
+	tigl::shader->setLightPosition(0, position);
+	tigl::shader->setLightAmbient(0, glm::vec3(0.1f, 0.1f, 0.15f));
+	tigl::shader->setLightDiffuse(0, glm::vec3(1.f, 1.f, 1.f));
+	tigl::shader->setLightSpecular(0, glm::vec3(0, 0, 0));
+	tigl::shader->setShinyness(1.f);
+}
+
+void FpsCam::draw() {
+
+	std::tuple<glm::mat4, glm::vec3> tuple = PositionFlashlight();
+
+	DrawLight(std::get<glm::vec3>(tuple));
+
 	// set cursor.
-	tigl::shader->setModelMatrix(ret);
+	tigl::shader->setModelMatrix(std::get<glm::mat4>(tuple));
 
 	// draw flashlight
 	flashlight->draw();
