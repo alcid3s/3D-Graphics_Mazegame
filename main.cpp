@@ -216,8 +216,10 @@ void draw() {
     // maze is generated.
     else {
         color = glm::vec3(0.05f, 0.05f, 0.05f);
+        color = glm::vec3(1, 1, 1);
         tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(cam->GetFov()), (float)width / height, 0.1f, 100.0f));
         tigl::shader->setViewMatrix(cam->getMatrix());
         mazeGen->DrawMaze();
+        cam->draw();
     }
 }
