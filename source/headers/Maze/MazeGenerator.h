@@ -19,9 +19,17 @@ public:
 	void Generate(const int& sizeOfMazeX = 10, const int& sizeOfMazeZ = 10);
 	void DrawMaze();
 
-	glm::vec3 spawnPoint = glm::vec3(0, 0, 0);
+	// place where enemy will spawn.
+	Tile* enemySpawnTile;
+
+	// tile where player will begin
 	Tile* spawnTile;
+	glm::vec3 spawnPoint = glm::vec3(0, 0, 0);
+
+	// place where altar will stand
+	Tile* endTile;
 	glm::vec3 endPoint = glm::vec3(2, 0, 2);
+	
 
 	// private variables
 private:
@@ -38,6 +46,7 @@ private:
 	void SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ);
 
 	glm::vec3 SetSpawnPoint(const int&, const int&);
+	void SetEnemySpawnPoint(const int& sizeX, const int& sizeZ);
 	Cube* PlaceEmptyGameobject(const int& x, const int& z);
 	Cube* PlaceWall(const float& x, const float& z);
 	Plane* PlaceFloor(const float& x, const float& z);
