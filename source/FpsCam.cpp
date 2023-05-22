@@ -186,7 +186,7 @@ std::tuple<glm::mat4, glm::vec3> FpsCam::PositionFlashlight() {
 		pos = glm::vec3(-.03f, -.1, 0.12f);
 	}
 	else {
-		pos = glm::vec3(-.03f, -.1, 0.12f);
+		pos = glm::vec3(0.f, -.1, 0.15f);
 	}
 	ret = glm::translate(ret, pos);
 
