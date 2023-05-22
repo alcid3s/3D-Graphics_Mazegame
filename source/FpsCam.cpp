@@ -177,7 +177,7 @@ std::tuple<glm::mat4, glm::vec3> FpsCam::PositionFlashlight() {
 	ret = glm::translate(ret, flashPos);
 
 	// rotate camera in right direction.
-	ret = glm::rotate(ret, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+	ret = glm::rotate(ret, rotation.x, glm::vec3(1, 0, 0));
 	ret = glm::rotate(ret, -rotation.y + 2.7f, glm::vec3(0, 1, 0));
 
 	// place camera a bit in front of camera

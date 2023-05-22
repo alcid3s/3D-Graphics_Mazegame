@@ -30,7 +30,7 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 		return;
 	}
 
-	srand(1);
+	srand(time(NULL));
 
 	// setup maze to traverse.
 	SetupMaze(sizeOfMazeX, sizeOfMazeZ);
