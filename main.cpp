@@ -43,6 +43,7 @@ void init();
 void update();
 void draw();
 
+void enableFog(bool flag);
 void soundsSetup();
 void playRandomSound();
 
@@ -148,6 +149,19 @@ void playRandomSound() {
         }
     }
 }
+
+void enableFog(bool flag) {
+    if (flag) {
+        tigl::shader->enableFog(true);
+        tigl::shader->setFogColor(glm::vec3(.05f, .05f, .05f));
+        tigl::shader->setFogLinear(1, 4);
+        tigl::shader->setFogExp(1.5f);
+    }
+    else {
+        tigl::shader->enableFog(false);
+    }
+}
+
 void update() {
     if (!creatingMaze) {
         creatingMaze = true;
@@ -211,6 +225,7 @@ void draw() {
         color = glm::vec3(0.f, 0.f, 0.f);
         tigl::shader->setViewMatrix(loadingScreen->GetMatrix());
         loadingScreen->draw();
+        enableFog(false);
     }
 
     // maze is generated.
@@ -221,5 +236,6 @@ void draw() {
         tigl::shader->setViewMatrix(cam->getMatrix());
         mazeGen->DrawMaze();
         cam->draw();
+        enableFog(true);
     }
 }
