@@ -172,14 +172,25 @@ void FpsCam::draw() {
 
 	glm::mat4 ret(1.0f);
 	glm::vec3 flashPos = -*this->position;
-	
+	flashPos.y = 0;
+
+	// set matrix on cams current position.
 	ret = glm::translate(ret, flashPos);
-	ret = glm::rotate(ret, 0.f, glm::vec3(1, 0, 0));
-	ret = glm::rotate(ret, 0.f, glm::vec3(0, 1, 0));
 
-	flashPos.z += .5f;
+	// rotate camera in right direction.
+	ret = glm::rotate(ret, rotation.x, glm::vec3(1, 0, 0));
+	ret = glm::rotate(ret, -rotation.y + 2.7f, glm::vec3(0, 1, 0));
 
+	// place camera a bit in front of camera
+	ret = glm::translate(ret, glm::vec3(0,-.1,0.15f));
+
+	// rotate camera to point in the right direction
+	ret = glm::rotate(ret, .5f, glm::vec3(0, 1, 0));
+
+	// set cursor.
 	tigl::shader->setModelMatrix(ret);
+
+	// draw flashlight
 	flashlight->draw();
 }
 
