@@ -171,19 +171,14 @@ void FpsCam::draw() {
 	glm::vec3 offset(0.f, 0.f, 0.f);
 
 	glm::mat4 ret(1.0f);
-	ret = glm::rotate(ret, 9.f, glm::vec3(1, 0, 0));
-	ret = glm::rotate(ret, 0.f, glm::vec3(0, 1, 0));
-	ret = glm::translate(ret, offset);
-
-	glm::vec3 flashPos = glm::vec3(0, 0, 0);
-
-	flashPos.x = -position->x - .15;
-	flashPos.y = position->y - .1;
-	flashPos.z = -position->z;
-
+	glm::vec3 flashPos = -*this->position;
+	
 	ret = glm::translate(ret, flashPos);
+	ret = glm::rotate(ret, 0.f, glm::vec3(1, 0, 0));
+	ret = glm::rotate(ret, 0.f, glm::vec3(0, 1, 0));
 
-	std::cout << "cam pos: (" << position->x << "," << position->z << "). Flash Pos: (" << flashPos.x << "," << flashPos.z << ")\n.";
+	flashPos.z += .5f;
+
 	tigl::shader->setModelMatrix(ret);
 	flashlight->draw();
 }
