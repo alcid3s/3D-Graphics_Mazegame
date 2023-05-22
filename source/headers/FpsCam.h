@@ -3,6 +3,7 @@
 #include <vector>
 #include <tuple>
 #include "SFML/Audio.hpp"
+#include "modelLoader/ObjModel.h"
 struct GLFWwindow;
 
 class Tile;
@@ -13,31 +14,65 @@ public:
 
 	glm::mat4 getMatrix();
 	void update(GLFWwindow*, float deltaTime);
+	void draw();
 	void setEndpoint(glm::vec3);
 	void setSpawnTile(Tile* tile);
 
 	inline float GetFov() const { return fov; }
 	bool endPointReached;
 
+	// current position
 	glm::vec3* position;
-private:
-	float fov;
-	bool shiftPressed;
 
+	// if player is making a sound
+	bool playingSpecialSound = false;
+
+	// variable for indicating when running
+	bool running;
+private:
+	// flashlight model
+	ObjModel* flashlight = nullptr;
+
+	// flashlight on or off. If off cannot turn back on for x seconds.
+	bool rightClicked = false;
+	clock_t changedLight = 0;
+
+	// current fov.
+	float fov;
+
+	// variables for maximum runtime and fov.
+	bool recovering = false;
+	bool shiftPressed = false;
+	bool wPressed = false;
+	clock_t timeStarted = 0;
+	clock_t recoverTime = 0;
+	sf::Sound* outOfBreath = nullptr;
+
+	// random numbers between 0 and the amount of sounds available for footsteps so footstep sounds are randomised and not repetitive.
 	int soundPosition, i = 0;
 
-	Tile* tile;
+	// current tile position
+	Tile* tile = nullptr;
 
+	// used to determine if player reached the endpoint
 	glm::vec3 endPoint;
-	glm::vec2 rotation = glm::vec2(0, 180);
 
-	bool isJumping;
+	// rotation of camera when starting.
+	glm::vec2 rotation = glm::vec2(0, 150);
 
+	// used for collision
+	bool closeToEdge = false;
+	std::vector<Tile*> neighbours;
+
+private:
 	void move(float angle, float fac, float deltaTime);
 	void moveCam(GLFWwindow* window, const float& speed, float deltaTime);
 	void changeFov(float deltaTime);
 	bool isAtEndpoint(float tolerance);
 	void PlayFootstep();
+	void MaxRunTime();
+	std::tuple<glm::mat4, glm::vec3> PositionFlashlight();
+	void DrawLight(glm::vec3 position);
 
 	std::vector<std::tuple<sf::Sound, sf::SoundBuffer>> footsteps;
 };

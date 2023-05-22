@@ -127,7 +127,7 @@ void soundsSetup() {
 
         std::cout << "load randomSound successfull: " << (buffer->loadFromFile(file) ? "true" : "false") << "\n";
         sound->setPitch(1.f);
-        sound->setVolume(50.f);
+        sound->setVolume(100.f);
         sound->setBuffer(*buffer);
         sound->setMinDistance(5.f);
         sound->setAttenuation(0.5f);
@@ -136,7 +136,17 @@ void soundsSetup() {
 }
 
 void playRandomSound() {
+    if (rand() % randomness == 0) {
+        int randomPos = rand() % randomSounds.size();
+        sf::Sound* sound = std::get<sf::Sound*>(randomSounds[randomPos]);
 
+        if (sound->getStatus() != sf::Sound::Playing) {
+            sf::Listener::setDirection(cam->position->x, cam->position->y, cam->position->z);
+
+            sound->setPosition(cam->position->x, cam->position->y, cam->position->z);
+            sound->play();
+        }
+    }
 }
 void update() {
     if (!creatingMaze) {
@@ -174,17 +184,8 @@ void update() {
 
         cam->update(window, deltaTime);
 
-        if (rand() % randomness == 0) {
-            int randomPos = rand() % randomSounds.size();
-            sf::Sound* sound = std::get<sf::Sound*>(randomSounds[randomPos]);
-
-            if (sound->getStatus() != sf::Sound::Playing) {
-                sf::Listener::setDirection(cam->position->x, cam->position->y, cam->position->z);
-
-                sound->setPosition(cam->position->x, cam->position->y, cam->position->z);
-                sound->play();
-            }
-        }
+        if(!cam->playingSpecialSound && !cam->running)
+            playRandomSound();
     }
 
     if (cam->endPointReached) {
@@ -215,8 +216,10 @@ void draw() {
     // maze is generated.
     else {
         color = glm::vec3(0.05f, 0.05f, 0.05f);
+        // color = glm::vec3(1, 1, 1);
         tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(cam->GetFov()), (float)width / height, 0.1f, 100.0f));
         tigl::shader->setViewMatrix(cam->getMatrix());
         mazeGen->DrawMaze();
+        cam->draw();
     }
 }

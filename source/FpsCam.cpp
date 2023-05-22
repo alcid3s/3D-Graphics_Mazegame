@@ -1,20 +1,25 @@
 #include "FpsCam.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include "tigl.h"
 #include "Tile.h"
 #include "enumType.h"
 #include "Maze/MazeGenerator.h"
+#include <ctime>
+
+#define maxRunningTime 4
+#define maxRecoverTime 4
+
+#define maxFlashlightOffTime 4
 
 #include <iostream>
-FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointReached(false), isJumping(false) {
-	srand(time(NULL));
-
+FpsCam::FpsCam(GLFWwindow* window) : fov(80.f) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwRawMouseMotionSupported()) {
 		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 	}
 	for (int i = 1; i <= 7; i++) {
-		sf::Sound* sound = new sf::Sound();;
+		sf::Sound* sound = new sf::Sound();
 		sf::SoundBuffer* buffer = new sf::SoundBuffer();
 
 		std::string file = "resource/sounds/footsteps/wav/footstep" + std::to_string(i) + ".wav";
@@ -27,6 +32,19 @@ FpsCam::FpsCam(GLFWwindow* window) : fov(80.f), shiftPressed(false), endPointRea
 		sound->setAttenuation(0.5f);
 		footsteps.push_back(std::make_tuple(*sound, *buffer));
 	}
+
+	outOfBreath = new sf::Sound();
+	sf::SoundBuffer* buffer = new sf::SoundBuffer();
+
+	std::cout << "load outOfBreath successfull: " << (buffer->loadFromFile("resource/sounds/characterSounds/outOfBreath.wav") ? "true" : "false") << "\n";
+
+	outOfBreath->setPitch(1.f);
+	outOfBreath->setVolume(40.f);
+	outOfBreath->setBuffer(*buffer);
+	outOfBreath->setMinDistance(5.f);
+	outOfBreath->setAttenuation(0.5f);
+
+	flashlight = new ObjModel("resource/models/flashlight/flashlight.obj");
 }
 
 glm::mat4 FpsCam::getMatrix() {
@@ -37,8 +55,8 @@ glm::mat4 FpsCam::getMatrix() {
 	return ret;
 }
 
-bool closeToEdge = false;
-std::vector<Tile*> neighbours;
+/*This function contains a bug. When the player keeps walking on edges the function wont
+keep track of the current position anymore and then the player can walk through walls.*/
 void FpsCam::move(float angle, float fac, float deltaTime) {
 	if (!tile)
 		return;
@@ -73,7 +91,7 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 		neighbours.clear();
 	}
 
-	// player is close to edge. Check if it crossed the tile
+	// player is close to edge. Check if it crossed the tile.
 	if (!neighbours.empty() && closeToEdge) {
 		for (int i = 0; i < neighbours.size(); i++) {
 			float nx = neighbours.at(i)->GetPosition().x;
@@ -86,7 +104,7 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 				closeToEdge = false;
 				//std::cout << "new tile: (" << nx << "," << nz << ")\n";
 			}
-			else if(neighbours.at(i)->type != Type::Floor) {
+			else if(neighbours.at(i)->type != Type::Floor && neighbours.at(i)->type != Type::Endpoint) {
 				const float removedFromEdge = 0.05;
 				if (i == Bearing::South) {
 					if (nz - edge - tolerance <= posZ) {
@@ -118,7 +136,7 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 				}
 			}
 		}
-	}
+	 }
 	position->x = movementX;
 	position->z = movementZ;
 	PlayFootstep();
@@ -147,6 +165,90 @@ void FpsCam::update(GLFWwindow* window, float deltaTime) {
 	if (isAtEndpoint(0.9f)) {
 		endPointReached = true;
 	}
+
+	MaxRunTime();
+}
+
+std::tuple<glm::mat4, glm::vec3> FpsCam::PositionFlashlight() {
+	glm::mat4 ret(1.0f);
+	glm::vec3 flashPos = -*this->position;
+
+	// set matrix on cams current position.
+	ret = glm::translate(ret, flashPos);
+
+	// rotate camera in right direction.
+	ret = glm::rotate(ret, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+	ret = glm::rotate(ret, -rotation.y + 2.7f, glm::vec3(0, 1, 0));
+
+	// place camera a bit in front of camera
+	glm::vec3 pos;
+	if (running) {
+		pos = glm::vec3(-.03f, -.1, 0.12f);
+	}
+	else {
+		pos = glm::vec3(-.03f, -.1, 0.12f);
+	}
+	ret = glm::translate(ret, pos);
+
+	// rotate camera to point in the right direction
+	ret = glm::rotate(ret, .5f, glm::vec3(0, 1, 0));
+
+	return std::make_tuple(ret, pos + flashPos);
+}
+
+void FpsCam::DrawLight(glm::vec3 position)
+{
+	position.y += 1.f;
+	position.z += .75f;
+	tigl::shader->enableLighting(true);
+	tigl::shader->setLightCount(1);
+	tigl::shader->setLightDirectional(1, true);
+	tigl::shader->setLightPosition(0, position);
+	tigl::shader->setLightAmbient(0, glm::vec3(0.1f, 0.1f, 0.15f));
+	tigl::shader->setLightDiffuse(0, glm::vec3(1.f, 1.f, 1.f));
+	tigl::shader->setLightSpecular(0, glm::vec3(0, 0, 0));
+	tigl::shader->setShinyness(1.f);
+}
+
+void FpsCam::draw() {
+
+	std::tuple<glm::mat4, glm::vec3> tuple = PositionFlashlight();
+
+	DrawLight(std::get<glm::vec3>(tuple));
+
+	// set cursor.
+	tigl::shader->setModelMatrix(std::get<glm::mat4>(tuple));
+
+	// draw flashlight
+	flashlight->draw();
+}
+
+// responsible for giving a limit on running.
+void FpsCam::MaxRunTime()
+{
+	if (wPressed && shiftPressed && !running && !recovering) {
+		timeStarted = clock();
+		running = true;
+	}
+	else if ((!wPressed || !shiftPressed) && running) {
+		running = false;
+	}
+
+	if (clock() - timeStarted > maxRunningTime * CLOCKS_PER_SEC && running && !recovering) {
+		playingSpecialSound = true;
+		outOfBreath->play();
+
+		recovering = true;
+		running = false;
+		recoverTime = clock();
+	}
+
+	if (clock() - recoverTime > maxRecoverTime * CLOCKS_PER_SEC && recovering) {
+		recovering = false;
+	}
+
+	if (playingSpecialSound && outOfBreath->getStatus() != sf::Sound::Playing)
+		playingSpecialSound = false;
 }
 
 void FpsCam::PlayFootstep() {
@@ -193,7 +295,7 @@ bool FpsCam::isAtEndpoint(float tolerance) {
 
 void FpsCam::changeFov(float deltaTime) {
 
-	if (shiftPressed) {
+	if (shiftPressed && wPressed) {
 		if (fov < 100.f) {
 			fov -= 50.f * deltaTime;
 		}
@@ -209,13 +311,12 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 	float mult = 1;
 
 	// multiplier for running
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !recovering) {
 		mult *= 3.f;
 		shiftPressed = true;
 	}
 	else
 		shiftPressed = false;
-
 
 	// left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
@@ -229,8 +330,11 @@ void FpsCam::moveCam(GLFWwindow* window, const float& speed, float deltaTime) {
 
 	// forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		wPressed = true;
 		move(90, speed * mult, deltaTime);
 	}
+	else
+		wPressed = false;
 
 	// backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
