@@ -163,6 +163,7 @@
     <ClCompile Include="source\components\CubeComponent.cpp" />
     <ClCompile Include="source\components\DrawComponent.cpp" />
     <ClCompile Include="source\components\EnemyComponent.cpp" />
+    <ClCompile Include="source\components\PlaneComponent.cpp" />
     <ClCompile Include="source\enemy\enemy.cpp" />
     <ClCompile Include="source\FpsCam.cpp" />
     <ClCompile Include="source\gameobjects\Cube.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="source\headers\components\CubeComponent.h" />
     <ClInclude Include="source\headers\components\DrawComponent.h" />
     <ClInclude Include="source\headers\components\EnemyComponent.h" />
+    <ClInclude Include="source\headers\components\PlaneComponent.h" />
     <ClInclude Include="source\headers\enemy.h" />
     <ClInclude Include="source\headers\enumType.h" />
     <ClInclude Include="source\headers\gameobjects\Cube.h" />

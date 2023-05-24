@@ -4,7 +4,8 @@
 #include "enumType.h"
 #include "headers/components/Component.h"
 #include "headers/components/CubeComponent.h"
-// #include "headers/components/Component.h"
+#include "headers/components/PlaneComponent.h"
+#include "headers/components/Component.h"
 #include "gameobjects/Cube.h"
 #include "gameobjects/Plane.h"
 #include "modelLoader/ObjModel.h"
@@ -40,7 +41,7 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	// getting the starting tile.
 	spawnTile = maze[(int)spawnPoint.z * -1][(int)spawnPoint.x * -1];
 	spawnTile->type = Type::Floor;
-	//spawnTile->setGameobject(PlaceFloor(spawnTile->GetPosition().x, spawnTile->GetPosition().z));
+	spawnTile->setGameobject(PlaceFloor(spawnTile->GetPosition().x, spawnTile->GetPosition().z));
 	std::vector<Tile*> visitedTiles;
 
 	// create maze with DFS algorithm
@@ -69,7 +70,7 @@ void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTile
 		int random = rand() % neighbours.size();
 		Tile* nextTile = neighbours[random];
 
-		//nextTile->setGameobject(PlaceFloor(nextTile->GetPosition().x, nextTile->GetPosition().z));
+		nextTile->setGameobject(PlaceFloor(nextTile->GetPosition().x, nextTile->GetPosition().z));
 		nextTile->type = Type::Floor;
 
 		visitedTiles->push_back(tile);
@@ -185,7 +186,7 @@ void MazeGenerator::FillMaze(const int& sizeX, const int& sizeZ) {
 			Tile* tile = maze[z][x];
 			if (tile->type == Type::Empty) {
 				tile->type = Type::Wall;
-				// tile->setGameobject(PlaceWall(x, z));
+				tile->setGameobject(PlaceWall(x, z));
 			}
 		}
 	}
@@ -277,14 +278,14 @@ CubeComponent* MazeGenerator::PlaceWall(const float& x, const float& z)
 	);
 }
 
-//Plane* MazeGenerator::PlaceFloor(const float& x, const float& z)
-//{
-//	return new Plane(
-//		glm::vec3(1, 0, 1),
-//		glm::vec3(x, -.5f, z),
-//		mazeTextures[0]
-//	);
-//}
+PlaneComponent* MazeGenerator::PlaceFloor(const float& x, const float& z)
+{
+	return new PlaneComponent(
+		glm::vec3(1, 0, 1),
+		glm::vec3(x, -.5f, z),
+		mazeTextures[0]
+	);
+}
 
 ObjModel* MazeGenerator::PlaceAltar()
 {

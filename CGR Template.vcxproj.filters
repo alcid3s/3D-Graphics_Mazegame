@@ -25,6 +25,21 @@
     <Filter Include="Source Files\modelloader">
       <UniqueIdentifier>{dadbb9ee-47db-4313-9cbd-02eb2e62442a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{02a2657f-0e32-4672-a575-41cb233fedc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\DrawComponent">
+      <UniqueIdentifier>{f6de30c0-f8c1-4501-a666-242d4dcd57db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\CubeComponent">
+      <UniqueIdentifier>{bd3a4213-dca8-44df-a3f9-88837cb35275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\EnemyComponent">
+      <UniqueIdentifier>{c892b157-a0b0-4f01-901a-b433d902ef21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\PlaneComponent">
+      <UniqueIdentifier>{109453f5-9318-4ef2-8431-344d04ce493e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,6 +84,21 @@
     <ClCompile Include="source\enemy\enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\components\Component.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\DrawComponent.cpp">
+      <Filter>Source Files\Components\DrawComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\CubeComponent.cpp">
+      <Filter>Source Files\Components\CubeComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\EnemyComponent.cpp">
+      <Filter>Source Files\Components\EnemyComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\PlaneComponent.cpp">
+      <Filter>Source Files\Components\PlaneComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">
@@ -112,6 +142,21 @@
     </ClInclude>
     <ClInclude Include="source\headers\enemy.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\EnemyComponent.h">
+      <Filter>Source Files\Components\EnemyComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\DrawComponent.h">
+      <Filter>Source Files\Components\DrawComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\CubeComponent.h">
+      <Filter>Source Files\Components\CubeComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\Component.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\PlaneComponent.h">
+      <Filter>Source Files\Components\PlaneComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

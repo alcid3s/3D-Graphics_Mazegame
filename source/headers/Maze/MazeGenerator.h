@@ -49,7 +49,7 @@ private:
 	void SetEnemySpawnPoint(const int& sizeX, const int& sizeZ);
 	CubeComponent* PlaceEmptyGameobject(const int& x, const int& z);
 	CubeComponent* PlaceWall(const float& x, const float& z);
-	// Plane* PlaceFloor(const float& x, const float& z);
+	PlaneComponent* PlaceFloor(const float& x, const float& z);
 	ObjModel* PlaceAltar();
 
 	// functions to walk the maze and apply prims algorithm
