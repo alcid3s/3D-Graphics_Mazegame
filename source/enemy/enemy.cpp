@@ -66,60 +66,36 @@ void Enemy::MoveRandom(float speed, float deltaTime) {
 	if (!moving) {
 		std::vector<Tile*> neighbours = GetNeighbours(tile);
 
+		std::cout << "size of neighbours before deletion: " << neighbours.size() << "\n";
+
 		neighbours.erase(std::remove_if(neighbours.begin(), neighbours.end(), [](Tile* tile) {
-			return tile->type != Type::Floor;
+			return tile->type != Type::Floor && tile->type != Type::Endpoint;
 			}), neighbours.end());
 
-		std::cout << "neighbours size: " << neighbours.size() << "\n";
-		int randomNum = rand() % neighbours.size();
-		tile = neighbours.at(randomNum);
-		moving = true;
-		tileBearing = randomNum;
+		std::cout << "size of neighbours after deletion: " << neighbours.size() << "\n";
+
+		if (!neighbours.empty()) {
+			int randomNum = rand() % neighbours.size();
+			tile = neighbours.at(randomNum);
+			moving = true;
+		}
 	}
+
 	else {
-
+		//std::cout << "bearing: " << tileBearing << ", position: (" << translate.x << ", " << translate.z << "). tile position: (" << tile->GetPosition().x << ", " << tile->GetPosition().z << ")\n";
 		// check which way the neighbour is.
-		switch (tileBearing) {
-		case Bearing::North:
-			if (translate.z > tile->GetPosition().z) {
-				translate.z -= speed * deltaTime;
-			}
-			else {
-				moving = false;
-			}
-			break;
-		case Bearing::East:
-			if (translate.x < tile->GetPosition().x) {
-				translate.x += speed * deltaTime;
-			}
-			else {
-				moving = false;
-			}
-			break;
-		case Bearing::South:
-			if (translate.z < tile->GetPosition().z) {
-				translate.z += speed * deltaTime;
-			}
-			else {
-				moving = false;
-			}
-			break;
-		case Bearing::West:
-			if (translate.x > tile->GetPosition().x) {
-				translate.x -= speed * deltaTime;
-			}
-			else {
-				moving = false;
-			}
-			break;
-		default:
-			std::cout << "error\n";
-			break;
 
+		float distance = glm::distance(tile->GetPosition(), translate);
+		if (distance < speed * deltaTime) {
+			translate = tile->GetPosition();
+			moving = false;
+		}
+		else {
+			auto direction = glm::normalize(tile->GetPosition() - translate);
+			translate += speed * deltaTime * direction;
 		}
 	}
 }
-
 void Enemy::playSound() {
 
 	int randomSound = rand() % sounds.size();

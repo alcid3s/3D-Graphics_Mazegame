@@ -198,7 +198,7 @@ void update() {
 	// all things that need updating in the maze
 	else {
 		double frameTime = glfwGetTime();
-		float deltaTime = lastFrameTime - frameTime;
+		float deltaTime = frameTime - lastFrameTime;
 		lastFrameTime = frameTime;
 
 		cam->update(window, deltaTime);
