@@ -1,7 +1,9 @@
 #include "headers/components/CubeComponent.h"
+#include <glm/gtc/matrix_transform.hpp>
 #include "Texture.h"
 
-CubeComponent::CubeComponent(glm::vec3 transform, glm::vec3 translation, Texture* texture, int textureMultiplier) : textureMultiplier(textureMultiplier)
+CubeComponent::CubeComponent(glm::vec3 transform, glm::vec3 translation, Texture* texture, int textureMultiplier)
+    : textureMultiplier(textureMultiplier), translate(translate), texture(texture)
 {
 	if (texture) {
         // achterkant z
@@ -85,5 +87,16 @@ CubeComponent::~CubeComponent()
 
 void CubeComponent::draw()
 {
+    tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.0f), translate));
+    tigl::begin(GL_QUADS);
+    if (texture) {
+        tigl::shader->enableTexture(true);
+        texture->bind();
         tigl::drawVertices(GL_QUADS, verts);
+        texture->unbind();
+        tigl::shader->enableTexture(false);
+    }
+    else
+        tigl::drawVertices(GL_QUADS, verts);
+    tigl::end();
 }

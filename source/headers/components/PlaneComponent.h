@@ -15,5 +15,7 @@ public:
 
 	virtual void draw() override;
 private:
+	glm::vec3 translate;
+	Texture* texture;
 	int textureMultiplier;
 };
