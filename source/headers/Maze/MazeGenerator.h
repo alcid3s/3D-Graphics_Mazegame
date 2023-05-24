@@ -6,6 +6,8 @@ class CubeComponent;
 class PlaneComponent;
 class ObjModel;
 
+class GameObject;
+
 class Tile;
 class Texture;
 
@@ -16,7 +18,7 @@ public:
 	MazeGenerator();
 	~MazeGenerator();
 
-	void Generate(const int& sizeOfMazeX = 10, const int& sizeOfMazeZ = 10);
+	std::list<std::shared_ptr<GameObject>> Generate(const int& sizeOfMazeX = 10, const int& sizeOfMazeZ = 10);
 	void DrawMaze();
 
 	// place where enemy will spawn.
@@ -43,7 +45,7 @@ private:
 	bool IsEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ);
 	bool NextToEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ);
 
-	void SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ);
+	void SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ, std::list<std::shared_ptr<GameObject>>*);
 
 	glm::vec3 SetSpawnPoint(const int&, const int&);
 	void SetEnemySpawnPoint(const int& sizeX, const int& sizeZ);
@@ -52,7 +54,7 @@ private:
 	PlaneComponent* PlaceFloor(const float& x, const float& z);
 	ObjModel* PlaceAltar();
 
-	// functions to walk the maze and apply prims algorithm
+	// functions to walk the maze and apply DFS algorithm
 private:
 	void DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles);
 	void FillMaze(const int& sizeX, const int& sizeZ);

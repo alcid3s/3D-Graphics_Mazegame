@@ -15,8 +15,10 @@ public:
 	~CubeComponent();
 
 	virtual void draw() override;
-private:
+
 	glm::vec3 translate;
+private:
+	
 	Texture* texture;
 	int textureMultiplier;
 };

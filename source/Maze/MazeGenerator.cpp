@@ -6,13 +6,14 @@
 #include "headers/components/CubeComponent.h"
 #include "headers/components/PlaneComponent.h"
 #include "headers/components/Component.h"
-#include "gameobjects/Cube.h"
-#include "gameobjects/Plane.h"
+#include "GameObject.h"
 #include "modelLoader/ObjModel.h"
 #include <vector>
 #include <random>
 #include <algorithm>
 #include <iostream>
+#include <list>
+#include <memory>
 
 std::vector<std::vector<Tile*>> maze;
 
@@ -28,15 +29,18 @@ MazeGenerator::~MazeGenerator() {
 
 }
 
-void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
+std::list<std::shared_ptr<GameObject>> MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	if (sizeOfMazeX < 5 || sizeOfMazeZ < 5) {
 		return;
 	}
 
 	srand(time(NULL));
 
+	// initialization of list.
+	std::list<std::shared_ptr<GameObject>> mazeObjects;
+
 	// setup maze to traverse.
-	SetupMaze(sizeOfMazeX, sizeOfMazeZ);
+	SetupMaze(sizeOfMazeX, sizeOfMazeZ, &mazeObjects);
 
 	// getting the starting tile.
 	spawnTile = maze[(int)spawnPoint.z * -1][(int)spawnPoint.x * -1];
@@ -50,18 +54,31 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	// create a random endpoint somewhere not close to the spawnPoint.
 	endTile = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
 	endTile->type = Type::Endpoint;
-	endTile->setModel(altar);
+	endTile->setModel(this->altar);
 	endPoint = endTile->GetPosition();
 
 	// Fill empty spots with Walls.
-	// FillMaze(sizeOfMazeX, sizeOfMazeZ);
+	FillMaze(sizeOfMazeX, sizeOfMazeZ);
 
 	// set enemy spawnpoint (next to altar)
 	SetEnemySpawnPoint(sizeOfMazeX, sizeOfMazeZ);
+
+	// add all tiles for maze to gameobjects
+	for (auto& tile : visitedTiles) {
+		auto obj = std::make_shared<GameObject>();
+		if (tile->type == Type::Floor || tile->type == Type::Endpoint) {
+			obj->addComponent(std::make_shared<PlaneComponent>(glm::vec3(1, 0, 1), tile->GetPosition(), mazeTextures[0]));
+		}
+		else {
+			obj->addComponent(std::make_shared<CubeComponent>(glm::vec3(1, 1, 1), tile->GetPosition(), mazeTextures[1]));
+		}
+		mazeObjects.push_back(obj);
+	}
+
+	return mazeObjects;
 }
 
 void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {
-	// std::cout << "checking tile: (" << tile->GetPosition().x << "," << tile->GetPosition().z << "). ";
 	tile->visited = true;
 
 	std::vector<Tile*> neighbours = GetUnvisitedNeighbours(tile);
@@ -192,7 +209,7 @@ void MazeGenerator::FillMaze(const int& sizeX, const int& sizeZ) {
 	}
 }
 
-void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
+void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ, std::list<std::shared_ptr<GameObject>>* mazeObjects) {
 	spawnPoint = SetSpawnPoint(sizeOfMazeX, sizeOfMazeZ);
 	std::cout << "Spawnpoint: (" << -spawnPoint.x << "," << -spawnPoint.z << ")\n";
 
@@ -204,10 +221,15 @@ void MazeGenerator::SetupMaze(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 			// check if it's an edge. If so, place Wall.
 			if (IsEdge(x, z, sizeOfMazeX, sizeOfMazeZ)) {
 				file.push_back(new Tile(PlaceWall((float)x, (float)z), Type::Edge, glm::vec3(x, 0, z), true));
+
+				auto obj = std::make_shared<GameObject>();
+				obj->translate = glm::vec3(x, -.5f, z);
+				obj->addComponent(std::make_shared<CubeComponent>());
+				mazeObjects->push_back(obj);
 			}
 			// not an edge
 			else {
-				amountOfTiles++;
+				this->amountOfTiles++;
 				file.push_back(new Tile(PlaceEmptyGameobject(x, z), Type::Empty, glm::vec3(x, 0, z), false));
 			}
 		}

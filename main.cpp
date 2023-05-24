@@ -12,6 +12,7 @@
 #include <iostream>
 #include "SFML/Audio.hpp"
 #include "enemy.h"
+#include "Gameobject.h"
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -28,6 +29,9 @@ Enemy* enemy;
 // sound controls
 sf::Music backgroundAmbience;
 
+// game components
+std::vector<std::shared_ptr<GameObject>> gameobjects;
+
 // randomsounds the player could make at any moment.
 std::vector<std::tuple<sf::Sound*, sf::SoundBuffer*>> randomSounds;
 const int randomness = 1000;
@@ -35,7 +39,7 @@ const int randomness = 1000;
 int width = 1400, height = 800;
 double lastFrameTime = 0;
 
-int mazeSizeX = 20, mazeSizeZ = 20;
+int mazeSizeX = 40, mazeSizeZ = 40;
 
 bool creatingMaze = false;
 
@@ -108,7 +112,11 @@ void init() {
 void generateMaze(int width, int height) {
 
 	// generate a maze
-	mazeGen->Generate(width, height);
+	std::list<std::shared_ptr<GameObject>> mazeObjects = mazeGen->Generate(width, height);
+
+	for (auto& g : mazeObjects) {
+		gameobjects.push_back(std::make_shared<GameObject>(g));
+	}
 
 	// set camera on spawnpoint
 	cam->position = &mazeGen->spawnPoint;
@@ -240,12 +248,17 @@ void draw() {
 	// maze is generated.
 	else {
 		color = glm::vec3(0.05f, 0.05f, 0.05f);
-		// color = glm::vec3(1, 1, 1);
+		color = glm::vec3(1, 1, 1);
 		tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(cam->GetFov()), (float)width / height, 0.1f, 100.0f));
 		tigl::shader->setViewMatrix(cam->getMatrix());
-		mazeGen->DrawMaze();
-		cam->draw();
+
 		// enableFog(true);
+		
+		for (auto& g : gameobjects) {
+			g->draw();
+		}
+		cam->draw();
+
 		enemy->draw();
 	}
 }

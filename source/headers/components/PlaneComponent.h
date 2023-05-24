@@ -14,6 +14,8 @@ public:
 	~PlaneComponent();
 
 	virtual void draw() override;
+
+	inline glm::vec3 getTranslate() const { return translate; }
 private:
 	glm::vec3 translate;
 	Texture* texture;

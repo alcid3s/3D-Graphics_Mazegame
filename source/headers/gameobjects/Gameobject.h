@@ -1,28 +1,49 @@
 #pragma once
 #include <glm/gtc/matrix_transform.hpp>
+#include <list>
+#include <memory>
 
-class Texture;
-enum Type;
+class Component;
+class DrawComponent;
 
-class Gameobject {
+class GameObject {
+	std::shared_ptr<DrawComponent> drawComponent;
+	std::list<std::shared_ptr<Component>> components;
+
 public:
-	Gameobject(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle);
-	~Gameobject();
+	GameObject();
+	~GameObject();
 
-	// abstract functions
-	virtual void update() = 0;
-	virtual void draw() = 0;
+	void addComponent(std::shared_ptr<Component> component);
+	std::list<std::shared_ptr<Component>> getComponents();
+	void update(float elapsedTime);
+	void draw(const glm::mat4 & = glm::mat4(1.0f));
 
-	inline glm::vec3 GetTransform() const { return transform; }
-	inline glm::vec3 GetRotation() const { return rotate; }
-	inline glm::vec3 GetTranslate() const { return translate; }
-protected:
-	glm::vec3 transform;
-	glm::vec3 rotate;
-	glm::vec3 translate;
-	float angle;
+	template<class T>
+	std::shared_ptr<T> getComponent()
+	{
+		for (auto c : components)
+		{
+			std::shared_ptr<T> t = dynamic_pointer_cast<T>(c);
+			if (t)
+			{
+				return t;
+			}
+		}
+		return nullptr;
+	}
 
-	Texture* texture;
+	template<class T>
+	void removeComponent()
+	{
+		components.remove_if([](Component* c)
+			{
+				T* t = dynamic_cast<T*>(c);
+				return t != nullptr;
+			});
+	}
 
-	int textureMulti;
+	glm::vec3 transform = glm::vec3(0, 0, 0);
+	glm::vec3 rotate = glm::vec3(0, 0, 0);
+	glm::vec3 translate = glm::vec3(1, 1, 1);
 };
