@@ -45,13 +45,16 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	DepthFirstSearch(spawnTile, &visitedTiles);
 
 	// create a random endpoint somewhere not close to the spawnPoint.
-	Tile* endPointTile = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
-	endPointTile->type = Type::Endpoint;
-	endPointTile->setModel(altar);
-	endPoint = endPointTile->GetPosition();
+	endTile = visitedTiles.at(((visitedTiles.size() - 1) / 4) * 3);
+	endTile->type = Type::Endpoint;
+	endTile->setModel(altar);
+	endPoint = endTile->GetPosition();
 
 	// Fill empty spots with Walls.
-	FillMaze(sizeOfMazeX, sizeOfMazeZ);
+	// FillMaze(sizeOfMazeX, sizeOfMazeZ);
+
+	// set enemy spawnpoint (next to altar)
+	SetEnemySpawnPoint(sizeOfMazeX, sizeOfMazeZ);
 }
 
 void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTiles) {
@@ -222,6 +225,17 @@ glm::vec3 MazeGenerator::SetSpawnPoint(const int& sizeX, const int& sizeZ) {
 	sPoint.x *= -1;
 	sPoint.z *= -1;
 	return sPoint;
+}
+
+void MazeGenerator::SetEnemySpawnPoint(const int &sizeX, const int &sizeZ) {
+	std::vector<Tile*> neighbours = GetNeighbours(endTile);
+
+	for (auto& neighbour : neighbours) {
+		if (neighbour->type == Type::Floor) {
+			this->enemySpawnTile = neighbour;
+			break;
+		}
+	}
 }
 
 bool MazeGenerator::NextToEdge(const int& x, const int& z, const int& sizeX, const int& sizeZ) {

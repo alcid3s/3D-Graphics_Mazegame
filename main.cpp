@@ -11,6 +11,7 @@
 #include <tuple>
 #include <iostream>
 #include "SFML/Audio.hpp"
+#include "enemy.h"
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -21,6 +22,8 @@ GLFWwindow* window;
 FpsCam* cam;
 MazeGenerator* mazeGen;
 LoadingScreen* loadingScreen;
+
+Enemy* enemy;
 
 // sound controls
 sf::Music backgroundAmbience;
@@ -49,21 +52,21 @@ void playRandomSound();
 
 int main(void)
 {
-    if (!glfwInit())
-        throw "Could not initialize glwf";
-    window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        throw "Could not initialize glwf";
-    }
-    glfwMakeContextCurrent(window);
+	if (!glfwInit())
+		throw "Could not initialize glwf";
+	window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		throw "Could not initialize glwf";
+	}
+	glfwMakeContextCurrent(window);
 
-    tigl::init();
+	tigl::init();
 
-    init();
+	init();
 
-    soundsSetup();
+	soundsSetup();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -74,168 +77,175 @@ int main(void)
 	}
 
 	glfwTerminate();
-    return 0;
+	return 0;
 }
 
 void init() {
-    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-    {
-        if (key == GLFW_KEY_ESCAPE)
-            glfwSetWindowShouldClose(window, true);
-    });
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		{
+			if (key == GLFW_KEY_ESCAPE)
+				glfwSetWindowShouldClose(window, true);
+		});
 
-    glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
-        {
-            ::width = width;
-            ::height = height;
-        });
+	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
+		{
+			::width = width;
+			::height = height;
+		});
 
-    loadingScreen = new LoadingScreen();
-    mazeGen = new MazeGenerator();
-    cam = new FpsCam(window);
+	loadingScreen = new LoadingScreen();
+	mazeGen = new MazeGenerator();
+	cam = new FpsCam(window);
 
-    backgroundAmbience.openFromFile("resource/sounds/ambience.wav");
-    backgroundAmbience.setVolume(5.f);
-    backgroundAmbience.setPitch(1.f);
+	enemy = new Enemy("resource/models/enemy/enemy.obj");
+
+	backgroundAmbience.openFromFile("resource/sounds/ambience.wav");
+	backgroundAmbience.setVolume(5.f);
+	backgroundAmbience.setPitch(1.f);
 }
 
 #include "Tile.h"
 void generateMaze(int width, int height) {
 
-    // generate a maze
-    mazeGen->Generate(width, height);
+	// generate a maze
+	mazeGen->Generate(width, height);
 
-    // set camera on spawnpoint
-    cam->position = &mazeGen->spawnPoint;
+	// set camera on spawnpoint
+	cam->position = &mazeGen->spawnPoint;
 
-    // give the endPoint to the camera. When cam is at endPoint game is won.
-    cam->setEndpoint(mazeGen->endPoint);
+	// give the endPoint to the camera. When cam is at endPoint game is won.
+	cam->setEndpoint(mazeGen->endPoint);
 
-    // give cam access to spawnTile
-    cam->setSpawnTile(mazeGen->spawnTile);
-    std::cout << "setSpawnTile: (" << mazeGen->spawnTile->GetPosition().x << "," << mazeGen->spawnTile->GetPosition().z << ")\n";
+	// give cam access to spawnTile
+	cam->setSpawnTile(mazeGen->spawnTile);
+	std::cout << "setSpawnTile: (" << mazeGen->spawnTile->GetPosition().x << "," << mazeGen->spawnTile->GetPosition().z << ")\n";
 
-    // atomic boolean set to true
-    mazeGenerated = true;
+	// atomic boolean set to true
+	mazeGenerated = true;
 }
 
 void soundsSetup() {
-    for (int i = 1; i <= 2; i++) {
-        sf::Sound* sound = new sf::Sound();;
-        sf::SoundBuffer* buffer = new sf::SoundBuffer();
+	for (int i = 1; i <= 2; i++) {
+		sf::Sound* sound = new sf::Sound();;
+		sf::SoundBuffer* buffer = new sf::SoundBuffer();
 
-        std::string file = "resource/sounds/characterSounds/randomSound" + std::to_string(i) + ".wav";
+		std::string file = "resource/sounds/characterSounds/randomSound" + std::to_string(i) + ".wav";
 
-        std::cout << "load randomSound successfull: " << (buffer->loadFromFile(file) ? "true" : "false") << "\n";
-        sound->setPitch(1.f);
-        sound->setVolume(100.f);
-        sound->setBuffer(*buffer);
-        sound->setMinDistance(5.f);
-        sound->setAttenuation(0.5f);
-        randomSounds.push_back(std::make_tuple(sound, buffer));
-    }
+		std::cout << "load randomSound successfull: " << (buffer->loadFromFile(file) ? "true" : "false") << "\n";
+		sound->setPitch(1.f);
+		sound->setVolume(100.f);
+		sound->setBuffer(*buffer);
+		sound->setMinDistance(5.f);
+		sound->setAttenuation(0.5f);
+		randomSounds.push_back(std::make_tuple(sound, buffer));
+	}
 }
 
 void playRandomSound() {
-    if (rand() % randomness == 0) {
-        int randomPos = rand() % randomSounds.size();
-        sf::Sound* sound = std::get<sf::Sound*>(randomSounds[randomPos]);
+	if (rand() % randomness == 0) {
+		int randomPos = rand() % randomSounds.size();
+		sf::Sound* sound = std::get<sf::Sound*>(randomSounds[randomPos]);
 
-        if (sound->getStatus() != sf::Sound::Playing) {
-            sf::Listener::setDirection(cam->position->x, cam->position->y, cam->position->z);
+		if (sound->getStatus() != sf::Sound::Playing) {
+			sf::Listener::setDirection(cam->position->x, cam->position->y, cam->position->z);
 
-            sound->setPosition(cam->position->x, cam->position->y, cam->position->z);
-            sound->play();
-        }
-    }
+			sound->setPosition(cam->position->x, cam->position->y, cam->position->z);
+			sound->play();
+		}
+	}
 }
 
 void enableFog(bool flag) {
-    if (flag) {
-        tigl::shader->enableFog(true);
-        tigl::shader->setFogColor(glm::vec3(.05f, .05f, .05f));
-        tigl::shader->setFogLinear(1, 4);
-        tigl::shader->setFogExp(1.5f);
-    }
-    else {
-        tigl::shader->enableFog(false);
-    }
+	if (flag) {
+		tigl::shader->enableFog(true);
+		tigl::shader->setFogColor(glm::vec3(.05f, .05f, .05f));
+		tigl::shader->setFogLinear(1, 4);
+		tigl::shader->setFogExp(1.5f);
+	}
+	else {
+		tigl::shader->enableFog(false);
+	}
 }
 
 void update() {
-    if (!creatingMaze) {
-        creatingMaze = true;
+	if (!creatingMaze) {
+		creatingMaze = true;
 
-        // setting to false if it was true
-        mazeGenerated = false;
+		// setting to false if it was true
+		mazeGenerated = false;
 
-        // create thread to create maze. Because this can take a while depending on the size.
-        std::thread mazeThread(generateMaze, mazeSizeX, mazeSizeZ);
+		// create thread to create maze. Because this can take a while depending on the size.
+		std::thread mazeThread(generateMaze, mazeSizeX, mazeSizeZ);
 
-        // detach so mainthread can run normally.
-        mazeThread.detach();
+		// detach so mainthread can run normally.
+		mazeThread.detach();
 
-        // play music
-        backgroundAmbience.play();
-    }
+		// play music
+		backgroundAmbience.play();
+	}
 
-    if (!mazeGenerated) {
+	if (!mazeGenerated) {
 
-    // setting model matrix.
-    tigl::shader->setModelMatrix(glm::mat4(1.0f));
+		// setting model matrix.
+		tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
-    // to don't get a weird effect and all faces drawn to the screen.
-    glEnable(GL_DEPTH_TEST);
+		// to don't get a weird effect and all faces drawn to the screen.
+		glEnable(GL_DEPTH_TEST);
 
-        loadingScreen->update();
-    }
+		loadingScreen->update();
+	}
 
-    // all things that need updating in the maze must be here
-    else {
-        double frameTime = glfwGetTime();
-        float deltaTime = lastFrameTime - frameTime;
-        lastFrameTime = frameTime;
+	// all things that need updating in the maze
+	else {
+		double frameTime = glfwGetTime();
+		float deltaTime = frameTime - lastFrameTime;
+		lastFrameTime = frameTime;
 
-        cam->update(window, deltaTime);
+		cam->update(window, deltaTime);
 
-        if(!cam->playingSpecialSound && !cam->running)
-            playRandomSound();
-    }
+		if (!cam->playingSpecialSound && !cam->running)
+			playRandomSound();
+		
+		enemy->SetSpawnPoint(mazeGen->enemySpawnTile);
 
-    if (cam->endPointReached) {
-        //exit(0);
-    }
+		enemy->update(deltaTime);
+
+		if (cam->endPointReached) {
+			//exit(0);
+		}
+	}
 }
 
 glm::vec3 color = glm::vec3(0.05f, 0.05f, 0.05f);
 void draw() {
-    glViewport(0, 0, width, height);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, width, height);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glClearColor(color.r, color.g, color.b, 1.0f);
+	glClearColor(color.r, color.g, color.b, 1.0f);
 
-    int viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    // while the maze generation thread is busy
-    if (!mazeGenerated) {
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	// while the maze generation thread is busy
+	if (!mazeGenerated) {
 
-        // set projection matrix. Influences Fov.
-        tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(80.0f), (float)width / height, 0.1f, 100.0f));
+		// set projection matrix. Influences Fov.
+		tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(80.0f), (float)width / height, 0.1f, 100.0f));
 
-        color = glm::vec3(0.f, 0.f, 0.f);
-        tigl::shader->setViewMatrix(loadingScreen->GetMatrix());
-        loadingScreen->draw();
-        enableFog(false);
-    }
+		color = glm::vec3(0.f, 0.f, 0.f);
+		tigl::shader->setViewMatrix(loadingScreen->GetMatrix());
+		loadingScreen->draw();
+		enableFog(false);
+	}
 
-    // maze is generated.
-    else {
-        color = glm::vec3(0.05f, 0.05f, 0.05f);
-        // color = glm::vec3(1, 1, 1);
-        tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(cam->GetFov()), (float)width / height, 0.1f, 100.0f));
-        tigl::shader->setViewMatrix(cam->getMatrix());
-        mazeGen->DrawMaze();
-        cam->draw();
-        enableFog(true);
-    }
+	// maze is generated.
+	else {
+		color = glm::vec3(0.05f, 0.05f, 0.05f);
+		// color = glm::vec3(1, 1, 1);
+		tigl::shader->setProjectionMatrix(glm::perspective(glm::radians(cam->GetFov()), (float)width / height, 0.1f, 100.0f));
+		tigl::shader->setViewMatrix(cam->getMatrix());
+		mazeGen->DrawMaze();
+		cam->draw();
+		// enableFog(true);
+		enemy->draw();
+	}
 }

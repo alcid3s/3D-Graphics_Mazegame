@@ -67,8 +67,8 @@ void FpsCam::move(float angle, float fac, float deltaTime) {
 	float x = tile->GetPosition().x;
 	float z = tile->GetPosition().z;
 
-	float movementX = position->x + ((float)cos(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
-	float movementZ = position->z + ((float)sin(rotation.y + glm::radians(angle)) * -fac) * deltaTime;
+	float movementX = position->x + ((float)cos(rotation.y + glm::radians(angle)) * fac) * deltaTime;
+	float movementZ = position->z + ((float)sin(rotation.y + glm::radians(angle)) * fac) * deltaTime;
 
 	float posX = -position->x;
 	float posZ = -position->z;
@@ -297,12 +297,12 @@ void FpsCam::changeFov(float deltaTime) {
 
 	if (shiftPressed && wPressed) {
 		if (fov < 100.f) {
-			fov -= 50.f * deltaTime;
+			fov += 50.f * deltaTime;
 		}
 	}
 	else {
 		if (fov > 80.f) {
-			fov += 50.f * deltaTime;
+			fov -= 50.f * deltaTime;
 		}
 	}
 }

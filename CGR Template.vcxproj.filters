@@ -66,6 +66,9 @@
     <ClCompile Include="source\modelLoader\ObjModel.cpp">
       <Filter>Source Files\modelloader</Filter>
     </ClCompile>
+    <ClCompile Include="source\enemy\enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">
@@ -105,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\modelLoader\ObjModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
