@@ -91,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\headers\components;$(SolutionDir)source\components;$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\headers\components;$(SolutionDir)source\components;$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +159,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="source\components\Component.cpp" />
+    <ClCompile Include="source\components\CubeComponent.cpp" />
+    <ClCompile Include="source\components\DrawComponent.cpp" />
+    <ClCompile Include="source\components\EnemyComponent.cpp" />
     <ClCompile Include="source\enemy\enemy.cpp" />
     <ClCompile Include="source\FpsCam.cpp" />
     <ClCompile Include="source\gameobjects\Cube.cpp" />
@@ -175,6 +179,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FpsCam.h" />
+    <ClInclude Include="source\headers\components\Component.h" />
+    <ClInclude Include="source\headers\components\CubeComponent.h" />
+    <ClInclude Include="source\headers\components\DrawComponent.h" />
+    <ClInclude Include="source\headers\components\EnemyComponent.h" />
     <ClInclude Include="source\headers\enemy.h" />
     <ClInclude Include="source\headers\enumType.h" />
     <ClInclude Include="source\headers\gameobjects\Cube.h" />

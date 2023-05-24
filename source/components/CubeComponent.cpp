@@ -85,6 +85,5 @@ CubeComponent::~CubeComponent()
 
 void CubeComponent::draw()
 {
-    if(!verts.empty())
         tigl::drawVertices(GL_QUADS, verts);
 }

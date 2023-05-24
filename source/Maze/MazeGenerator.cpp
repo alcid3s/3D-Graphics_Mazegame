@@ -2,7 +2,9 @@
 #include "Tile.h"
 #include "Texture.h"
 #include "enumType.h"
-#include "gameobjects/Gameobject.h"
+#include "headers/components/Component.h"
+#include "headers/components/CubeComponent.h"
+// #include "headers/components/Component.h"
 #include "gameobjects/Cube.h"
 #include "gameobjects/Plane.h"
 #include "modelLoader/ObjModel.h"
@@ -38,7 +40,7 @@ void MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ) {
 	// getting the starting tile.
 	spawnTile = maze[(int)spawnPoint.z * -1][(int)spawnPoint.x * -1];
 	spawnTile->type = Type::Floor;
-	spawnTile->setGameobject(PlaceFloor(spawnTile->GetPosition().x, spawnTile->GetPosition().z));
+	//spawnTile->setGameobject(PlaceFloor(spawnTile->GetPosition().x, spawnTile->GetPosition().z));
 	std::vector<Tile*> visitedTiles;
 
 	// create maze with DFS algorithm
@@ -67,7 +69,7 @@ void MazeGenerator::DepthFirstSearch(Tile* tile, std::vector<Tile*>* visitedTile
 		int random = rand() % neighbours.size();
 		Tile* nextTile = neighbours[random];
 
-		nextTile->setGameobject(PlaceFloor(nextTile->GetPosition().x, nextTile->GetPosition().z));
+		//nextTile->setGameobject(PlaceFloor(nextTile->GetPosition().x, nextTile->GetPosition().z));
 		nextTile->type = Type::Floor;
 
 		visitedTiles->push_back(tile);
@@ -182,8 +184,8 @@ void MazeGenerator::FillMaze(const int& sizeX, const int& sizeZ) {
 		{
 			Tile* tile = maze[z][x];
 			if (tile->type == Type::Empty) {
-				tile->type == Type::Wall;
-				tile->setGameobject(PlaceWall(x, z));
+				tile->type = Type::Wall;
+				// tile->setGameobject(PlaceWall(x, z));
 			}
 		}
 	}
@@ -258,37 +260,31 @@ bool MazeGenerator::IsEdge(const int& x, const int& z, const int& sizeX, const i
 	return (x == sizeX || x == 0 || z == 0 || z == sizeZ);
 }
 
-Cube* MazeGenerator::PlaceEmptyGameobject(const int& x, const int& z) {
-	return new Cube(
-		glm::vec3(0.f, 0.f, 0.f),
+CubeComponent* MazeGenerator::PlaceEmptyGameobject(const int& x, const int& z) {
+	return new CubeComponent(
 		glm::vec3(0.f, 0.f, 0.f),
 		glm::vec3(x, -.5f, z),
-		nullptr,
-		1
+		nullptr
 	);
 }
 
-Cube* MazeGenerator::PlaceWall(const float& x, const float& z)
+CubeComponent* MazeGenerator::PlaceWall(const float& x, const float& z)
 {
-	return new Cube(
+	return new CubeComponent(
 		glm::vec3(1, 1, 1),
-		glm::vec3(0.f, 0.f, 0.f),
 		glm::vec3(x, 0.f, z),
-		mazeTextures[1],
-		1
+		mazeTextures[1]
 	);
 }
 
-Plane* MazeGenerator::PlaceFloor(const float& x, const float& z)
-{
-	return new Plane(
-		glm::vec3(1, 0, 1),
-		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(x, -.5f, z),
-		mazeTextures[0],
-		1
-	);
-}
+//Plane* MazeGenerator::PlaceFloor(const float& x, const float& z)
+//{
+//	return new Plane(
+//		glm::vec3(1, 0, 1),
+//		glm::vec3(x, -.5f, z),
+//		mazeTextures[0]
+//	);
+//}
 
 ObjModel* MazeGenerator::PlaceAltar()
 {

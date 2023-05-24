@@ -1,17 +1,17 @@
 #pragma once
 #include <glm/gtc/matrix_transform.hpp>
 enum Type;
-class Gameobject;
+class DrawComponent;
 class ObjModel;
 
 class Tile {
 public:
-	Tile(Gameobject *, Type type, glm::vec3 position, bool visited);
+	Tile(DrawComponent *, Type type, glm::vec3 position, bool visited);
 	~Tile();
 
 	void draw();
 
-	void setGameobject(Gameobject*);
+	void setGameobject(DrawComponent*);
 	void setModel(ObjModel*);
 
 	bool visited;
@@ -21,5 +21,5 @@ private:
 	ObjModel* model = nullptr;
 	glm::vec3 position;
 
-	Gameobject* gameobject;
+	DrawComponent* drawComponent;
 };
