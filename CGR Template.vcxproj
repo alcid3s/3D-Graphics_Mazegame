@@ -91,12 +91,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\headers\components;$(SolutionDir)source\components;$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SFML\lib;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)source\components;$(SolutionDir)lib\SFML\lib;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -108,12 +108,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\headers\components;$(SolutionDir)source\components;$(SolutionDir)source\enemy;$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SFML\lib;$(SolutionDir)src;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)source\components;$(SolutionDir)lib\SFML\lib;$(SolutionDir)src;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -159,12 +159,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="source\components\Component.cpp" />
+    <ClCompile Include="source\components\CubeComponent.cpp" />
+    <ClCompile Include="source\components\DrawComponent.cpp" />
     <ClCompile Include="source\enemy\enemy.cpp" />
     <ClCompile Include="source\FpsCam.cpp" />
     <ClCompile Include="source\gameobjects\Cube.cpp" />
     <ClCompile Include="source\gameobjects\EmptyGameobject.cpp" />
-    <ClCompile Include="source\gameobjects\Gameobject.cpp" />
+    <ClCompile Include="source\gameobjects\GameObject.cpp" />
     <ClCompile Include="source\gameobjects\Plane.cpp" />
+    <ClCompile Include="source\headers\components\PlaneComponent.cpp" />
     <ClCompile Include="source\LoadingScreen.cpp" />
     <ClCompile Include="source\Maze\MazeGenerator.cpp" />
     <ClCompile Include="source\modelLoader\ObjModel.cpp" />
@@ -175,6 +179,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FpsCam.h" />
+    <ClInclude Include="source\components\EnemyComponent.cpp" />
+    <ClInclude Include="source\headers\components\Component.h" />
+    <ClInclude Include="source\headers\components\CubeComponent.h" />
+    <ClInclude Include="source\headers\components\DrawComponent.h" />
+    <ClInclude Include="source\headers\components\EnemyComponent.h" />
     <ClInclude Include="source\headers\enemy.h" />
     <ClInclude Include="source\headers\enumType.h" />
     <ClInclude Include="source\headers\gameobjects\Cube.h" />

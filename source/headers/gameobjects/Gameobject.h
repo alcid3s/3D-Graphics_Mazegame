@@ -1,18 +1,27 @@
 #pragma once
 #include <glm/gtc/matrix_transform.hpp>
+#include <memory>
+#include <vector>
 
+class Component;
 class Texture;
 enum Type;
 
-class Gameobject {
+class GameObject {
+	std::vector<std::shared_ptr<Component>> components;
+
 public:
-	Gameobject(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle);
-	~Gameobject();
+	GameObject(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle);
+	~GameObject();
 
 	// abstract functions
 	virtual void update() = 0;
 	virtual void draw() = 0;
 
+	void addComponent(std::shared_ptr<Component> component);
+	std::vector<std::shared_ptr<Component>> getComponents();
+
+	// Getter functions
 	inline glm::vec3 GetTransform() const { return transform; }
 	inline glm::vec3 GetRotation() const { return rotate; }
 	inline glm::vec3 GetTranslate() const { return translate; }

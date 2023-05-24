@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -25,6 +25,18 @@
     <Filter Include="Source Files\modelloader">
       <UniqueIdentifier>{dadbb9ee-47db-4313-9cbd-02eb2e62442a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\components">
+      <UniqueIdentifier>{de224b1d-9de6-4fc0-ad41-34f55a60eea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\EnemyComponent">
+      <UniqueIdentifier>{3401430b-2062-4e9f-8348-2b3445c88140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\DrawComponent">
+      <UniqueIdentifier>{71445b27-a162-4cce-a729-1adecad92ecb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\CubeComponent">
+      <UniqueIdentifier>{419c5cb9-8593-4fb9-b98e-ce9d5b3fb749}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,14 +60,11 @@
     <ClCompile Include="source\Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameobjects\Gameobject.cpp">
+    <ClCompile Include="source\gameobjects\GameObject.cpp">
       <Filter>Source Files\gameobjects</Filter>
     </ClCompile>
     <ClCompile Include="source\gameobjects\Cube.cpp">
       <Filter>Source Files\gameobjects</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gameobjects\EmptyGameobject.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\LoadingScreen.cpp">
       <Filter>Source Files</Filter>
@@ -68,6 +77,19 @@
     </ClCompile>
     <ClCompile Include="source\enemy\enemy.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\Component.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameobjects\EmptyGameobject.cpp">
+      <Filter>Source Files\gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\DrawComponent.cpp">
+      <Filter>Source Files\components\DrawComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="source\components\CubeComponent.cpp">
+      <Filter>Source Files\components\CubeComponent</Filter>
+    </ClCompile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +134,21 @@
     </ClInclude>
     <ClInclude Include="source\headers\enemy.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\Component.h">
+      <Filter>Source Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\components\EnemyComponent.cpp">
+      <Filter>Source Files\components\EnemyComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\EnemyComponent.h">
+      <Filter>Source Files\components\EnemyComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\DrawComponent.h">
+      <Filter>Source Files\components\DrawComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\components\CubeComponent.h">
+      <Filter>Source Files\components\CubeComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
