@@ -159,7 +159,7 @@ ObjModel::ObjModel(const std::string& fileName)
 			currentGroup = new ObjGroup();
 			currentGroup->materialIndex = -1;
 
-			for (size_t i = 0; i < materials.size(); i++)
+			for (int i = 0; i < materials.size(); i++)
 			{
 				MaterialInfo* info = materials[i];
 				if (info->name == params[1])
@@ -230,7 +230,7 @@ void ObjModel::loadMaterialFile(const std::string& fileName, const std::string& 
 		return;
 	}
 
-	MaterialInfo* currentMaterial = NULL;
+	MaterialInfo* currentMaterial = nullptr;
 
 	while (!pFile.eof())
 	{

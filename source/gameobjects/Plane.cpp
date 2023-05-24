@@ -6,7 +6,7 @@
 using tigl::Vertex;
 
 Plane::Plane(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle)
-	: Gameobject(transf, rot, transl, tex, textMulti, angle)
+	: GameObject(transf, rot, transl, tex, textMulti, angle)
 {
 
 }

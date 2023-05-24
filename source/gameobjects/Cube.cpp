@@ -6,17 +6,13 @@
 using tigl::Vertex;
 
 Cube::Cube(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture*  tex, int textMulti, float angle) 
-    : Gameobject(transf, rot, transl, tex, textMulti, angle)
+    : GameObject(transf, rot, transl, tex, textMulti, angle)
 {
 
 }
 
 Cube::~Cube()
 {
-}
-
-void Cube::update() {
-
 }
 
 void Cube::draw() {

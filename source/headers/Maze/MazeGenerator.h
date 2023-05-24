@@ -2,8 +2,8 @@
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 
-class Cube;
-class Plane;
+class CubeComponent;
+// class PlaneComponent;
 class ObjModel;
 
 class Tile;
@@ -29,7 +29,6 @@ public:
 	// place where altar will stand
 	Tile* endTile;
 	glm::vec3 endPoint = glm::vec3(2, 0, 2);
-	
 
 	// private variables
 private:
@@ -47,9 +46,9 @@ private:
 
 	glm::vec3 SetSpawnPoint(const int&, const int&);
 	void SetEnemySpawnPoint(const int& sizeX, const int& sizeZ);
-	Cube* PlaceEmptyGameobject(const int& x, const int& z);
-	Cube* PlaceWall(const float& x, const float& z);
-	Plane* PlaceFloor(const float& x, const float& z);
+	CubeComponent* PlaceEmptyGameobject(const int& x, const int& z);
+	CubeComponent* PlaceWall(const float& x, const float& z);
+	// PlaneComponent* PlaceFloor(const float& x, const float& z);
 	ObjModel* PlaceAltar();
 
 	// functions to walk the maze and apply prims algorithm

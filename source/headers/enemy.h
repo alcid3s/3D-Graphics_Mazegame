@@ -33,7 +33,6 @@ private:
 
 	// currently in moving transition
 	bool moving = false;
-	int tileBearing = Bearing::BearingNone;
 
 private:
 	void playSound();

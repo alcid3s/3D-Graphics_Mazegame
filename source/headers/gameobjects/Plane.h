@@ -5,7 +5,7 @@
 enum Type;
 class Texture;
 
-class Plane : public Gameobject {
+class Plane : public GameObject {
 public:
 	Plane(glm::vec3 transf, glm::vec3 rot, glm::vec3 transl, Texture* tex, int textMulti, float angle = 0);
 	~Plane();

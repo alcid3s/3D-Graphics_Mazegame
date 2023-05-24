@@ -12,6 +12,7 @@
 #include <iostream>
 #include "SFML/Audio.hpp"
 #include "enemy.h"
+#include "Tile.h"
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -104,7 +105,6 @@ void init() {
 	backgroundAmbience.setPitch(1.f);
 }
 
-#include "Tile.h"
 void generateMaze(int width, int height) {
 
 	// generate a maze
