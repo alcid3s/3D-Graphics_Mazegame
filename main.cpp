@@ -51,7 +51,7 @@ GuiManager* guiManager;
 double lastFrameTime = 0;
 
 // bool for debug purposes. Start with or without GUI.
-const bool activateGui = false;
+constexpr bool activateGui = false;
 
 // screen size
 const int screenX = 1400, screenY = 800;
@@ -133,6 +133,7 @@ void init()
 	player->addComponent(std::make_shared<AudioComponent>(AudioType::AudioPlayer));
 	player->addComponent(std::make_shared<FlashlightComponent>());
 	player->addComponent(std::make_shared<HUDComponent>());
+	player->addComponent(std::make_shared<ParticleComponent>());
 
 	// give HUD access to the fov parameter
 	player->getComponent<HUDComponent>()->setFov(&player->getComponent<CameraComponent>()->fov);
@@ -231,7 +232,7 @@ void update()
 		if (!bMazeGenerated) {
 			return;
 		}
-		else {
+		else if(bMazeGenerated && guiManager->menuType != MenuType::Playing){
 			guiManager->menuType = MenuType::Playing;
 		}
 	}
@@ -240,7 +241,7 @@ void update()
 	double currentFrame = glfwGetTime();
 	float deltaTime = currentFrame - lastFrameTime;
 	lastFrameTime = currentFrame;
-		
+
 	// Updating gameobjects
 	for (auto& o : objects)
 		o->update(deltaTime);
@@ -260,11 +261,12 @@ void draw()
 			guiManager->draw();
 			return;
 		}
+
 		if (!bMazeGenerated) {
 			return;
 		}
 	}
-	
+
 	// Draw dark background
 	glClearColor(.05f, .05f, .05f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -275,7 +277,7 @@ void draw()
 	// Set projection matrix
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	
+
 	glm::mat4 projection = glm::perspective(glm::radians(player->getComponent<CameraComponent>()->fov), viewport[2] / (float)viewport[3], 0.01f, 1000.0f);
 
 	auto cameraComponent = player->getComponent<CameraComponent>();
@@ -287,7 +289,7 @@ void draw()
 
 	tigl::shader->enableColor(true);
 
-	enableFog(true);
+	// enableFog(true);
 
 	// Drawing all gameobjects
 	for (auto& o : objects)
@@ -298,4 +300,5 @@ void draw()
 		player->getComponent<HUDComponent>()->draw();
 	}
 	player->getComponent<FlashlightComponent>()->draw();
+	player->getComponent<ParticleComponent>()->draw();
 }

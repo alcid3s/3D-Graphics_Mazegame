@@ -28,7 +28,7 @@ std::vector<std::vector<std::shared_ptr<Cell>>> MazeGenerator::Generate(const in
 		exit(1);
 	}
 
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	// Setup maze to traverse.
 	SetupMaze(sizeOfMazeX, sizeOfMazeZ);
@@ -49,7 +49,7 @@ std::vector<std::vector<std::shared_ptr<Cell>>> MazeGenerator::Generate(const in
 	SetEnemySpawnPoint(sizeOfMazeX, sizeOfMazeZ);
 
 	// Fill empty spots of maze with walls
-	FillMaze(sizeOfMazeX, sizeOfMazeZ);
+	// FillMaze(sizeOfMazeX, sizeOfMazeZ);
 
 	return this->maze;
 }

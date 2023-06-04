@@ -109,7 +109,6 @@ std::vector<std::shared_ptr<GameObject>> EnemyComponent::generateNewTarget() {
 /*
 	Takes shortest path to position
 */
-#include <functional>
 
 struct Vec3Hash {
 	std::size_t operator()(const glm::vec3& vec) const {
