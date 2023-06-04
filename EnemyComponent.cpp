@@ -158,8 +158,10 @@ std::vector<std::shared_ptr<GameObject>> EnemyComponent::findShortestPath(const 
 			// Reverse the path to get the correct order
 			std::reverse(path.begin(), path.end());
 
-			target = path[path.size() - 1]->position;
-			return path;
+			if (!path.empty() && path.size() > 1) {
+				target = path[path.size() - 1]->position;
+				return path;
+			}
 		}
 
 		// Get the direct neighbors within the specified distance

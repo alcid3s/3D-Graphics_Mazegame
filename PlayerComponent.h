@@ -35,7 +35,6 @@ private:
 	clock_t recoverTime = 0;
 
 	glm::vec3 tempPosition = glm::vec3(0, 0, 0);
-	glm::vec3 oldPosition = glm::vec3(0, 0, 0);
 private:
 	void move(float angle, float fac, float deltaTime);
 	void playerInput(float deltaTime);
