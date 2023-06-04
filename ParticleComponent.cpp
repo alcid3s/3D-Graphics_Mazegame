@@ -12,7 +12,7 @@ ParticleComponent::ParticleComponent(const int& numParticles) : numParticles(num
 ParticleComponent::~ParticleComponent()
 {
 }
-#include <iostream>
+
 void ParticleComponent::update(float deltaTime)
 {
 	static bool initialised = false;
@@ -50,10 +50,10 @@ void ParticleComponent::draw()
 		verts.push_back(vert);
 	}
 
-	glPointSize(10.f);
+	glPointSize(1.f);
 	tigl::shader->enableColor(true);
-	tigl::begin(GL_POINT);
+
 	tigl::drawVertices(GL_POINT, verts);
-	tigl::end();
+
 	tigl::shader->enableColor(false);
 }

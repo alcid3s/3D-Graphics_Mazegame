@@ -7,7 +7,7 @@
 
 class ParticleComponent : public DrawComponent {
 public:
-	ParticleComponent(const int& numParticles = 1000);
+	ParticleComponent(const int& numParticles = 1);
 	~ParticleComponent();
 
 	void update(float deltaTime) override;
