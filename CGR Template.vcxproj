@@ -24,7 +24,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CGRTemplate</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Mazegame</ProjectName>
+    <ProjectName>MazeGame</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -91,12 +91,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\imgui;$(SolutionDir)lib\SFML\include;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SFML\lib;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\GL\;$(SolutionDir)lib\SFML\lib;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -108,12 +109,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SFML\include;$(SolutionDir)source\headers\modelLoader;$(SolutionDir)source\modelLoader;$(SolutionDir)source\gameobjects;$(SolutionDir)source\headers\gameobjects;$(SolutionDir)source\stb;$(SolutionDir)source;$(SolutionDir)source\headers;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\imgui;$(SolutionDir)lib\SFML\include;$(SolutionDir)lib\glm;$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SFML\lib;$(SolutionDir)src;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\GL\;$(SolutionDir)lib\SFML\lib;$(SolutionDir)lib\glfw-3.3.8\$(Platform);$(SolutionDir)lib\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -158,38 +160,68 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AltarComponent.cpp" />
+    <ClCompile Include="AudioComponent.cpp" />
+    <ClCompile Include="BoundingBoxComponent.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="CubeComponent.cpp" />
+    <ClCompile Include="DrawComponent.cpp" />
+    <ClCompile Include="EnemyComponent.cpp" />
+    <ClCompile Include="FlashlightComponent.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GuiManager.cpp" />
+    <ClCompile Include="HUDComponent.cpp" />
+    <ClCompile Include="lib\imgui\imgui.cpp" />
+    <ClCompile Include="lib\imgui\imgui_demo.cpp" />
+    <ClCompile Include="lib\imgui\imgui_draw.cpp" />
+    <ClCompile Include="lib\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="lib\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="lib\imgui\imgui_tables.cpp" />
+    <ClCompile Include="lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="source\FpsCam.cpp" />
-    <ClCompile Include="source\gameobjects\Cube.cpp" />
-    <ClCompile Include="source\gameobjects\EmptyGameobject.cpp" />
-    <ClCompile Include="source\gameobjects\Gameobject.cpp" />
-    <ClCompile Include="source\gameobjects\Plane.cpp" />
-    <ClCompile Include="source\LoadingScreen.cpp" />
-    <ClCompile Include="source\Maze\MazeGenerator.cpp" />
-    <ClCompile Include="source\modelLoader\ObjModel.cpp" />
-    <ClCompile Include="source\stb\stb_image.cpp" />
-    <ClCompile Include="source\Texture.cpp" />
-    <ClCompile Include="source\tigl.cpp" />
-    <ClCompile Include="source\Tile.cpp" />
+    <ClCompile Include="MazeGenerator.cpp" />
+    <ClCompile Include="ObjModel.cpp" />
+    <ClCompile Include="PlaneComponent.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
+    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="stb_truetype.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="tigl.cpp" />
+    <ClCompile Include="TileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FpsCam.h" />
-    <ClInclude Include="source\headers\enumType.h" />
-    <ClInclude Include="source\headers\gameobjects\Cube.h" />
-    <ClInclude Include="source\headers\gameobjects\Gameobject.h" />
-    <ClInclude Include="source\headers\gameobjects\Plane.h" />
-    <ClInclude Include="source\headers\gameobject\EmptyGameobject.h" />
-    <ClInclude Include="source\headers\LoadingScreen.h" />
-    <ClInclude Include="source\headers\Maze\MazeGenerator.h" />
-    <ClInclude Include="source\headers\modelLoader\ObjModel.h" />
-    <ClInclude Include="source\headers\texture.h" />
-    <ClInclude Include="source\headers\Tile.h" />
-    <ClInclude Include="source\stb\stb_image.h" />
+    <ClInclude Include="AltarComponent.h" />
+    <ClInclude Include="AudioComponent.h" />
+    <ClInclude Include="BoundingBoxComponent.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="CubeComponent.h" />
+    <ClInclude Include="DrawComponent.h" />
+    <ClInclude Include="EnemyComponent.h" />
+    <ClInclude Include="enumType.h" />
+    <ClInclude Include="FlashlightComponent.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GuiManager.h" />
+    <ClInclude Include="HUDComponent.h" />
+    <ClInclude Include="lib\imgui\imconfig.h" />
+    <ClInclude Include="lib\imgui\imgui.h" />
+    <ClInclude Include="lib\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="lib\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="lib\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="lib\imgui\imgui_internal.h" />
+    <ClInclude Include="lib\imgui\imstb_rectpack.h" />
+    <ClInclude Include="lib\imgui\imstb_textedit.h" />
+    <ClInclude Include="lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="MazeGenerator.h" />
+    <ClInclude Include="ObjModel.h" />
+    <ClInclude Include="PlaneComponent.h" />
+    <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="stb_truetype.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="tigl.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resource\textures\Bush_Texture.jpg" />
-    <Image Include="resource\textures\Floor.png" />
+    <ClInclude Include="TileComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
