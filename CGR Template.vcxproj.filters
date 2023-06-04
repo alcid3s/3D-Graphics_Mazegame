@@ -82,6 +82,9 @@
     <Filter Include="Header Files\ImGui">
       <UniqueIdentifier>{65caab06-7f99-4c7a-9fb8-a76238b151c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Components\ParticleComponent">
+      <UniqueIdentifier>{c8a3320f-3609-43da-86be-c32d7146ba47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tigl.cpp">
@@ -170,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_widgets.cpp">
       <Filter>lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleComponent.cpp">
+      <Filter>Source Files\Components\ParticleComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="lib\imgui\imconfig.h">
       <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleComponent.h">
+      <Filter>Source Files\Components\ParticleComponent</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include "GameObject.h"
 
-CameraComponent::CameraComponent(GLFWwindow* window) 
+CameraComponent::CameraComponent(GLFWwindow* window)
 	: window(window), fov(75.f)
 {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -49,8 +49,8 @@ void CameraComponent::updateCamera(float deltaTime) {
 
 void CameraComponent::changeFOV(float deltaTime, bool running)
 {
-	if(running) {
-	if (fov < 100.f) {
+	if (running) {
+		if (fov < 100.f) {
 			fov += 50.f * deltaTime;
 		}
 	}
@@ -59,4 +59,6 @@ void CameraComponent::changeFOV(float deltaTime, bool running)
 			fov -= 50.f * deltaTime;
 		}
 	}
+
+
 }

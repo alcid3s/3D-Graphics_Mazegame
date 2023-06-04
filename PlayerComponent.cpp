@@ -18,7 +18,7 @@ PlayerComponent::~PlayerComponent()
 
 }
 
-
+#include <iostream>
 void PlayerComponent::move(float angle, float fac, float deltaTime)
 {
 	this->bMoving = true;
@@ -39,7 +39,7 @@ bool PlayerComponent::checkCollision(std::list<std::shared_ptr<GameObject>>& obj
 		return collides;
 	}
 	this->tempPosition = gameObject->position + this->tempPosition;
-	this->oldPosition = gameObject->position;
+	gameObject->oldPosition = gameObject->position;
 
 	gameObject->position = this->tempPosition;
 	if (!gameObject->getComponent<BoundingBoxComponent>()) {
@@ -53,7 +53,7 @@ bool PlayerComponent::checkCollision(std::list<std::shared_ptr<GameObject>>& obj
 	}
 
 	if (collides) {
-		gameObject->position = this->oldPosition;
+		gameObject->position = gameObject->oldPosition;
 	}
 
 	this->tempPosition = glm::vec3(0, 0, 0);

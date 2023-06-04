@@ -16,6 +16,7 @@
 #include "EnemyComponent.h"
 #include "AltarComponent.h"
 #include "HUDComponent.h"
+#include "ParticleComponent.h"
 #include <memory>
 
 #include <thread>
@@ -133,6 +134,9 @@ void init()
 	player->addComponent(std::make_shared<FlashlightComponent>());
 	player->addComponent(std::make_shared<HUDComponent>());
 
+	// give HUD access to the fov parameter
+	player->getComponent<HUDComponent>()->setFov(&player->getComponent<CameraComponent>()->fov);
+
 	glm::vec3 min = glm::vec3(-.1f, 0, -.1f);
 	glm::vec3 max = glm::vec3(.1f, 0, .1f);
 	player->addComponent(std::make_shared<BoundingBoxComponent>(min, max));
@@ -186,6 +190,7 @@ void updatePlayer(float deltaTime) {
 	auto cameraComponent = player->getComponent<CameraComponent>();
 	auto audioComponent = player->getComponent<AudioComponent>();
 	auto flashlightComponent = player->getComponent<FlashlightComponent>();
+	auto hudComponent = player->getComponent<HUDComponent>();
 
 	// Letting the audio component know if there've been updates concerning the movement of the player
 	audioComponent->bIsRunning = playerComponent->bIsRunning;
@@ -195,7 +200,9 @@ void updatePlayer(float deltaTime) {
 	// let flashLight know if player is running
 	flashlightComponent->bIsRunning = playerComponent->bIsRunning;
 
-	//hudComponent->setRotation(cameraComponent->)
+	// let hudComponent know if player is moving or running
+	hudComponent->setIsMoving(playerComponent->bMoving);
+	hudComponent->setIsRunning(playerComponent->bIsRunning);
 
 	// Change FOV according to the movement of the player
 	cameraComponent->changeFOV(deltaTime, playerComponent->bIsRunning);
@@ -287,8 +294,8 @@ void draw()
 		o->draw();
 
 	// Drawing the flashlight and HUD of the player
-	player->getComponent<FlashlightComponent>()->draw();
 	if (!activateGui) {
 		player->getComponent<HUDComponent>()->draw();
 	}
+	player->getComponent<FlashlightComponent>()->draw();
 }
