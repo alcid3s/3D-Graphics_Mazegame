@@ -13,113 +13,165 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\stb">
-      <UniqueIdentifier>{14b20e99-40d3-4ac0-87e1-c33007ccdee8}</UniqueIdentifier>
+    <Filter Include="Source Files\GameObject">
+      <UniqueIdentifier>{cc8d05e3-3bdd-4908-98bf-0f1f4d562bb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\tigl">
-      <UniqueIdentifier>{118c95b3-f264-40a3-95f5-cfc223dc203a}</UniqueIdentifier>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{488ce78e-afc7-4060-811e-604a6f5b8c46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\gameobjects">
-      <UniqueIdentifier>{bd64fb23-175b-40e9-b77a-1bac504b1a92}</UniqueIdentifier>
+    <Filter Include="Source Files\Components\CubeComponent">
+      <UniqueIdentifier>{25faf74f-d833-4e58-982d-14f5740a8719}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\modelloader">
-      <UniqueIdentifier>{dadbb9ee-47db-4313-9cbd-02eb2e62442a}</UniqueIdentifier>
+    <Filter Include="Source Files\Components\PlaneComponent">
+      <UniqueIdentifier>{a476b3ef-a7a1-4471-9d91-800e0d26f886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\DrawComponent">
+      <UniqueIdentifier>{2a57a04c-b0e1-4833-bd93-b90c5986274a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\TileComponent">
+      <UniqueIdentifier>{81e10d21-bf41-419b-b0c1-502d0945212c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{e180a76f-6ffa-44ef-a6ed-ade5e0bb9011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\stbi">
+      <UniqueIdentifier>{6ae7fae1-ff33-413f-9273-20fdd9bcaf9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ModelLoader">
+      <UniqueIdentifier>{50c05c58-1ef6-412a-94f0-04fb96bae33e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\enumType">
+      <UniqueIdentifier>{7e5b54f9-4ff5-42e0-9d91-2f8af8ce468c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Maze">
+      <UniqueIdentifier>{61e0e9f7-a004-4b07-83f6-b1e590f039fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\PlayerComponent">
+      <UniqueIdentifier>{8a91b9b9-b3f0-4966-9aac-8dab9f2afa01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\CameraComponent">
+      <UniqueIdentifier>{6f6a71f1-2eae-4146-8a07-3c09d82f52c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\AudioComponent">
+      <UniqueIdentifier>{408b3bd2-09e9-46cb-a163-e244bfb1279a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\FlashlightComponent">
+      <UniqueIdentifier>{e20671e6-888c-4e22-8d87-1acfc136b8fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\BoundingBoxComponent">
+      <UniqueIdentifier>{ff3d1004-1783-4c73-8781-95a9c4ba6a38}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="tigl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\FpsCam.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="source\tigl.cpp">
-      <Filter>Source Files\tigl</Filter>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="source\stb\stb_image.cpp">
-      <Filter>Source Files\stb</Filter>
+    <ClCompile Include="CubeComponent.cpp">
+      <Filter>Source Files\Components\CubeComponent</Filter>
     </ClCompile>
-    <ClCompile Include="source\Texture.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="DrawComponent.cpp">
+      <Filter>Source Files\Components\DrawComponent</Filter>
     </ClCompile>
-    <ClCompile Include="source\Maze\MazeGenerator.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="TileComponent.cpp">
+      <Filter>Source Files\Components\TileComponent</Filter>
     </ClCompile>
-    <ClCompile Include="source\Tile.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="PlaneComponent.cpp">
+      <Filter>Source Files\Components\PlaneComponent</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameobjects\Gameobject.cpp">
-      <Filter>Source Files\gameobjects</Filter>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameobjects\Cube.cpp">
-      <Filter>Source Files\gameobjects</Filter>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Source Files\stbi</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameobjects\EmptyGameobject.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ObjModel.cpp">
+      <Filter>Source Files\ModelLoader</Filter>
     </ClCompile>
-    <ClCompile Include="source\LoadingScreen.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="MazeGenerator.cpp">
+      <Filter>Source Files\Maze</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameobjects\Plane.cpp">
-      <Filter>Source Files\gameobjects</Filter>
+    <ClCompile Include="PlayerComponent.cpp">
+      <Filter>Source Files\Components\PlayerComponent</Filter>
     </ClCompile>
-    <ClCompile Include="source\modelLoader\ObjModel.cpp">
-      <Filter>Source Files\modelloader</Filter>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Source Files\Components\CameraComponent</Filter>
     </ClCompile>
-    <ClCompile Include="source\enemy\enemy.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AudioComponent.cpp">
+      <Filter>Source Files\Components\AudioComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="FlashlightComponent.cpp">
+      <Filter>Source Files\Components\FlashlightComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxComponent.cpp">
+      <Filter>Source Files\Components\BoundingBoxComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_truetype.cpp">
+      <Filter>Source Files\stbi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FpsCam.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameObject.h">
+      <Filter>Source Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="source\stb\stb_image.h">
-      <Filter>Source Files\stb</Filter>
+    <ClInclude Include="Component.h">
+      <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\enumType.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="CubeComponent.h">
+      <Filter>Source Files\Components\CubeComponent</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\Maze\MazeGenerator.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="DrawComponent.h">
+      <Filter>Source Files\Components\DrawComponent</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\Tile.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="TileComponent.h">
+      <Filter>Source Files\Components\TileComponent</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\texture.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PlaneComponent.h">
+      <Filter>Source Files\Components\PlaneComponent</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\gameobjects\Gameobject.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Texture.h">
+      <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\gameobjects\Cube.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="stb_image.h">
+      <Filter>Source Files\stbi</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\gameobjects\Plane.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ObjModel.h">
+      <Filter>Source Files\ModelLoader</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\gameobject\EmptyGameobject.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="enumType.h">
+      <Filter>Source Files\enumType</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\LoadingScreen.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MazeGenerator.h">
+      <Filter>Source Files\Maze</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\modelLoader\ObjModel.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PlayerComponent.h">
+      <Filter>Source Files\Components\PlayerComponent</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\enemy.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Source Files\Components\CameraComponent</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resource\textures\Bush_Texture.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="resource\textures\Floor.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ClInclude Include="AudioComponent.h">
+      <Filter>Source Files\Components\AudioComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="FlashlightComponent.h">
+      <Filter>Source Files\Components\FlashlightComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBoxComponent.h">
+      <Filter>Source Files\Components\BoundingBoxComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_truetype.h">
+      <Filter>Source Files\stbi</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
