@@ -10,7 +10,7 @@ This project is an interactive maze game developed using OpenGL and C++. In this
 - Sound effects and background music to enhance the gaming experience.
 - AI-controlled monster that actively hunts the player.
 - Multiple levels with increasing difficulty.
-- Player and monster movement controlled by keyboard input.
+- Player movement controlled by keyboard input.
 
 ## Installation
 To run this project on your local machine, follow these steps:
