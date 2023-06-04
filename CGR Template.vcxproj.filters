@@ -34,12 +34,6 @@
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{e180a76f-6ffa-44ef-a6ed-ade5e0bb9011}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\stbi">
-      <UniqueIdentifier>{6ae7fae1-ff33-413f-9273-20fdd9bcaf9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ModelLoader">
-      <UniqueIdentifier>{50c05c58-1ef6-412a-94f0-04fb96bae33e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\enumType">
       <UniqueIdentifier>{7e5b54f9-4ff5-42e0-9d91-2f8af8ce468c}</UniqueIdentifier>
     </Filter>
@@ -60,6 +54,33 @@
     </Filter>
     <Filter Include="Source Files\Components\BoundingBoxComponent">
       <UniqueIdentifier>{ff3d1004-1783-4c73-8781-95a9c4ba6a38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\AlterComponent">
+      <UniqueIdentifier>{ec3db4fe-1273-4c66-a1c7-68435ba3304f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\EnemyComponent">
+      <UniqueIdentifier>{4cd43012-5357-4ea7-88b4-1161371984c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GuiManager">
+      <UniqueIdentifier>{831fd7fa-fa47-485a-ba87-df0748923e68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\HUDComponent">
+      <UniqueIdentifier>{fee460a5-d6cf-46e2-b9b4-459926e01653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{f02a3531-f470-4871-9013-cfd8c1d3e42e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\stbi">
+      <UniqueIdentifier>{6ae7fae1-ff33-413f-9273-20fdd9bcaf9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\ModelLoader">
+      <UniqueIdentifier>{50c05c58-1ef6-412a-94f0-04fb96bae33e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\ImGui">
+      <UniqueIdentifier>{76471bcc-3f3b-450a-acec-404a1df5a897}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ImGui">
+      <UniqueIdentifier>{65caab06-7f99-4c7a-9fb8-a76238b151c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,10 +112,10 @@
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="stb_image.cpp">
-      <Filter>Source Files\stbi</Filter>
+      <Filter>lib\stbi</Filter>
     </ClCompile>
     <ClCompile Include="ObjModel.cpp">
-      <Filter>Source Files\ModelLoader</Filter>
+      <Filter>lib\ModelLoader</Filter>
     </ClCompile>
     <ClCompile Include="MazeGenerator.cpp">
       <Filter>Source Files\Maze</Filter>
@@ -115,40 +136,40 @@
       <Filter>Source Files\Components\BoundingBoxComponent</Filter>
     </ClCompile>
     <ClCompile Include="stb_truetype.cpp">
-      <Filter>Source Files\stbi</Filter>
+      <Filter>lib\stbi</Filter>
     </ClCompile>
     <ClCompile Include="AltarComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components\AlterComponent</Filter>
     </ClCompile>
     <ClCompile Include="EnemyComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components\EnemyComponent</Filter>
     </ClCompile>
     <ClCompile Include="GuiManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GuiManager</Filter>
     </ClCompile>
     <ClCompile Include="HUDComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\HUDComponent</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>lib\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>lib\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>lib\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_impl_glfw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>lib\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_impl_opengl3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>lib\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>lib\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>lib\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,10 +198,10 @@
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>Source Files\stbi</Filter>
+      <Filter>lib\stbi</Filter>
     </ClInclude>
     <ClInclude Include="ObjModel.h">
-      <Filter>Source Files\ModelLoader</Filter>
+      <Filter>lib\ModelLoader</Filter>
     </ClInclude>
     <ClInclude Include="enumType.h">
       <Filter>Source Files\enumType</Filter>
@@ -204,46 +225,46 @@
       <Filter>Source Files\Components\BoundingBoxComponent</Filter>
     </ClInclude>
     <ClInclude Include="stb_truetype.h">
-      <Filter>Source Files\stbi</Filter>
+      <Filter>lib\stbi</Filter>
     </ClInclude>
     <ClInclude Include="AltarComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Components\AlterComponent</Filter>
     </ClInclude>
     <ClInclude Include="EnemyComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Components\EnemyComponent</Filter>
     </ClInclude>
     <ClInclude Include="GuiManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\GuiManager</Filter>
     </ClInclude>
     <ClInclude Include="HUDComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imgui_impl_glfw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imgui_impl_opengl3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imgui_impl_opengl3_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\imgui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\HUDComponent</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imgui.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imgui_impl_glfw.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imgui_impl_opengl3.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imgui_internal.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imstb_rectpack.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imstb_textedit.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\imgui\imconfig.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
