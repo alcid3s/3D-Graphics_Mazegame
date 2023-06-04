@@ -22,7 +22,6 @@ HUDComponent::~HUDComponent()
 
 }
 
-#include <iostream>
 void HUDComponent::update(float deltaTime)
 {
 	if (texture) {
@@ -55,7 +54,6 @@ void HUDComponent::update(float deltaTime)
 		}
 		else if (bIsMoving) {
 			zDistance -= .01f;
-			std::cout << "zDistance when moving: " << zDistance << " \n";
 		}
 
 		// move HUD slightly in front of player

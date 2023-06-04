@@ -133,6 +133,7 @@ void init()
 	player->addComponent(std::make_shared<AudioComponent>(AudioType::AudioPlayer));
 	player->addComponent(std::make_shared<FlashlightComponent>());
 	player->addComponent(std::make_shared<HUDComponent>());
+	player->addComponent(std::make_shared<ParticleComponent>());
 
 	// give HUD access to the fov parameter
 	player->getComponent<HUDComponent>()->setFov(&player->getComponent<CameraComponent>()->fov);
@@ -287,7 +288,7 @@ void draw()
 
 	tigl::shader->enableColor(true);
 
-	enableFog(true);
+	// enableFog(true);
 
 	// Drawing all gameobjects
 	for (auto& o : objects)
@@ -298,4 +299,5 @@ void draw()
 		player->getComponent<HUDComponent>()->draw();
 	}
 	player->getComponent<FlashlightComponent>()->draw();
+	player->getComponent<ParticleComponent>()->draw();
 }

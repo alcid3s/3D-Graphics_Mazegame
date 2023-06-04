@@ -35,27 +35,44 @@ void PlayerComponent::update(float deltaTime)
 
 bool PlayerComponent::checkCollision(std::list<std::shared_ptr<GameObject>>& objects) {
 	bool collides = false;
+
+	// if no movement was called
 	if (this->tempPosition == glm::vec3(0.0f, 0.0f, 0.0f)) {
 		return collides;
 	}
-	this->tempPosition = gameObject->position + this->tempPosition;
-	gameObject->oldPosition = gameObject->position;
 
-	gameObject->position = this->tempPosition;
+	// check if player has bounding box
 	if (!gameObject->getComponent<BoundingBoxComponent>()) {
 		return false;
 	}
-	for (auto& obj : objects) {
+
+	// create the temporary position of the player
+	this->tempPosition = gameObject->position + this->tempPosition;
+
+	// save the very old position of the player from 2 cycles ago
+	glm::vec3 oldOldPosition = gameObject->oldPosition;
+
+	// old position of the player is this
+	gameObject->oldPosition = gameObject->position;
+
+	// set gameObject equal to future position
+	gameObject->position = this->tempPosition;
+
+	// check if any object collides with the new position of the player
+	for (const auto& obj : objects) {
 		if (gameObject->getComponent<BoundingBoxComponent>()->collide(obj)) {
 			collides = true;
 			break;
 		}
 	}
 
+	// if collision with an object happend, set the player back to it's old position. Move was illegal.
 	if (collides) {
 		gameObject->position = gameObject->oldPosition;
+		gameObject->oldPosition = oldOldPosition;
 	}
 
+	// reset the temporary position
 	this->tempPosition = glm::vec3(0, 0, 0);
 
 	return collides;
