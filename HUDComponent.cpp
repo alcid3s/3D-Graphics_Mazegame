@@ -6,8 +6,8 @@
 HUDComponent::HUDComponent(std::string path) : texture(new Texture(path))
 {
 	// size for hud
-	float width = 0.28f;  
-	float height = 0.17f; 
+	const float width = 0.297f;  
+	const float height = 0.168f; 
 
 	// vertices for quad of hud
 	verts.push_back(tigl::Vertex::PT(glm::vec3(-width, -height, 0.0f), glm::vec2(0, 0)));
