@@ -2,58 +2,68 @@
 #include "GameObject.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
+#include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 ParticleComponent::ParticleComponent(const int& numParticles) : numParticles(numParticles)
 {
-	particles.resize(numParticles);
+
 }
 
 ParticleComponent::~ParticleComponent()
 {
 }
 
-void ParticleComponent::update(float deltaTime)
-{
-	static bool initialised = false;
-	if (!initialised) {
-		initialised = true;
-		glm::vec3 pos = -gameObject->position;
-		pos.z -= 1.f;
+void ParticleComponent::init() {
+	if (particles.empty()) {
 		for (int i = 0; i < numParticles; ++i)
 		{
-			glm::vec4 color = glm::vec4(
-				static_cast<float>(rand()) / 255,
-				static_cast<float>(rand()) / 255,
-				static_cast<float>(rand()) / 255, 1.f
-			);
-			auto tuple = std::make_tuple(glm::vec3(1.f, 1.f, 1.f), tigl::Vertex::PT(pos, color));
-			particles.push_back(tuple);
-		}
+			glm::vec3 position = -gameObject->position;
 
+			position.z += 1.f;
+			position.y = 1.f;
+
+			if (position.z == 10.f) {
+				position.z = 8;
+			}
+
+			Particle particle;
+			particle.velocity = glm::vec3(0.f, 0.f, 0.f);
+			particle.vert = Vertex::PT(position, generateColor());
+
+			std::cout << "particle " << i << " (" << position.x << "," << position.y << "," << position.z << "\n";
+
+			particles.push_back(particle);
+		}
 	}
+}
+
+glm::vec4 ParticleComponent::generateColor() {
+	return glm::vec4(
+		static_cast<float>(1.f),
+		static_cast<float>(1.f),
+		static_cast<float>(1.f), 1.f
+	);
+}
+
+void ParticleComponent::update(float deltaTime)
+{
+	init();
 	for (int i = 0; i < particles.size(); i++)
 	{
-		// get current position of particle
-		glm::vec3& particlePosition = std::get<1>(particles[i]).position;
-
-		// update particle position with velocity * deltaTime
-		particlePosition += std::get<0>(particles[i]) * deltaTime;
+		particles[i].vert.position += particles[i].velocity;
 	}
 }
 
 void ParticleComponent::draw()
 {
-	std::vector<tigl::Vertex> verts;
+	tigl::begin(GL_POINT);
+
 	for (const auto& p : particles) {
-		auto& vert = std::get<1>(p);
-		verts.push_back(vert);
+		tigl::shader->enableColor(true);
+		glPointSize(10.f);
+		tigl::addVertex(p.vert);
 	}
-
-	glPointSize(1.f);
-	tigl::shader->enableColor(true);
-
-	tigl::drawVertices(GL_POINT, verts);
-
+	tigl::end();
 	tigl::shader->enableColor(false);
 }

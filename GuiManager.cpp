@@ -1,6 +1,5 @@
 #include "GuiManager.h"
 #include <GLFW/glfw3.h>
-
 #include <iostream>
 
 GuiManager::GuiManager(GLFWwindow* window, const int& x, const int& y)
@@ -37,21 +36,26 @@ void GuiManager::draw()
 		drawLoadingScreen();
 		break;
 	case MenuType::Playing:
+		// No GUI rendering needed when playing
 		break;
 	case MenuType::Options:
-		// draw options
+		// Draw options GUI here
 		break;
 	default:
-		std::cout << "no menu selected\n";
+		std::cout << "No menu selected\n";
 		exit(-1);
 	}
 }
 
+void GuiManager::shutdownImGui()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+}
+
 void GuiManager::drawLoadingScreen()
 {
-	glClearColor(0.07f, 0.13f, 0.17f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -66,17 +70,10 @@ void GuiManager::drawLoadingScreen()
 
 	if (menuType == MenuType::Loading) return;
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-
-	init();
+	shutdownImGui();
 }
 
 void GuiManager::drawMainMenu() {
-	glClearColor(0.07f, 0.13f, 0.17f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -114,16 +111,12 @@ void GuiManager::drawMainMenu() {
 
 	ImGui::End();
 	ImGui::EndFrame();
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	if (menuType == MenuType::MainMenu) return;
+	if (menuType == MenuType::MainMenu) {
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-
-	init();
 }
 
 void GuiManager::setColorGui()

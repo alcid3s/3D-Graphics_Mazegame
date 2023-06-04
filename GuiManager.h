@@ -33,4 +33,5 @@ private:
 	void drawLoadingScreen();
 	void drawMainMenu();
 	void setColorGui();
+	void shutdownImGui();
 };

@@ -75,14 +75,19 @@ void HUDComponent::draw()
 		// making texture transparent
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
 
 		texture->bind();
 		tigl::shader->enableTexture(true);
 		tigl::drawVertices(GL_QUADS, verts);
 		tigl::shader->enableTexture(false);
 		texture->unbind();
+
+		glEnable(GL_DEPTH_TEST);
 		unbindHUD();
 	}
+	else
+		throw "Could not load HUD texture.";
 }
 
 void HUDComponent::bindHUD()
