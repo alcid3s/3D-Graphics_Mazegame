@@ -24,52 +24,41 @@ HUDComponent::~HUDComponent()
 
 void HUDComponent::update(float deltaTime)
 {
-	if (texture) {
-		glm::mat4 ret(1.0f);
-		glm::vec3 position = -gameObject->position;
+	
+}
 
-		// position of player
-		ret = glm::translate(ret, position);
+void HUDComponent::updateHUD() {
+	glm::mat4 ret = glm::mat4(1.0f);
 
-		// rotate hud
-		ret = glm::rotate(ret, -gameObject->rotation.y, glm::vec3(0, 1, 0));
+	float zDistance = -.2f;
 
-		// rotate hud around x-axis
-		ret = glm::rotate(ret, -gameObject->rotation.x, glm::vec3(1, 0, 0));
+	// set HUD on gameObject position
+	ret = glm::translate(ret, -gameObject->position);
 
-		float zDistance = -.2f;
+	// rotate HUD
+	ret = glm::rotate(ret, -gameObject->rotation.y, glm::vec3(0, 1, 0));
+	ret = glm::rotate(ret, -gameObject->rotation.x, glm::vec3(1, 0, 0));
 
-		if (bIsRunning) {
-			// scale the HUD must change towards.
-			float targetScale = glm::tan(glm::radians(*this->fov * 0.5f)) * 2.0f;
-
-			// calculates current scale
-			float currentScale = glm::length(glm::vec3(ret[0][0], ret[0][1], ret[0][2]));
-
-			// linear interpolation (smooth transition) between current and target scale
-			float scaleFactor = glm::lerp(currentScale, targetScale, deltaTime * 10.0f);
-
-			// matrix is scaled accordingly
-			ret = glm::scale(ret, glm::vec3(scaleFactor, scaleFactor, 1.0f));
-		}
-		else if (bIsMoving) {
-			zDistance -= .01f;
-		}
-
-		// move HUD slightly in front of player
-		position = glm::vec3(0.0f, 0.0f, zDistance);
-
-		// place HUD
-		ret = glm::translate(ret, position);
-
-		this->mat = ret;
+	if (bIsRunning) {
+		// make overlay bigger
 	}
+	else if (bIsMoving) {
+		zDistance -= .01f;
+	}
+
+	// place a bit in front of camera
+	ret = glm::translate(ret, glm::vec3(0.0f, 0.0f, -.2f));
+
+	tigl::shader->setModelMatrix(ret);
 }
 
 void HUDComponent::draw()
 {
 	if (texture) {
-		tigl::shader->setModelMatrix(this->mat);
+
+		// called here because it no workey in update.
+		updateHUD();
+
 		bindHUD();
 
 		// making texture transparent
