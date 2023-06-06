@@ -1,15 +1,17 @@
 #include "HUDComponent.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "glm/gtx/compatibility.hpp"
+#include "glm/glm.hpp"
+#include <cmath>
+
 #include "Texture.h"
 #include "GameObject.h"
 
+// size for hud
+const float width = 0.295f;
+const float height = 0.168f;
+
 HUDComponent::HUDComponent(std::string path) : texture(new Texture(path))
 {
-	// size for hud
-	const float width = 0.295f;
-	const float height = 0.168f;
-
 	// vertices for quad of hud
 	verts.push_back(tigl::Vertex::PT(glm::vec3(-width, -height, 0.0f), glm::vec2(0, 0)));
 	verts.push_back(tigl::Vertex::PT(glm::vec3(width, -height, 0.0f), glm::vec2(1, 0)));
@@ -27,6 +29,7 @@ void HUDComponent::update(float deltaTime)
 	
 }
 
+#include <iostream>
 void HUDComponent::updateHUD() {
 	glm::mat4 ret = glm::mat4(1.0f);
 
@@ -40,7 +43,16 @@ void HUDComponent::updateHUD() {
 	ret = glm::rotate(ret, -gameObject->rotation.x, glm::vec3(1, 0, 0));
 
 	if (bIsRunning) {
-		// make overlay bigger
+		// Get bigger according to FOV
+		float scalingFactor = (mapValue(*this->fov) / 100) * 1.3;
+		//std::cout << "max " << scalingFactor << "\n";
+		ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
+	}
+	else if (*this->fov > 75.f) {
+		// Get smaller according to FOV
+		float scalingFactor = (mapValue(*this->fov) / 100) * 1.3;
+		//std::cout << "min " << scalingFactor << "\n";
+		ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
 	}
 	else if (bIsMoving) {
 		zDistance -= .01f;
@@ -50,6 +62,10 @@ void HUDComponent::updateHUD() {
 	ret = glm::translate(ret, glm::vec3(0.0f, 0.0f, -.2f));
 
 	tigl::shader->setModelMatrix(ret);
+}
+
+float HUDComponent::mapValue(float value) {
+	return ((value - 75.0f) * (25.0f/ 34.0f)) + 100.0f;
 }
 
 void HUDComponent::draw()

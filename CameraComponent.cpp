@@ -59,6 +59,4 @@ void CameraComponent::changeFOV(float deltaTime, bool running)
 			fov -= 50.f * deltaTime;
 		}
 	}
-
-
 }

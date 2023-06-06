@@ -28,4 +28,5 @@ private:
 	void unbindHUD();
 
 	void updateHUD();
+	float mapValue(float value);
 };
