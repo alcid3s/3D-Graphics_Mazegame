@@ -17,12 +17,12 @@ To run this project on your local machine, follow these steps:
 
 1. Clone the repository to your local machine or download the project files.
 ```bash
-    git clone https://github.com/your-username/opengl-maze-game.git
+    git clone https://github.com/alcid3s/3D-Graphics_Mazegame.git
 ```
 
 2. Navigate to the project directory.
 ```bash
-    cd opengl-maze-game
+    cd 3D-Graphics_Mazegame
 ```
 3. Copy or move the files from the sfml_libs directory into the x64/Debug directory of the project
 ``` bash
