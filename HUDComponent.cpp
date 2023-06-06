@@ -32,37 +32,48 @@ void HUDComponent::update(float deltaTime)
 }
 
 void HUDComponent::updateHUD() {
-	glm::mat4 ret = glm::mat4(1.0f);
+	if (this->fov) {
+		glm::mat4 ret = glm::mat4(1.0f);
 
-	float zDistance = -.2f;
+		float zDistance = -.2f;
 
-	// set HUD on gameObject position
-	ret = glm::translate(ret, -gameObject->position);
+		// set HUD on gameObject position
+		ret = glm::translate(ret, -gameObject->position);
 
-	// rotate HUD
-	ret = glm::rotate(ret, -gameObject->rotation.y, glm::vec3(0, 1, 0));
-	ret = glm::rotate(ret, -gameObject->rotation.x, glm::vec3(1, 0, 0));
+		// rotate HUD
+		ret = glm::rotate(ret, -gameObject->rotation.y, glm::vec3(0, 1, 0));
+		ret = glm::rotate(ret, -gameObject->rotation.x, glm::vec3(1, 0, 0));
 
-	if (bIsRunning) {
-		// Get bigger according to FOV
-		float scalingFactor = (mapValue(*this->fov) / 100) * 1.3;
-		//std::cout << "max " << scalingFactor << "\n";
-		ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
+		if (bIsRunning) {
+			if (*this->fov < 100.f) {
+				totalDifference = 100.f - *this->fov;
+			}
+
+			// Get bigger according to FOV
+			float scalingFactor = (mapValue(*this->fov - totalDifference) / 100) * 1.3;
+
+			std::cout << "max " << scalingFactor << ", totalDiff: " << totalDifference << "\n";
+			ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
+		}
+		else if (*this->fov > 75.f) {
+			totalDifference = 100.f - *this->fov;
+			// Get smaller according to FOV 0.8925
+			float scalingFactor = (mapValue(*this->fov - totalDifference) / 100) * 1.3;
+			std::cout << "min " << scalingFactor << ", totalDiff: " << totalDifference << "\n";
+			ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
+		}
+		else if (bIsMoving) {
+			zDistance -= .01f;
+		}
+
+		// place a bit in front of camera
+		ret = glm::translate(ret, glm::vec3(0.0f, 0.0f, -.2f));
+
+		tigl::shader->setModelMatrix(ret);
+
+		// set previous Fov.
+		previousFov = *this->fov;
 	}
-	else if (*this->fov > 75.f) {
-		// Get smaller according to FOV
-		float scalingFactor = (mapValue(*this->fov) / 100) * 1.3;
-		//std::cout << "min " << scalingFactor << "\n";
-		ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
-	}
-	else if (bIsMoving) {
-		zDistance -= .01f;
-	}
-
-	// place a bit in front of camera
-	ret = glm::translate(ret, glm::vec3(0.0f, 0.0f, -.2f));
-
-	tigl::shader->setModelMatrix(ret);
 }
 
 float HUDComponent::mapValue(float value) {

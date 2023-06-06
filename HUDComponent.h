@@ -21,6 +21,10 @@ private:
 	Texture* texture;
 
 	float* fov;
+	float previousFov = 0.f;
+
+	float totalDifference = 0.f;
+
 	bool bIsRunning = false;
 	bool bIsMoving = false;
 private:
