@@ -6,6 +6,8 @@
 #include "Texture.h"
 #include "GameObject.h"
 
+#include <iostream>
+
 // size for hud
 const float width = 0.295f;
 const float height = 0.168f;
@@ -29,7 +31,6 @@ void HUDComponent::update(float deltaTime)
 	
 }
 
-#include <iostream>
 void HUDComponent::updateHUD() {
 	glm::mat4 ret = glm::mat4(1.0f);
 
