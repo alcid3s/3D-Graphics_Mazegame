@@ -1,12 +1,10 @@
-// first include because it contains ImGui
-#include "GuiManager.h"
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "MazeGenerator.h"
 #include "GameObject.h"
+#include "PlaneComponent.h"
 #include "CubeComponent.h"
 #include "PlayerComponent.h"
 #include "CameraComponent.h"
@@ -17,6 +15,8 @@
 #include "AltarComponent.h"
 #include "HUDComponent.h"
 #include "ParticleComponent.h"
+#include "GuiManager.h"
+#include "Texture.h"
 #include <memory>
 
 #include <thread>
@@ -30,10 +30,13 @@ using tigl::Vertex;
 #pragma comment(lib, "opengl32.lib")
 
 // used to communicate between threads.
-std::atomic<bool> bMazeGenerated(false);
+std::atomic<bool> bMazeGeneratedFinished(false);
 
 // check if maze generation is started
 bool bMazeGenerationStarted = false;
+
+// check if all objects are initialised with components.
+bool bObjectInitialised = false;
 
 // window
 GLFWwindow* window;
@@ -51,16 +54,24 @@ GuiManager* guiManager;
 double lastFrameTime = 0;
 
 // bool for debug purposes. Start with or without GUI.
-constexpr bool activateGui = false;
+constexpr bool activateGui = true;
 
 // screen size
 const int screenX = 1400, screenY = 800;
+
+// width and length of maze
+int mazeWidth = 10, mazeLength = 10;
+
+std::vector<std::vector<std::shared_ptr<Cell>>> maze;
 
 void init();
 void update();
 void draw();
 void updatePlayer(float deltaTime);
+void updateGuiManager();
 void enableFog(bool flag);
+void initObjects();
+void generateMaze();
 
 int main(void)
 {
@@ -76,12 +87,14 @@ int main(void)
 
 	tigl::init();
 
+	init();
+
 	if (activateGui) {
 		guiManager = new GuiManager(window, screenX, screenY);
 		guiManager->init();
 	}
 	else {
-		init();
+		initObjects();
 	}
 
 	while (!glfwWindowShouldClose(window))
@@ -100,15 +113,83 @@ int main(void)
 // This function will run in a seperate thread
 void init()
 {
+	std::cout << "main is initialising\n";
 	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			if (key == GLFW_KEY_ESCAPE)
 				glfwSetWindowShouldClose(window, true);
 		});
+}
 
-	// Initialise and draw a maze
-	mazeGen = new MazeGenerator();
-	auto maze = mazeGen->Generate(10, 10);
+void update()
+{
+	if (activateGui) {
+		updateGuiManager();
+		if (guiManager->menuType != MenuType::Playing)
+			return;
+	}
+
+	// Getting deltatime
+	double currentFrame = glfwGetTime();
+	float deltaTime = currentFrame - lastFrameTime;
+	lastFrameTime = currentFrame;
+
+	// Updating gameobjects
+	for (auto& o : objects)
+		o->update(deltaTime);
+
+	// Updating player
+	updatePlayer(deltaTime);
+}
+
+void draw()
+{
+	if (activateGui) {
+		guiManager->draw();
+		if (guiManager->menuType != MenuType::Playing)
+			return;
+	}
+
+	// Draw dark background
+	glClearColor(.05f, .05f, .05f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Make sure not all sides of the vertices are visible to the player
+	glEnable(GL_DEPTH_TEST);
+
+	// Set projection matrix
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	glm::mat4 projection = glm::perspective(glm::radians(player->getComponent<CameraComponent>()->fov), viewport[2] / (float)viewport[3], 0.01f, 1000.0f);
+
+	auto cameraComponent = player->getComponent<CameraComponent>();
+
+	// Setting matrixes
+	tigl::shader->setProjectionMatrix(projection);
+	tigl::shader->setViewMatrix(cameraComponent->getMatrix());
+	tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
+	tigl::shader->enableColor(true);
+
+	// enableFog(true);
+
+	// Drawing all gameobjects
+	for (auto& o : objects)
+		o->draw();
+
+	// Drawing the flashlight, HUD and particleSystem of the player
+	player->getComponent<HUDComponent>()->draw();
+	player->getComponent<FlashlightComponent>()->draw();
+	player->getComponent<ParticleComponent>()->draw();
+}
+
+void initObjects() {
+	std::vector<Texture*> mazeTextures;
+
+	// Added pointer of Texture to the vector.
+	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
+	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
 
 	// Adding all gameobjects the generate function created to the gameobjects list
 	for (auto row : maze) {
@@ -116,11 +197,18 @@ void init()
 			if (obj->gameObject.type == Type::Wall || obj->gameObject.type == Type::Edge) {
 				glm::vec3 minimal = glm::vec3(-.5f, 0, -.5f);
 				glm::vec3 maximal = glm::vec3(.5f, 0, .5f);
+				obj->gameObject.addComponent(std::make_shared<CubeComponent>(glm::vec3(1,1,1), mazeTextures[1]));
 				obj->gameObject.addComponent(std::make_shared<BoundingBoxComponent>(minimal, maximal));
+			}
+			else if (obj->gameObject.type == Type::Floor || obj->gameObject.type == Type::Endpoint || obj->gameObject.type == Type::Spawnpoint) {
+				obj->gameObject.addComponent(std::make_shared<PlaneComponent>(glm::vec3(1, 0, 1), mazeTextures[0]));
 			}
 			objects.push_back(std::make_shared<GameObject>(obj->gameObject));
 		}
 	}
+
+	// clear maze because it's not needed anymore
+	maze.clear();
 
 	// Create player and sets it's position to the spawnpoint
 	player = std::make_shared<GameObject>();
@@ -160,7 +248,17 @@ void init()
 	altar->addComponent(std::make_shared<AltarComponent>());
 	objects.push_back(altar);
 
-	bMazeGenerated = true;
+	bObjectInitialised = true;
+}
+
+// function to generate maze. Called from thread if GUI active
+void generateMaze()
+{
+	// Initialise and draw a maze
+	mazeGen = new MazeGenerator();
+	maze = mazeGen->Generate(mazeWidth, mazeLength);
+
+	bMazeGeneratedFinished = true;
 }
 
 // Enables fog into the world
@@ -209,96 +307,33 @@ void updatePlayer(float deltaTime) {
 	cameraComponent->changeFOV(deltaTime, playerComponent->bIsRunning);
 }
 
-void update()
+// updates all global variables in main according to the states.
+void updateGuiManager()
 {
-	if (activateGui) {
-		if (guiManager->menuType == MenuType::MainMenu) {
-			guiManager->update();
-			return;
-		}
-		else if (guiManager->menuType == MenuType::Loading && !bMazeGenerationStarted) {
-			// setting to false if it was true
-			bMazeGenerated = false;
-
-			// maze generation ahs started so it won't start another time
-			bMazeGenerationStarted = true;
-
-			// creating thread initialising all variables
-			std::thread initThread(init);
-
-			// detach so mainthread can run normally.
-			initThread.detach();
-		}
-		if (!bMazeGenerated) {
-			return;
-		}
-		else if(bMazeGenerated && guiManager->menuType != MenuType::Playing){
-			guiManager->menuType = MenuType::Playing;
-		}
+	if (guiManager->menuType == MenuType::MainMenu) {
+		guiManager->update();
+		return;
 	}
+	else if (guiManager->menuType == MenuType::Loading && !bMazeGenerationStarted) {
+		// setting to false if it was true
+		bMazeGeneratedFinished = false;
 
-	// Getting deltatime
-	double currentFrame = glfwGetTime();
-	float deltaTime = currentFrame - lastFrameTime;
-	lastFrameTime = currentFrame;
+		// maze generation ahs started so it won't start another time
+		bMazeGenerationStarted = true;
 
-	// Updating gameobjects
-	for (auto& o : objects)
-		o->update(deltaTime);
+		// creating thread initialising all variables
+		std::thread thread(generateMaze);
 
-	// Updating player
-	updatePlayer(deltaTime);
-}
-
-void draw()
-{
-	if (activateGui) {
-		if (guiManager->menuType == MenuType::MainMenu) {
-			guiManager->draw();
-			return;
-		}
-		else if (guiManager->menuType == MenuType::Loading) {
-			guiManager->draw();
-			return;
-		}
-
-		if (!bMazeGenerated) {
-			return;
-		}
+		// detach so mainthread can run normally.
+		thread.detach();
 	}
-
-	// Draw dark background
-	glClearColor(.05f, .05f, .05f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Make sure not all sides of the vertices are visible to the player
-	glEnable(GL_DEPTH_TEST);
-
-	// Set projection matrix
-	int viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-
-	glm::mat4 projection = glm::perspective(glm::radians(player->getComponent<CameraComponent>()->fov), viewport[2] / (float)viewport[3], 0.01f, 1000.0f);
-
-	auto cameraComponent = player->getComponent<CameraComponent>();
-
-	// Setting matrixes
-	tigl::shader->setProjectionMatrix(projection);
-	tigl::shader->setViewMatrix(cameraComponent->getMatrix());
-	tigl::shader->setModelMatrix(glm::mat4(1.0f));
-
-	tigl::shader->enableColor(true);
-
-	// enableFog(true);
-
-	// Drawing all gameobjects
-	for (auto& o : objects)
-		o->draw();
-
-	// Drawing the flashlight and HUD of the player
-	if (!activateGui) {
-		player->getComponent<HUDComponent>()->draw();
+	if (!bMazeGeneratedFinished) {
+		return;
 	}
-	player->getComponent<FlashlightComponent>()->draw();
-	player->getComponent<ParticleComponent>()->draw();
+	else if (bMazeGeneratedFinished && !bObjectInitialised) {
+		initObjects();
+	}
+	else if (bMazeGeneratedFinished && bObjectInitialised && guiManager->menuType != MenuType::Playing) {
+		guiManager->menuType = MenuType::Playing;
+	}
 }
