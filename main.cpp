@@ -68,11 +68,12 @@ std::vector<std::vector<std::shared_ptr<Cell>>> maze;
 void init();
 void update();
 void draw();
-void updatePlayer(float deltaTime);
-void updateGuiManager();
-void enableFog(bool flag);
+
 void initObjects();
 void generateMaze();
+void enableFog(bool flag);
+void updatePlayer(float deltaTime);
+void updateGuiManager();
 
 int main(void)
 {
@@ -191,6 +192,7 @@ void draw()
 	Functions under here contain logic. But aren't convenient to put in a class.
 */
 
+// Gives maze textures and shapes. Also instantiates player, altar and ambience gameObjects.
 void initObjects() {
 	std::vector<Texture*> mazeTextures;
 
