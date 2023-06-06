@@ -51,10 +51,11 @@ MazeGenerator* mazeGen;
 // manager for ImGui
 GuiManager* guiManager;
 
+// used for deltatime
 double lastFrameTime = 0;
 
 // bool for debug purposes. Start with or without GUI.
-constexpr bool activateGui = true;
+constexpr bool activateGui = false;
 
 // screen size
 const int screenX = 1400, screenY = 800;
@@ -110,7 +111,6 @@ int main(void)
 	return 0;
 }
 
-// This function will run in a seperate thread
 void init()
 {
 	std::cout << "main is initialising\n";
@@ -119,6 +119,9 @@ void init()
 			if (key == GLFW_KEY_ESCAPE)
 				glfwSetWindowShouldClose(window, true);
 		});
+
+	if (!activateGui)
+		generateMaze();
 }
 
 void update()
@@ -183,6 +186,10 @@ void draw()
 	player->getComponent<FlashlightComponent>()->draw();
 	player->getComponent<ParticleComponent>()->draw();
 }
+
+/*
+	Functions under here contain logic. But aren't convenient to put in a class.
+*/
 
 void initObjects() {
 	std::vector<Texture*> mazeTextures;
