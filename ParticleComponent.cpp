@@ -20,7 +20,6 @@ void ParticleComponent::init() {
 		{
 			glm::vec3 position = -gameObject->position;
 
-			position.z += 1.f;
 			position.y = 1.f;
 
 			if (position.z == 10.f) {
@@ -28,7 +27,7 @@ void ParticleComponent::init() {
 			}
 
 			Particle particle;
-			particle.velocity = glm::vec3(0.f, 0.f, 0.f);
+			particle.velocity = glm::vec3(0.f);
 			particle.vert = Vertex::PT(position, generateColor());
 
 			std::cout << "particle " << i << " (" << position.x << "," << position.y << "," << position.z << "\n";
@@ -57,11 +56,12 @@ void ParticleComponent::update(float deltaTime)
 
 void ParticleComponent::draw()
 {
+	glPointSize(1000.f);
 	tigl::begin(GL_POINT);
 
 	for (const auto& p : particles) {
 		tigl::shader->enableColor(true);
-		glPointSize(10.f);
+
 		tigl::addVertex(p.vert);
 	}
 	tigl::end();

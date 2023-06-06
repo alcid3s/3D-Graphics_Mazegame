@@ -55,7 +55,7 @@ GuiManager* guiManager;
 double lastFrameTime = 0;
 
 // bool for debug purposes. Start with or without GUI.
-constexpr bool activateGui = false;
+constexpr bool activateGui = true;
 
 // screen size
 const int screenX = 1400, screenY = 800;
