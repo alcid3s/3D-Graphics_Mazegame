@@ -23,7 +23,7 @@ void FlashlightComponent::draw()
 	if (obj) {
 		tigl::shader->setModelMatrix(this->mat);
 		obj->draw();
-		drawLight();
+		//drawLight();
 	}
 }
 
