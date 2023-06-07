@@ -34,32 +34,32 @@ void ParticleComponent::init() {
 			particle.originalVert[2] = particle.vert[2];
 			particle.originalVert[3] = particle.vert[3];
 
-			particle.x = 1.f;
+			particle.x = .5f;
 
 			glm::vec3 velocity = glm::vec3(0.f);
 
-			//int randomVelocity = 0;// (((rand() % 4) + 1) / 10) + 1;
-			//int direction = rand();
+			int randomVelocity = 0; // (((rand() % 4) + 1) / 10) + 1;
 
-			//float parabolaY = a * (particle.x * particle.x) + b * particle.x + c;
+			float parabolaY = calculateParabola(particle.x);
 
-			//if (direction % 5 == 0) {
+			//switch (rand() % 4) {
+			//case 3:
 			//	velocity = glm::vec3(-randomVelocity, parabolaY, -randomVelocity);
-			//}
-			//else if (direction % 4 == 0) {
+			//	break;
+			//case 2:
 			//	velocity = glm::vec3(randomVelocity, parabolaY, -randomVelocity);
-			//}
-			//else if (direction % 3 == 0) {
+			//	break;
+			//case 1:
 			//	velocity = glm::vec3(randomVelocity, parabolaY, randomVelocity);
-			//}
-			//else {
+			//	break;
+			//case 0:
 			//	velocity = glm::vec3(-randomVelocity, parabolaY, randomVelocity);
+			//	break;
 			//}
 
 			particle.velocity = velocity;
 			particle.originalVelocity = velocity;
-
-			std::cout << "velocity for particle: " << i << " is (" << velocity.x << ", " << velocity.y << ", " << velocity.z << ")\n";
+			particle.previousVelocity = velocity;
 
 			particles.push_back(particle);
 
@@ -77,39 +77,48 @@ glm::vec4 ParticleComponent::generateColor() {
 	);
 }
 
+float ParticleComponent::calculateParabola(const float& x) {
+	return (a * (x * x)) + (b * x) + (c);
+}
+
+void ParticleComponent::resetParticle(Particle& particle) {
+	std::cout << "resetting particle\n";
+	particle.vert[0].position = particle.originalVert[0].position;
+	particle.vert[1].position = particle.originalVert[1].position;
+	particle.vert[2].position = particle.originalVert[2].position;
+	particle.vert[3].position = particle.originalVert[3].position;
+
+	particle.velocity = particle.originalVelocity;
+	particle.previousVelocity = particle.originalVelocity;
+
+	particle.x = .5f;
+}
+
 void ParticleComponent::update(float deltaTime)
 {
 	init();
-	//for (int i = 0; i < particles.size(); i++)
-	//{
-	//	for (int j = 0; j < 4; j++) {
-	//			particles[i].vert[j].position.x = particles[i].velocity.x;
-	//			particles[i].vert[j].position.y = particles[i].velocity.y;
-	//			particles[i].vert[j].position.z = particles[i].velocity.z;
+	for (int i = 0; i < particles.size(); i++)
+	{
+		for (int j = 0; j < 4; j++) {
 
-	//			// updates velocity
-	//			particles[i].x -= 0.001f;
-	//			float parabolaY = a * (particles[i].x * particles[i].x) + b * particles[i].x + c;
-	//			particles[i].velocity.y = parabolaY;
+			// updates position with velocity
+			particles[i].vert[j].position += (particles[i].velocity - particles[i].previousVelocity);
 
-	//			// reset particle position
-	//			if (particles[i].vert[j].position.y < -5.f) {
-	//				std::cout << "reset\n";
-	//				particles[i].vert[0].position = particles[i].originalVert[0].position;
-	//				particles[i].vert[1].position = particles[i].originalVert[1].position;
-	//				particles[i].vert[2].position = particles[i].originalVert[2].position;
-	//				particles[i].vert[3].position = particles[i].originalVert[3].position;
+			// updates velocity
+			particles[i].previousVelocity = particles[i].velocity;
+			particles[i].x -= 0.001f;
+			particles[i].velocity.y = calculateParabola(particles[i].x);
 
-	//				particles[i].velocity = particles[i].originalVelocity;
-
-	//				particles[i].x = 1.f;
-	//				break;
-	//			}
-	//	}
-	//	if (i == 0) {
-	//		std::cout << "particle 0: (" << particles[i].vert[0].position.x << "," << particles[i].vert[0].position.y << "," << particles[i].vert[0].position.z << "), x: " << particles[i].x << "\n";
-	//	}
-	// }
+			// reset particle position
+			if (particles[i].vert[j].position.y < -.5f) {
+				resetParticle(particles[i]);
+				break;
+			}
+		}
+		if (i == 0) {
+			std::cout << "particle 0: (" << particles[i].vert[0].position.x << "," << particles[i].vert[0].position.y << "," << particles[i].vert[0].position.z << "), x: " << particles[i].x << "\n";
+		}
+	}
 }
 
 glm::mat4 ParticleComponent::changeModelMatrix(bool flag) {

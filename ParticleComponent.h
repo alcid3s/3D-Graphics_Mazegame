@@ -11,6 +11,7 @@ struct Particle {
 	std::array<Vertex, 4> originalVert;
 
 	glm::vec3 velocity;
+	glm::vec3 previousVelocity;
 	glm::vec3 originalVelocity;
 	float x;
 };
@@ -30,8 +31,10 @@ private:
 	int numParticles;
 
 	// variables used to calculate the parabola of the particle
-	const float a = -5.f, b = 0.f, c = 5.f;
+	const float a = -2.f, b = 0.f, c = .5f;
 private:
 	glm::vec4 generateColor();
 	glm::mat4 changeModelMatrix(bool flag);
+	float calculateParabola(const float& x);
+	void resetParticle(Particle& particle);
 };
