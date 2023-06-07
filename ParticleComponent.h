@@ -18,7 +18,7 @@ struct Particle {
 
 class ParticleComponent : public DrawComponent {
 public:
-	ParticleComponent(const int& numParticles = 5);
+	ParticleComponent(const int& numParticles = 25);
 	~ParticleComponent();
 
 	void update(float deltaTime) override;

@@ -38,24 +38,22 @@ void ParticleComponent::init() {
 
 			glm::vec3 velocity = glm::vec3(0.f);
 
-			int randomVelocity = 0; // (((rand() % 4) + 1) / 10) + 1;
+			int randomVelocity = static_cast<float>(rand() % 100 - 50) / 500.0f;
 
-			float parabolaY = calculateParabola(particle.x);
-
-			//switch (rand() % 4) {
-			//case 3:
-			//	velocity = glm::vec3(-randomVelocity, parabolaY, -randomVelocity);
-			//	break;
-			//case 2:
-			//	velocity = glm::vec3(randomVelocity, parabolaY, -randomVelocity);
-			//	break;
-			//case 1:
-			//	velocity = glm::vec3(randomVelocity, parabolaY, randomVelocity);
-			//	break;
-			//case 0:
-			//	velocity = glm::vec3(-randomVelocity, parabolaY, randomVelocity);
-			//	break;
-			//}
+			switch (rand() % 4) {
+			case 3:
+				velocity = glm::vec3(-randomVelocity, 0, -randomVelocity);
+				break;
+			case 2:
+				velocity = glm::vec3(randomVelocity, 0, -randomVelocity);
+				break;
+			case 1:
+				velocity = glm::vec3(randomVelocity, 0, randomVelocity);
+				break;
+			case 0:
+				velocity = glm::vec3(-randomVelocity, 0, randomVelocity);
+				break;
+			}
 
 			particle.velocity = velocity;
 			particle.originalVelocity = velocity;
@@ -101,8 +99,11 @@ void ParticleComponent::update(float deltaTime)
 	{
 		for (int j = 0; j < 4; j++) {
 
-			// updates position with velocity
-			particles[i].vert[j].position += (particles[i].velocity - particles[i].previousVelocity);
+			// updates position of y with velocity
+			particles[i].vert[j].position.y += (particles[i].velocity.y - particles[i].previousVelocity.y);
+
+			particles[i].vert[j].position.x += particles[i].velocity.x;
+			particles[i].vert[j].position.z += particles[i].velocity.z;
 
 			// updates velocity
 			particles[i].previousVelocity = particles[i].velocity;
