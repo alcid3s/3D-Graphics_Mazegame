@@ -31,7 +31,6 @@ void EnemyComponent::update(float deltaTime)
 		this->shortestPath = generateNewTarget();
 		posInList = 0;
 		bMoving = true;
-		std::cout << "enemy spawnpoint: (" << gameObject->position.x << "," << gameObject->position.z << ")\n";
 	}
 
 	if (bMoving && !bIdle) {

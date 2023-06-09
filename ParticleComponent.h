@@ -45,6 +45,7 @@ private:
 	const float a = -2.f, b = 0.f, c = .5f, particleXSpeed = .02f;
 private:
 	glm::vec4 generateColor();
+	float generateVelocity();
 	glm::mat4 changeModelMatrix(bool flag);
 	float calculateParabola(const float& x);
 	void resetParticle(Particle& particle);

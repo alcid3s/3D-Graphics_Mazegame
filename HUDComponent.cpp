@@ -51,15 +51,12 @@ void HUDComponent::updateHUD() {
 
 			// Get bigger according to FOV
 			float scalingFactor = (mapValue(*this->fov - totalDifference) / 100) * 1.3;
-
-			std::cout << "max " << scalingFactor << ", totalDiff: " << totalDifference << "\n";
 			ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
 		}
 		else if (*this->fov > 75.f) {
 			totalDifference = 100.f - *this->fov;
 			// Get smaller according to FOV 0.8925
 			float scalingFactor = (mapValue(*this->fov - totalDifference) / 100) * 1.3;
-			std::cout << "min " << scalingFactor << ", totalDiff: " << totalDifference << "\n";
 			ret = glm::scale(ret, glm::vec3(scalingFactor, scalingFactor, 1.0f));
 		}
 		else if (bIsMoving) {

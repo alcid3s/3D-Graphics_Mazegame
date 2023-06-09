@@ -48,8 +48,8 @@ void ParticleComponent::init() {
 
 			// creating random velocity in a direction
 			glm::vec3 velocity = glm::vec3(0.f);
-			float randomVelocityX = static_cast<float>(rand() % 100 - 50) / spread;
-			float randomVelocityY = static_cast<float>(rand() % 100 - 50) / spread;
+			float randomVelocityX = generateVelocity();
+			float randomVelocityY = generateVelocity();
 			switch (rand() % 4) {
 			case 3:
 				velocity = glm::vec3(-randomVelocityX, 0, -randomVelocityY);
@@ -86,6 +86,10 @@ glm::vec4 ParticleComponent::generateColor() {
 
 float ParticleComponent::calculateParabola(const float& x) {
 	return (a * (x * x)) + (b * x) + (c);
+}
+
+float ParticleComponent::generateVelocity() {
+	return static_cast<float>(rand() % 100 - 50) / spread;
 }
 
 void ParticleComponent::resetParticle(Particle& particle) {
