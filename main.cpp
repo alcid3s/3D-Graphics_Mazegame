@@ -199,6 +199,7 @@ void initObjects() {
 	// Added pointer of Texture to the vector.
 	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
 	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
+	mazeTextures.push_back(new Texture("resource/textures/dirt.png"));
 
 	// Adding all gameobjects the generate function created to the gameobjects list
 	for (auto row : maze) {
@@ -230,7 +231,7 @@ void initObjects() {
 	player->addComponent(std::make_shared<AudioComponent>(AudioType::AudioPlayer));
 	player->addComponent(std::make_shared<FlashlightComponent>());
 	player->addComponent(std::make_shared<HUDComponent>());
-	player->addComponent(std::make_shared<ParticleComponent>());
+	player->addComponent(std::make_shared<ParticleComponent>(mazeTextures[2]));
 
 	// give HUD access to the fov parameter
 	player->getComponent<HUDComponent>()->setFov(&player->getComponent<CameraComponent>()->fov);

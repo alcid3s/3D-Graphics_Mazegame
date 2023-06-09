@@ -3,10 +3,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
+#include "Texture.h"
 #include "CameraComponent.h"
 
-ParticleComponent::ParticleComponent(const int& numParticles) : numParticles(numParticles)
+ParticleComponent::ParticleComponent(Texture* texture, const int& numParticles) : numParticles(numParticles), texture(texture), bCondition(nullptr)
 {
 
 }
@@ -48,8 +48,8 @@ void ParticleComponent::init() {
 
 			// creating random velocity in a direction
 			glm::vec3 velocity = glm::vec3(0.f);
-			float randomVelocityX = static_cast<float>(rand() % 100 - 50) / 2500.0f;
-			float randomVelocityY = static_cast<float>(rand() % 100 - 50) / 2500.0f;
+			float randomVelocityX = static_cast<float>(rand() % 100 - 50) / spread;
+			float randomVelocityY = static_cast<float>(rand() % 100 - 50) / spread;
 			switch (rand() % 4) {
 			case 3:
 				velocity = glm::vec3(-randomVelocityX, 0, -randomVelocityY);
@@ -89,7 +89,6 @@ float ParticleComponent::calculateParabola(const float& x) {
 }
 
 void ParticleComponent::resetParticle(Particle& particle) {
-	std::cout << "resetting particle\n";
 	particle.vert[0].position = particle.originalVert[0].position;
 	particle.vert[1].position = particle.originalVert[1].position;
 	particle.vert[2].position = particle.originalVert[2].position;
@@ -181,8 +180,10 @@ void ParticleComponent::draw()
 		ret = glm::translate(ret, pos);
 
 		tigl::shader->setModelMatrix(ret);
-
 		tigl::shader->enableColor(true);
+		tigl::shader->enableTexture(true);
+
+		texture->bind();
 		tigl::begin(GL_QUADS);
 		for (const auto& p : particles) {
 			for (int i = 0; i < 4; i++) {
@@ -190,6 +191,8 @@ void ParticleComponent::draw()
 			}
 		}
 		tigl::end();
+		texture->unbind();
 		tigl::shader->enableColor(false);
+		tigl::shader->enableTexture(false);
 	}
 }
