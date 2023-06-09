@@ -235,6 +235,9 @@ void initObjects() {
 	// give HUD access to the fov parameter
 	player->getComponent<HUDComponent>()->setFov(&player->getComponent<CameraComponent>()->fov);
 
+	// give HUD access to the running boolean and if this condition is met it'll do particle things.
+	player->getComponent<ParticleComponent>()->setCondition(&player->getComponent<PlayerComponent>()->bIsRunning);
+
 	glm::vec3 min = glm::vec3(-.1f, 0, -.1f);
 	glm::vec3 max = glm::vec3(.1f, 0, .1f);
 	player->addComponent(std::make_shared<BoundingBoxComponent>(min, max));

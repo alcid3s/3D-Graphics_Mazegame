@@ -23,36 +23,48 @@ void ParticleComponent::init() {
 
 			Particle particle;
 
-			// sets size and origin of particle
-			particle.vert[0] = Vertex::PC(position + glm::vec3(-.05, 0, -.05), generateColor());
-			particle.vert[1] = Vertex::PC(position + glm::vec3(.05, 0, -.05), generateColor());
-			particle.vert[2] = Vertex::PC(position + glm::vec3(.05, 0, .05), generateColor());
-			particle.vert[3] = Vertex::PC(position + glm::vec3(-.05, 0, .05), generateColor());
+			// hardcoding the size of a particle
+			glm::vec3 size[4] = {
+				glm::vec3(-.01, 0, -0.01),
+				glm::vec3(.01, 0, -0.01),
+				glm::vec3(.01, 0, .01),
+				glm::vec3(-.01, 0, .01)
+			};
 
+			// add vertices to particle.
+			particle.vert[0] = Vertex::PC(position + size[0], generateColor());
+			particle.vert[1] = Vertex::PC(position + size[1], generateColor());
+			particle.vert[2] = Vertex::PC(position + size[2], generateColor());
+			particle.vert[3] = Vertex::PC(position + size[3], generateColor());
+
+			// Original values, so particle can respawn on exact same position
 			particle.originalVert[0] = particle.vert[0];
 			particle.originalVert[1] = particle.vert[1];
 			particle.originalVert[2] = particle.vert[2];
 			particle.originalVert[3] = particle.vert[3];
 
+			// x for parabola
 			particle.x = .5f;
 
+			// creating random velocity in a direction
 			glm::vec3 velocity = glm::vec3(0.f);
-
-			int randomVelocity = static_cast<float>(rand() % 100 - 50) / 500.0f;
-
+			float randomVelocityX = static_cast<float>(rand() % 100 - 50) / 2500.0f;
+			float randomVelocityY = static_cast<float>(rand() % 100 - 50) / 2500.0f;
 			switch (rand() % 4) {
 			case 3:
-				velocity = glm::vec3(-randomVelocity, 0, -randomVelocity);
+				velocity = glm::vec3(-randomVelocityX, 0, -randomVelocityY);
 				break;
 			case 2:
-				velocity = glm::vec3(randomVelocity, 0, -randomVelocity);
+				velocity = glm::vec3(randomVelocityX, 0, -randomVelocityY);
 				break;
 			case 1:
-				velocity = glm::vec3(randomVelocity, 0, randomVelocity);
+				velocity = glm::vec3(randomVelocityX, 0, randomVelocityY);
 				break;
 			case 0:
-				velocity = glm::vec3(-randomVelocity, 0, randomVelocity);
+				velocity = glm::vec3(-randomVelocityX, 0, randomVelocityY);
 				break;
+			default:
+				throw "error creating random velocity in ParticleComponent";
 			}
 
 			particle.velocity = velocity;
@@ -60,9 +72,6 @@ void ParticleComponent::init() {
 			particle.previousVelocity = velocity;
 
 			particles.push_back(particle);
-
-			if (i == 0)
-				std::cout << "start of particle 0: (" << particles[i].vert[0].position.x << "," << particles[i].vert[0].position.y << "," << particles[i].vert[0].position.z << ")\n";
 		}
 	}
 }
@@ -95,29 +104,28 @@ void ParticleComponent::resetParticle(Particle& particle) {
 void ParticleComponent::update(float deltaTime)
 {
 	init();
-	for (int i = 0; i < particles.size(); i++)
-	{
-		for (int j = 0; j < 4; j++) {
+	if (*this->bCondition) {
+		for (int i = 0; i < particles.size(); i++)
+		{
+			for (int j = 0; j < 4; j++) {
 
-			// updates position of y with velocity
-			particles[i].vert[j].position.y += (particles[i].velocity.y - particles[i].previousVelocity.y);
+				// updates position of y with velocity
+				particles[i].vert[j].position.y += (particles[i].velocity.y - particles[i].previousVelocity.y);
 
-			particles[i].vert[j].position.x += particles[i].velocity.x;
-			particles[i].vert[j].position.z += particles[i].velocity.z;
+				particles[i].vert[j].position.x += particles[i].velocity.x;
+				particles[i].vert[j].position.z += particles[i].velocity.z;
 
-			// updates velocity
-			particles[i].previousVelocity = particles[i].velocity;
-			particles[i].x -= 0.001f;
-			particles[i].velocity.y = calculateParabola(particles[i].x);
+				// updates velocity
+				particles[i].previousVelocity = particles[i].velocity;
+				particles[i].x -= particleXSpeed;
+				particles[i].velocity.y = calculateParabola(particles[i].x);
 
-			// reset particle position
-			if (particles[i].vert[j].position.y < -.5f) {
-				resetParticle(particles[i]);
-				break;
+				// reset particle position
+				if (particles[i].vert[j].position.y < -.5f) {
+					resetParticle(particles[i]);
+					break;
+				}
 			}
-		}
-		if (i == 0) {
-			std::cout << "particle 0: (" << particles[i].vert[0].position.x << "," << particles[i].vert[0].position.y << "," << particles[i].vert[0].position.z << "), x: " << particles[i].x << "\n";
 		}
 	}
 }
@@ -165,21 +173,23 @@ glm::mat4 ParticleComponent::changeModelMatrix(bool flag) {
 
 void ParticleComponent::draw()
 {
-	glm::vec3 pos = -gameObject->position;
-	pos.y += -.3f;
+	if (*this->bCondition) {
+		glm::vec3 pos = -gameObject->position;
+		pos.y += -.3f;
 
-	glm::mat4 ret(1.f);
-	ret = glm::translate(ret, pos);
+		glm::mat4 ret(1.f);
+		ret = glm::translate(ret, pos);
 
-	tigl::shader->setModelMatrix(ret);
+		tigl::shader->setModelMatrix(ret);
 
-	tigl::shader->enableColor(true);
-	tigl::begin(GL_QUADS);
-	for (const auto& p : particles) {
-		for (int i = 0; i < 4; i++) {
-			tigl::addVertex(p.vert[i]);
+		tigl::shader->enableColor(true);
+		tigl::begin(GL_QUADS);
+		for (const auto& p : particles) {
+			for (int i = 0; i < 4; i++) {
+				tigl::addVertex(p.vert[i]);
+			}
 		}
+		tigl::end();
+		tigl::shader->enableColor(false);
 	}
-	tigl::end();
-	tigl::shader->enableColor(false);
 }

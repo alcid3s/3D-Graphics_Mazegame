@@ -18,20 +18,26 @@ struct Particle {
 
 class ParticleComponent : public DrawComponent {
 public:
-	ParticleComponent(const int& numParticles = 25);
+	ParticleComponent(const int& numParticles = 50);
 	~ParticleComponent();
 
 	void update(float deltaTime) override;
 	void draw() override;
+
+
+	inline void setCondition(bool* condition) { this->bCondition = condition; }
+
+	bool* bCondition;
 protected:
 	std::vector<Particle> particles;
-
+protected:
 	void init();
+
 private:
 	int numParticles;
 
 	// variables used to calculate the parabola of the particle
-	const float a = -2.f, b = 0.f, c = .5f;
+	const float a = -2.f, b = 0.f, c = .5f, particleXSpeed = .02f;
 private:
 	glm::vec4 generateColor();
 	glm::mat4 changeModelMatrix(bool flag);
