@@ -15,6 +15,11 @@ MazeGenerator::~MazeGenerator()
 {
 	mazeTextures.clear();
 	delete& mazeTextures;
+	delete& enemySpawnTile;
+	delete& spawnGameObject;
+	delete& endTile;
+	delete& maze;
+	delete& altar;
 }
 
 std::vector<std::vector<std::shared_ptr<Cell>>> MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ)
@@ -23,6 +28,8 @@ std::vector<std::vector<std::shared_ptr<Cell>>> MazeGenerator::Generate(const in
 		throw "maze must be atleast 5 wide and 5 long.";
 		exit(1);
 	}
+
+	std::cout << "generating maze\n";
 
 	srand(static_cast<unsigned int>(time(nullptr)));
 
@@ -65,16 +72,18 @@ void MazeGenerator::SetEnemySpawnPoint(const int& sizeX, const int& sizeZ) {
 
 void MazeGenerator::setEndTile(const int& sizeX, const int& sizeZ)
 {
-	std::vector<glm::vec3*> possibleEndPoints;
+	std::vector<glm::vec3> possibleEndPoints;
 	for (int x = 0; x <= sizeX; x++) {
 		for (int z = 0; z <= sizeZ; z++) {
-			if (NextToEdge(x, z, sizeX, sizeZ) && x != spawnPoint.x && z != spawnPoint.z) {
-				possibleEndPoints.push_back(new glm::vec3((float)x, 0.f, (float)z));
+			if (NextToEdge(x, z, sizeX, sizeZ) && x != -spawnPoint.x && z != -spawnPoint.z) {
+				if (maze[z][x]->gameObject.type == Type::Floor)
+					possibleEndPoints.push_back(glm::vec3(x, 0.f, z));
 			}
 		}
 	}
-	this->endPoint = *possibleEndPoints.at(rand() % possibleEndPoints.size());
+	this->endPoint = possibleEndPoints.at(rand() % possibleEndPoints.size());
 	this->endTile = maze[this->endPoint.z][this->endPoint.x];
+	std::cout << "endTile: (" << endPoint.x << "," << endPoint.z << "\n";
 }
 
 void MazeGenerator::DepthFirstSearch(std::shared_ptr<Cell> tile, std::vector<std::shared_ptr<Cell>>* visitedTiles) {
