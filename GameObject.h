@@ -20,9 +20,15 @@ public:
 	GameObject();
 	~GameObject();
 
+	// Holds current parameters of the gameObject in the world
 	glm::vec3 position;
 	glm::vec3 rotation = glm::vec3(0, 0, 0);
 	glm::vec3 scale = glm::vec3(1, 1, 1);
+
+	// Holds previous parameters of the gameObject in the world
+	glm::vec3 oldPosition;
+	glm::vec3 oldRotation = glm::vec3(0, 0, 0);
+	glm::vec3 oldScale = glm::vec3(1, 1, 1);
 
 	// specifies the type of object it is.
 	Type type;
@@ -52,6 +58,6 @@ public:
 				T* t = dynamic_cast<T*>(c);
 				return t != nullptr;
 			});
-	}
+	}	
 };
 

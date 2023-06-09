@@ -18,7 +18,7 @@ PlayerComponent::~PlayerComponent()
 
 }
 
-
+#include <iostream>
 void PlayerComponent::move(float angle, float fac, float deltaTime)
 {
 	this->bMoving = true;
@@ -35,27 +35,44 @@ void PlayerComponent::update(float deltaTime)
 
 bool PlayerComponent::checkCollision(std::list<std::shared_ptr<GameObject>>& objects) {
 	bool collides = false;
+
+	// if no movement was called
 	if (this->tempPosition == glm::vec3(0.0f, 0.0f, 0.0f)) {
 		return collides;
 	}
-	this->tempPosition = gameObject->position + this->tempPosition;
-	this->oldPosition = gameObject->position;
 
-	gameObject->position = this->tempPosition;
+	// check if player has bounding box
 	if (!gameObject->getComponent<BoundingBoxComponent>()) {
 		return false;
 	}
-	for (auto& obj : objects) {
+
+	// create the temporary position of the player
+	this->tempPosition = gameObject->position + this->tempPosition;
+
+	// save the very old position of the player from 2 cycles ago
+	glm::vec3 oldOldPosition = gameObject->oldPosition;
+
+	// old position of the player is this
+	gameObject->oldPosition = gameObject->position;
+
+	// set gameObject equal to future position
+	gameObject->position = this->tempPosition;
+
+	// check if any object collides with the new position of the player
+	for (const auto& obj : objects) {
 		if (gameObject->getComponent<BoundingBoxComponent>()->collide(obj)) {
 			collides = true;
 			break;
 		}
 	}
 
+	// if collision with an object happend, set the player back to it's old position. Move was illegal.
 	if (collides) {
-		gameObject->position = this->oldPosition;
+		gameObject->position = gameObject->oldPosition;
+		gameObject->oldPosition = oldOldPosition;
 	}
 
+	// reset the temporary position
 	this->tempPosition = glm::vec3(0, 0, 0);
 
 	return collides;
@@ -93,18 +110,6 @@ void PlayerComponent::playerInput(float deltaTime)
 	// right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		move(180, 0.05f, deltaTime);
-
-	// up
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		gameObject->position.y -= speed * 0.001f;
-	}
-
-	// down
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-	{
-		gameObject->position.y += speed * 0.001f;
-	}
 }
 
 void PlayerComponent::checkMaxRunTime()

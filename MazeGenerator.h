@@ -55,6 +55,6 @@ private:
 	void FillMaze(const int& sizeX, const int& sizeZ);
 };
 
-std::vector<std::shared_ptr<Cell>> GetUnvisitedNeighbours(std::shared_ptr<Cell> tile, std::vector<std::vector<std::shared_ptr<Cell>>>& maze);
+std::vector<std::shared_ptr<Cell>> GetUnvisitedNeighbours(std::shared_ptr<Cell>& tile, std::vector<std::vector<std::shared_ptr<Cell>>>& maze);
 std::vector<std::shared_ptr<Cell>> GetNeighbours(std::shared_ptr<Cell> tile, std::vector<std::vector<std::shared_ptr<Cell>>>& maze);
 bool NextToFloor(std::shared_ptr<Cell> currentTile, std::vector<std::vector<std::shared_ptr<Cell>>> maze);

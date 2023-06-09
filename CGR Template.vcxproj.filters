@@ -64,9 +64,6 @@
     <Filter Include="Source Files\GuiManager">
       <UniqueIdentifier>{831fd7fa-fa47-485a-ba87-df0748923e68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\HUDComponent">
-      <UniqueIdentifier>{fee460a5-d6cf-46e2-b9b4-459926e01653}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lib">
       <UniqueIdentifier>{f02a3531-f470-4871-9013-cfd8c1d3e42e}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,12 @@
     </Filter>
     <Filter Include="Header Files\ImGui">
       <UniqueIdentifier>{65caab06-7f99-4c7a-9fb8-a76238b151c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\ParticleComponent">
+      <UniqueIdentifier>{c8a3320f-3609-43da-86be-c32d7146ba47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\HUDComponent">
+      <UniqueIdentifier>{fee460a5-d6cf-46e2-b9b4-459926e01653}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,7 +151,7 @@
       <Filter>Source Files\GuiManager</Filter>
     </ClCompile>
     <ClCompile Include="HUDComponent.cpp">
-      <Filter>Source Files\HUDComponent</Filter>
+      <Filter>Source Files\Components\HUDComponent</Filter>
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui.cpp">
       <Filter>lib\ImGui</Filter>
@@ -170,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="lib\imgui\imgui_widgets.cpp">
       <Filter>lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleComponent.cpp">
+      <Filter>Source Files\Components\ParticleComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -237,7 +243,7 @@
       <Filter>Source Files\GuiManager</Filter>
     </ClInclude>
     <ClInclude Include="HUDComponent.h">
-      <Filter>Source Files\HUDComponent</Filter>
+      <Filter>Source Files\Components\HUDComponent</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\imstb_truetype.h">
       <Filter>Header Files\ImGui</Filter>
@@ -265,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="lib\imgui\imconfig.h">
       <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleComponent.h">
+      <Filter>Source Files\Components\ParticleComponent</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ class ObjModel;
 
 class EnemyComponent : public DrawComponent {
 public:
-	EnemyComponent(std::list<std::shared_ptr<GameObject>>& objects, float speed = 1.f, const std::string& path = "resource/models/enemy/enemy.obj");
+	EnemyComponent(std::list<std::shared_ptr<GameObject>>& objects, ObjModel* model, float speed = 1.f);
 	~EnemyComponent();
 
 	void update(float deltaTime) override;

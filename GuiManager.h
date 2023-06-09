@@ -6,11 +6,11 @@
 class GLFWwindow;
 
 enum MenuType {
-	MainMenu,
-	Loading,
-	Options,
-	Playing,
-	None
+	MainMenu= 0,
+	Loading = 1,
+	Options = 2,
+	Playing = 3,
+	None = -1
 };
 
 class GuiManager {
@@ -27,10 +27,11 @@ public:
 private:
 	GLFWwindow* window;
 	const int& screenX, screenY;
-
+	bool bShutdownGui = false;
 	
 private:
 	void drawLoadingScreen();
 	void drawMainMenu();
 	void setColorGui();
+	void shutdownImGui();
 };
