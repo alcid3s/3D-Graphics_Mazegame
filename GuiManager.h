@@ -27,7 +27,7 @@ public:
 private:
 	GLFWwindow* window;
 	const int& screenX, screenY;
-	bool bShutdown = false;
+	bool bShutdownGui = false;
 	
 private:
 	void drawLoadingScreen();

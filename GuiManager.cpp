@@ -13,7 +13,7 @@ GuiManager::~GuiManager()
 }
 
 void GuiManager::init() {
-	bShutdown = false;
+	bShutdownGui = false;
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -37,7 +37,7 @@ void GuiManager::draw()
 		drawLoadingScreen();
 		break;
 	case MenuType::Playing:
-		if (!bShutdown) {
+		if (!bShutdownGui) {
 			shutdownImGui();
 		}
 		break;
@@ -52,7 +52,7 @@ void GuiManager::draw()
 
 void GuiManager::shutdownImGui()
 {
-	bShutdown = true;
+	bShutdownGui = true;
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
@@ -60,6 +60,9 @@ void GuiManager::shutdownImGui()
 
 void GuiManager::drawLoadingScreen()
 {
+	if (bShutdownGui)
+		init();
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();

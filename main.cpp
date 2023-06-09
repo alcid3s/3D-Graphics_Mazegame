@@ -3,6 +3,7 @@
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "MazeGenerator.h"
+#include "ObjModel.h"
 #include "GameObject.h"
 #include "PlaneComponent.h"
 #include "CubeComponent.h"
@@ -42,8 +43,16 @@ bool bObjectInitialised = false;
 GLFWwindow* window;
 
 // GameObjects
-std::shared_ptr<GameObject> player;
+std::shared_ptr<GameObject> player = nullptr;
+std::shared_ptr<GameObject> endPoint = nullptr;
+std::shared_ptr<GameObject> enemy = nullptr;
 std::list<std::shared_ptr<GameObject>> objects;
+
+// 3d model of enemy
+ObjModel* enemyModel = nullptr;
+
+// Textures
+std::vector<Texture*> mazeTextures;
 
 // Manager for maze generation
 MazeGenerator* mazeGen;
@@ -129,8 +138,9 @@ void update()
 {
 	if (activateGui) {
 		updateGuiManager();
-		if (guiManager->menuType != MenuType::Playing)
+		if (guiManager->menuType != MenuType::Playing) {
 			return;
+		}
 	}
 
 	// Getting deltatime
@@ -142,8 +152,23 @@ void update()
 	for (auto& o : objects)
 		o->update(deltaTime);
 
+	// updating enemy
+	enemy->update(deltaTime);
+
 	// Updating player
 	updatePlayer(deltaTime);
+
+	// check if player reached endpoint and wants to go to next level. If so maze will be regenerated.
+	if (endPoint && endPoint->getComponent<AltarComponent>()) {
+		if (endPoint->getComponent<AltarComponent>()->endReached()) {
+			mazeWidth++;
+			mazeLength++;
+			bMazeGenerationStarted = false;
+			guiManager->menuType = MenuType::Loading;
+		}
+	}
+	else
+		throw "endpoint not initialised";
 }
 
 void draw()
@@ -182,6 +207,9 @@ void draw()
 	for (auto& o : objects)
 		o->draw();
 
+	// drawing enemy
+	enemy->draw();
+
 	// Drawing the flashlight, HUD and particleSystem of the player
 	player->getComponent<HUDComponent>()->draw();
 	player->getComponent<FlashlightComponent>()->draw();
@@ -194,12 +222,13 @@ void draw()
 
 // Gives maze textures and shapes. Also instantiates player, altar and ambience gameObjects.
 void initObjects() {
-	std::vector<Texture*> mazeTextures;
 
 	// Added pointer of Texture to the vector.
-	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
-	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
-	mazeTextures.push_back(new Texture("resource/textures/dirt.png"));
+	if (mazeTextures.empty()) {
+		mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
+		mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
+		mazeTextures.push_back(new Texture("resource/textures/dirt.png"));
+	}
 
 	// Adding all gameobjects the generate function created to the gameobjects list
 	for (auto row : maze) {
@@ -223,7 +252,6 @@ void initObjects() {
 	// Create player and sets it's position to the spawnpoint
 	player = std::make_shared<GameObject>();
 	player->type = Type::Player;
-	player->position = mazeGen->spawnPoint;
 
 	// Adding components to the player
 	player->addComponent(std::make_shared<PlayerComponent>(window));
@@ -243,23 +271,28 @@ void initObjects() {
 	glm::vec3 max = glm::vec3(.1f, 0, .1f);
 	player->addComponent(std::make_shared<BoundingBoxComponent>(min, max));
 
+	player->position = mazeGen->spawnPoint;
+
+	// loading object model in memory if it isn't loaded already
+	if (!enemyModel)
+		enemyModel = new ObjModel("resource/models/enemy/enemy.obj");
+
 	// Creating an enemy and adding it to the objects list
-	auto enemy = std::make_shared<GameObject>();
+	enemy = std::make_shared<GameObject>();
+	enemy->addComponent(std::make_shared<EnemyComponent>(objects, enemyModel));
 	enemy->position = mazeGen->enemySpawnTile->position;
-	enemy->addComponent(std::make_shared<EnemyComponent>(objects));
-	objects.push_back(enemy);
 
 	// adding ambient sound to the objects list
 	auto ambience = std::make_shared<GameObject>();
 	ambience->addComponent(std::make_shared<AudioComponent>(AudioType::Ambience));
 	objects.push_back(ambience);
 
-	// adding the endpoint object to the game. Y position -.499 so it stands directly on the floor
-	auto altar = std::make_shared<GameObject>();
-	altar->position = mazeGen->endPoint;
-	altar->position.y = -.499f;
-	altar->addComponent(std::make_shared<AltarComponent>());
-	objects.push_back(altar);
+	// adding the endpoint object to the game. Y position -.499 so it stands directly on the floor. Needs player to check if player is near
+	endPoint = std::make_shared<GameObject>();
+	endPoint->position = mazeGen->endPoint;
+	endPoint->position.y = -.499f;
+	endPoint->addComponent(std::make_shared<AltarComponent>(window, player));
+	objects.push_back(endPoint);
 
 	bObjectInitialised = true;
 }
@@ -328,8 +361,13 @@ void updateGuiManager()
 		return;
 	}
 	else if (guiManager->menuType == MenuType::Loading && !bMazeGenerationStarted) {
-		// setting to false if it was true
+		// setting to false if it was true, means regeneration started
 		bMazeGeneratedFinished = false;
+		bObjectInitialised = false;
+
+		if (!objects.empty()) {
+			objects.clear();
+		}
 
 		// maze generation ahs started so it won't start another time
 		bMazeGenerationStarted = true;

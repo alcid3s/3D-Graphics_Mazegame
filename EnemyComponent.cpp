@@ -10,14 +10,15 @@
 
 #define idleTime 5
 
-EnemyComponent::EnemyComponent(std::list<std::shared_ptr<GameObject>>& objects, float speed, const std::string& path) : objects(objects), speed(speed)
+EnemyComponent::EnemyComponent(std::list<std::shared_ptr<GameObject>>& objects, ObjModel* model, float speed) : objects(objects), speed(speed)
 {
 	for (auto& obj : objects) {
 		if (obj->type == Type::Floor) {
 			floors.push_back(obj);
 		}
 	}
-	model = new ObjModel(path);
+
+	this->model = model;
 }
 
 EnemyComponent::~EnemyComponent()
