@@ -110,18 +110,6 @@ void PlayerComponent::playerInput(float deltaTime)
 	// right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		move(180, 0.05f, deltaTime);
-
-	// up
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		gameObject->position.y -= speed * 0.001f;
-	}
-
-	// down
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-	{
-		gameObject->position.y += speed * 0.001f;
-	}
 }
 
 void PlayerComponent::checkMaxRunTime()
