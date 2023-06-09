@@ -55,7 +55,7 @@ GuiManager* guiManager;
 double lastFrameTime = 0;
 
 // bool for debug purposes. Start with or without GUI.
-constexpr bool activateGui = false;
+constexpr bool activateGui = true;
 
 // screen size
 const int screenX = 1400, screenY = 800;
@@ -176,7 +176,7 @@ void draw()
 
 	tigl::shader->enableColor(true);
 
-	// enableFog(true);
+	enableFog(true);
 
 	// Drawing all gameobjects
 	for (auto& o : objects)
@@ -199,6 +199,7 @@ void initObjects() {
 	// Added pointer of Texture to the vector.
 	mazeTextures.push_back(new Texture("resource/textures/Floor4.png"));
 	mazeTextures.push_back(new Texture("resource/textures/Bush_Texture4.png"));
+	mazeTextures.push_back(new Texture("resource/textures/dirt.png"));
 
 	// Adding all gameobjects the generate function created to the gameobjects list
 	for (auto row : maze) {
@@ -230,10 +231,13 @@ void initObjects() {
 	player->addComponent(std::make_shared<AudioComponent>(AudioType::AudioPlayer));
 	player->addComponent(std::make_shared<FlashlightComponent>());
 	player->addComponent(std::make_shared<HUDComponent>());
-	player->addComponent(std::make_shared<ParticleComponent>());
+	player->addComponent(std::make_shared<ParticleComponent>(mazeTextures[2]));
 
 	// give HUD access to the fov parameter
 	player->getComponent<HUDComponent>()->setFov(&player->getComponent<CameraComponent>()->fov);
+
+	// give HUD access to the running boolean and if this condition is met it'll do particle things.
+	player->getComponent<ParticleComponent>()->setCondition(&player->getComponent<PlayerComponent>()->bIsRunning);
 
 	glm::vec3 min = glm::vec3(-.1f, 0, -.1f);
 	glm::vec3 max = glm::vec3(.1f, 0, .1f);

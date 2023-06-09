@@ -20,7 +20,7 @@ MazeGenerator::~MazeGenerator()
 std::vector<std::vector<std::shared_ptr<Cell>>> MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ)
 {
 	if (sizeOfMazeX < 5 || sizeOfMazeZ < 5) {
-		std::cout << "maze must be atleast 5 wide and 5 long.\n";
+		throw "maze must be atleast 5 wide and 5 long.";
 		exit(1);
 	}
 
@@ -58,6 +58,9 @@ void MazeGenerator::SetEnemySpawnPoint(const int& sizeX, const int& sizeZ) {
 			break;
 		}
 	}
+
+	if (!this->enemySpawnTile)
+		this->enemySpawnTile = std::make_shared<GameObject>(this->endTile->gameObject);
 }
 
 void MazeGenerator::setEndTile(const int& sizeX, const int& sizeZ)
@@ -236,11 +239,11 @@ std::vector<std::shared_ptr<Cell>> GetNeighbours(std::shared_ptr<Cell> tile, std
 	return neighbours;
 }
 
-std::vector<std::shared_ptr<Cell>> GetUnvisitedNeighbours(std::shared_ptr<Cell> currentTile, std::vector<std::vector<std::shared_ptr<Cell>>>& maze) {
+std::vector<std::shared_ptr<Cell>> GetUnvisitedNeighbours(std::shared_ptr<Cell>& currentTile, std::vector<std::vector<std::shared_ptr<Cell>>>& maze) {
 	std::vector<std::shared_ptr<Cell>> neighbours = GetNeighbours(currentTile, maze);
 
 	std::vector<std::shared_ptr<Cell>> tilesToRemove;
-	for (auto& tile : neighbours) {
+	for (const auto& tile : neighbours) {
 		if (tile->visited || NextToFloor(tile, maze))
 			tilesToRemove.push_back(tile);
 	}

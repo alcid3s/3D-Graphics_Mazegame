@@ -38,7 +38,7 @@ void CameraComponent::updateCamera(float deltaTime) {
 
 	float tempX = gameObject->rotation.x - (float)(lastY - y) / 100.f;
 
-	if (tempX < 0.9f && tempX > -0.7f)
+	//if (tempX < 0.9f && tempX > -0.7f)
 		gameObject->rotation.x = tempX;
 
 	gameObject->rotation.y -= (float)(lastX - x) / 100.f;
@@ -59,6 +59,4 @@ void CameraComponent::changeFOV(float deltaTime, bool running)
 			fov -= 50.f * deltaTime;
 		}
 	}
-
-
 }

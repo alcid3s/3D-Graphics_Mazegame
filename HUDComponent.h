@@ -19,12 +19,18 @@ public:
 	inline void setIsMoving(bool bIsMoving) { this->bIsMoving = bIsMoving; }
 private:
 	Texture* texture;
-	glm::mat4 mat;
 
 	float* fov;
+	float previousFov = 0.f;
+
+	float totalDifference = 0.f;
+
 	bool bIsRunning = false;
 	bool bIsMoving = false;
 private:
 	void bindHUD();
 	void unbindHUD();
+
+	void updateHUD();
+	float mapValue(float value);
 };
