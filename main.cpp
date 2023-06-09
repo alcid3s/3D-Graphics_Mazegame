@@ -176,7 +176,7 @@ void draw()
 
 	tigl::shader->enableColor(true);
 
-	// enableFog(true);
+	enableFog(true);
 
 	// Drawing all gameobjects
 	for (auto& o : objects)
@@ -207,8 +207,8 @@ void initObjects() {
 			if (obj->gameObject.type == Type::Wall || obj->gameObject.type == Type::Edge) {
 				glm::vec3 minimal = glm::vec3(-.5f, 0, -.5f);
 				glm::vec3 maximal = glm::vec3(.5f, 0, .5f);
-				//obj->gameObject.addComponent(std::make_shared<CubeComponent>(glm::vec3(1,1,1), mazeTextures[1]));
-				//obj->gameObject.addComponent(std::make_shared<BoundingBoxComponent>(minimal, maximal));
+				obj->gameObject.addComponent(std::make_shared<CubeComponent>(glm::vec3(1,1,1), mazeTextures[1]));
+				obj->gameObject.addComponent(std::make_shared<BoundingBoxComponent>(minimal, maximal));
 			}
 			else if (obj->gameObject.type == Type::Floor || obj->gameObject.type == Type::Endpoint || obj->gameObject.type == Type::Spawnpoint) {
 				obj->gameObject.addComponent(std::make_shared<PlaneComponent>(glm::vec3(1, 0, 1), mazeTextures[0]));
