@@ -61,7 +61,7 @@ void EnemyComponent::moveTo(float deltaTime) {
 		gameObject->position = this->shortestPath[posInList]->position;
 		if (posInList < shortestPath.size()) {
 			posInList++;
-			std::cout << "PosInList: " << posInList << ", size of list: " << shortestPath.size() << "\n";
+			//std::cout << "PosInList: " << posInList << ", size of list: " << shortestPath.size() << "\n";
 		}
 	}
 	else {
@@ -76,7 +76,7 @@ void EnemyComponent::moveTo(float deltaTime) {
 		resetParams();
 		bIdle = true;
 		timeToBeidle = clock();
-		std::cout << "reached endpoint\n";
+		//std::cout << "reached endpoint\n";
 	}
 }
 
