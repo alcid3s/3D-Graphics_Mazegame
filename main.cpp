@@ -19,9 +19,9 @@
 #include "GuiManager.h"
 #include "Texture.h"
 #include <memory>
-
 #include <thread>
 #include <atomic>
+#include <fstream>
 
 #include <iostream>
 using tigl::Vertex;
@@ -72,12 +72,19 @@ const int screenX = 1400, screenY = 800;
 // width and length of maze
 int mazeWidth = 10, mazeLength = 10;
 
+// used for file IO.
+const std::string fileName = "stats.txt";
+clock_t applicationRunning = 0;
+bool bFinishedLevel = false;
+
+// used to save maze. Will be cleared after maze is added to objects list.
 std::vector<std::vector<std::shared_ptr<Cell>>> maze;
 
 void init();
 void update();
 void draw();
 
+void getStats();
 void initObjects();
 void generateMaze();
 void enableFog(bool flag);
@@ -108,6 +115,9 @@ int main(void)
 		initObjects();
 	}
 
+	// prints stats of previous game to the console
+	getStats();
+
 	while (!glfwWindowShouldClose(window))
 	{
 		update();
@@ -123,7 +133,6 @@ int main(void)
 
 void init()
 {
-	std::cout << "main is initialising\n";
 	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			if (key == GLFW_KEY_ESCAPE)
@@ -141,6 +150,21 @@ void update()
 		if (guiManager->menuType != MenuType::Playing) {
 			return;
 		}
+	}
+
+	static bool bGameStarted = true;
+	if (bGameStarted) {
+		bGameStarted = false;
+		applicationRunning = clock();
+	}
+
+	if (bFinishedLevel) {
+		bFinishedLevel = false;
+		std::ofstream file;
+		file.open(fileName, std::ios::app);
+		file << "level: " << mazeWidth - 10 << " finished in " << (clock() - applicationRunning) / CLOCKS_PER_SEC << " seconds\n";
+		file.close();
+		applicationRunning = clock();
 	}
 
 	// Getting deltatime
@@ -164,6 +188,7 @@ void update()
 			mazeWidth++;
 			mazeLength++;
 			bMazeGenerationStarted = false;
+			bFinishedLevel = true;
 			guiManager->menuType = MenuType::Loading;
 		}
 	}
@@ -194,7 +219,7 @@ void draw()
 
 	auto cameraComponent = player->getComponent<CameraComponent>();
 
-	// Setting matrixes
+	// Setting matrices
 	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setViewMatrix(cameraComponent->getMatrix());
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));
@@ -220,6 +245,19 @@ void draw()
 	Functions under here contain logic. But aren't convenient to put in a class.
 */
 
+void getStats() {
+	std::cout << "stats if last game:\n";
+	std::string line;
+	std::ifstream file(fileName);
+	if (file.is_open()) {
+		while (std::getline(file, line)) {
+			std::cout << line << "\n";
+		}
+		file.close();
+		std::remove(fileName.c_str());
+	}
+}
+
 // Gives maze textures and shapes. Also instantiates player, altar and ambience gameObjects.
 void initObjects() {
 
@@ -230,21 +268,25 @@ void initObjects() {
 		mazeTextures.push_back(new Texture("resource/textures/dirt.png"));
 	}
 
-	// Adding all gameobjects the generate function created to the gameobjects list
-	for (auto row : maze) {
-		for (auto obj : row) {
-			if (obj->gameObject.type == Type::Wall || obj->gameObject.type == Type::Edge) {
-				glm::vec3 minimal = glm::vec3(-.5f, 0, -.5f);
-				glm::vec3 maximal = glm::vec3(.5f, 0, .5f);
-				obj->gameObject.addComponent(std::make_shared<CubeComponent>(glm::vec3(1,1,1), mazeTextures[1]));
-				obj->gameObject.addComponent(std::make_shared<BoundingBoxComponent>(minimal, maximal));
+	// Adding all gameobjects the generate function of maze created to the gameobjects list
+	if (!maze.empty()) {
+		for (auto row : maze) {
+			for (auto obj : row) {
+				if (obj->gameObject.type == Type::Wall || obj->gameObject.type == Type::Edge) {
+					glm::vec3 minimal = glm::vec3(-.5f, 0, -.5f);
+					glm::vec3 maximal = glm::vec3(.5f, 0, .5f);
+					obj->gameObject.addComponent(std::make_shared<CubeComponent>(glm::vec3(1, 1, 1), mazeTextures[1]));
+					obj->gameObject.addComponent(std::make_shared<BoundingBoxComponent>(minimal, maximal));
+				}
+				else if (obj->gameObject.type == Type::Floor || obj->gameObject.type == Type::Endpoint || obj->gameObject.type == Type::Spawnpoint) {
+					obj->gameObject.addComponent(std::make_shared<PlaneComponent>(glm::vec3(1, 0, 1), mazeTextures[0]));
+				}
+				objects.push_back(std::make_shared<GameObject>(obj->gameObject));
 			}
-			else if (obj->gameObject.type == Type::Floor || obj->gameObject.type == Type::Endpoint || obj->gameObject.type == Type::Spawnpoint) {
-				obj->gameObject.addComponent(std::make_shared<PlaneComponent>(glm::vec3(1, 0, 1), mazeTextures[0]));
-			}
-			objects.push_back(std::make_shared<GameObject>(obj->gameObject));
 		}
 	}
+	else
+		throw "Maze not generated";
 
 	// clear maze because it's not needed anymore
 	maze.clear();
