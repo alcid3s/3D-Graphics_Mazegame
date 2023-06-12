@@ -9,6 +9,7 @@
 lib/glew-2.1.0/doc
 *.html
 
+*.docx
 
 Test/fakestats.txt
 Test/TestResult.txt
