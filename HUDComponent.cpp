@@ -45,6 +45,8 @@ void HUDComponent::updateHUD() {
 		ret = glm::rotate(ret, -gameObject->rotation.x, glm::vec3(1, 0, 0));
 
 		if (bIsRunning) {
+
+			// change fov accordingly.
 			if (*this->fov < 100.f) {
 				totalDifference = 100.f - *this->fov;
 			}
@@ -73,6 +75,7 @@ void HUDComponent::updateHUD() {
 	}
 }
 
+// Performs scaling.
 float HUDComponent::mapValue(float value) {
 	return ((value - 75.0f) * (25.0f/ 34.0f)) + 100.0f;
 }

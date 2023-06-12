@@ -4,6 +4,8 @@
 
 PlaneComponent::PlaneComponent(glm::vec3 transform, Texture* texture, int textureMultiplier)
 	: textureMultiplier(textureMultiplier), texture(texture) {
+
+	// place positions of the plane
 	if (texture) {
 		verts.push_back(Vertex::PT(glm::vec3(-transform.x / 2, 0, -transform.z / 2), glm::vec2(0, 0)));
 		verts.push_back(Vertex::PT(glm::vec3(transform.x / 2, 0, -transform.z / 2), glm::vec2(1 * textureMultiplier, 0)));

@@ -24,6 +24,7 @@ MazeGenerator::~MazeGenerator()
 
 std::vector<std::vector<std::shared_ptr<Cell>>> MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ)
 {
+	// maze must be atleast 5x5, otherwise it's not really a good maze.
 	if (sizeOfMazeX < 5 || sizeOfMazeZ < 5) {
 		throw "maze must be atleast 5 wide and 5 long.";
 		exit(1);

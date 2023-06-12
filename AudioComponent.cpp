@@ -107,6 +107,7 @@ void AudioComponent::playFootsteps()
 		// get random walk sound, but because out of breath sounds was first. It needs to exclude those from the footsteps
 		this->soundPosition = (rand() % (soundsList.size() - amountOfOutOfBreathSounds)) + amountOfOutOfBreathSounds;
 
+		// change values of the sound according to the movement state of the player. sounds get louder and plays faster if player runs.
 		if (bIsRunning) {
 			sound->setVolume(sound->getVolume() + 10.f);
 			sound->setPitch(1.5f);
