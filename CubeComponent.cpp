@@ -5,6 +5,8 @@
 CubeComponent::CubeComponent(glm::vec3 transform, Texture* texture, int textureMultiplier)
     : textureMultiplier(textureMultiplier), texture(texture)
 {
+
+    // if the texture is valid, draw the texture on the cube. Multiplier makes for more drawings of the same texture on the same plane.
     if (texture) {
         // achterkant z
         verts.push_back(Vertex::PT(glm::vec3(-transform.x / 2, -transform.y / 2, -transform.z / 2), glm::vec2(0, 0)));
@@ -42,6 +44,8 @@ CubeComponent::CubeComponent(glm::vec3 transform, Texture* texture, int textureM
         verts.push_back(Vertex::PT(glm::vec3(transform.x / 2, transform.y / 2, transform.z / 2), glm::vec2(0, 1 * textureMultiplier)));
         verts.push_back(Vertex::PT(glm::vec3(transform.x / 2, -transform.y / 2, transform.z / 2), glm::vec2(1 * textureMultiplier, 1 * textureMultiplier)));
     }
+
+    // draw a cube that is white of color.
     else {
         // achterkant z
         verts.push_back(Vertex::PC(glm::vec3(-transform.x / 2, -transform.y / 2, -transform.z / 2), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)));

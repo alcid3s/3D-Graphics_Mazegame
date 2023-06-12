@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include <memory>
+
+// enumType for gameObjects
 enum Type {
 	Floor = 0,
 	Wall = 1,
@@ -13,6 +15,7 @@ enum Type {
 	TypeNone = -1
 };
 
+// used in main and mazeGenerator.
 struct Cell {
 	GameObject gameObject;
 	bool visited;

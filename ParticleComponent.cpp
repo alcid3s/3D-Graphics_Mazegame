@@ -25,17 +25,17 @@ void ParticleComponent::init() {
 
 			// hardcoding the size of a particle
 			glm::vec3 size[4] = {
-				glm::vec3(-.01, 0, -0.01),
-				glm::vec3(.01, 0, -0.01),
-				glm::vec3(.01, 0, .01),
-				glm::vec3(-.01, 0, .01)
+				glm::vec3(-particleSize, 0, -particleSize),
+				glm::vec3(particleSize, 0, -particleSize),
+				glm::vec3(particleSize, 0, particleSize),
+				glm::vec3(-particleSize, 0, particleSize)
 			};
 
 			// add vertices to particle.
-			particle.vert[0] = Vertex::PC(position + size[0], generateColor());
-			particle.vert[1] = Vertex::PC(position + size[1], generateColor());
-			particle.vert[2] = Vertex::PC(position + size[2], generateColor());
-			particle.vert[3] = Vertex::PC(position + size[3], generateColor());
+			particle.vert[0] = Vertex::P(position + size[0]);
+			particle.vert[1] = Vertex::P(position + size[1]);
+			particle.vert[2] = Vertex::P(position + size[2]);
+			particle.vert[3] = Vertex::P(position + size[3]);
 
 			// Original values, so particle can respawn on exact same position
 			particle.originalVert[0] = particle.vert[0];
@@ -74,14 +74,6 @@ void ParticleComponent::init() {
 			particles.push_back(particle);
 		}
 	}
-}
-
-glm::vec4 ParticleComponent::generateColor() {
-	return glm::vec4(
-		static_cast<float>(1.f),
-		static_cast<float>(1.f),
-		static_cast<float>(1.f), 1.f
-	);
 }
 
 float ParticleComponent::calculateParabola(const float& x) {

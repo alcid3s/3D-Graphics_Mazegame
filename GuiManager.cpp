@@ -12,6 +12,7 @@ GuiManager::~GuiManager()
 {
 }
 
+// initialised GUI
 void GuiManager::init() {
 	bShutdownGui = false;
 	IMGUI_CHECKVERSION();
@@ -50,6 +51,7 @@ void GuiManager::draw()
 	}
 }
 
+// shuts down GUI
 void GuiManager::shutdownImGui()
 {
 	bShutdownGui = true;
@@ -58,6 +60,7 @@ void GuiManager::shutdownImGui()
 	ImGui::DestroyContext();
 }
 
+// draws loading pop up
 void GuiManager::drawLoadingScreen()
 {
 	if (bShutdownGui)
@@ -80,6 +83,7 @@ void GuiManager::drawLoadingScreen()
 	shutdownImGui();
 }
 
+// draws main menu
 void GuiManager::drawMainMenu() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -126,6 +130,7 @@ void GuiManager::drawMainMenu() {
 
 }
 
+// sets color style of GUI
 void GuiManager::setColorGui()
 {
 	ImVec4* colors = ImGui::GetStyle().Colors;

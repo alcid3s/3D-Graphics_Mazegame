@@ -12,6 +12,7 @@ FileEditor::~FileEditor()
 {
 }
 
+// begins the application running clock. Extra check in function so this could also be run in update and only executed once.
 void FileEditor::begin() {
 	static bool started = false;
 	if (!started) {
@@ -20,6 +21,7 @@ void FileEditor::begin() {
 	}
 }
 
+// write statistics to the file. If player wants verbose this could be printed to console as well.
 void FileEditor::writeStats(bool verbose) {
 	std::ofstream file;
 	file.open(fileName, std::ios::app);
@@ -30,6 +32,7 @@ void FileEditor::writeStats(bool verbose) {
 	file.close();
 }
 
+// gets stats from file if it's not deleted. If it's printed it'll be deleted
 std::string FileEditor::getStats(bool verbose) {
 	std::string fullText;
 	std::string line;
