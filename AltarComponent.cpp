@@ -15,8 +15,8 @@ AltarComponent::~AltarComponent()
 
 void AltarComponent::update(float deltaTime)
 {
-	if (gameObject->position.x - minimalDistance < -player->position.x && gameObject->position.x + minimalDistance > -player->position.x) {
-		if (gameObject->position.z - minimalDistance < -player->position.z && gameObject->position.z + minimalDistance > -player->position.z) {
+	if (gameObject->position.x - minimalPlayerDistance < -player->position.x && gameObject->position.x + minimalPlayerDistance > -player->position.x) {
+		if (gameObject->position.z - minimalPlayerDistance < -player->position.z && gameObject->position.z + minimalPlayerDistance > -player->position.z) {
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 				this->bReachedEnd = true;
 		}

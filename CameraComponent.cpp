@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include "GameObject.h"
 
+// setting FOV to 75 for a natural feel. Will change when player is running
 CameraComponent::CameraComponent(GLFWwindow* window)
 	: window(window), fov(75.f)
 {
@@ -49,6 +50,8 @@ void CameraComponent::updateCamera(float deltaTime) {
 
 void CameraComponent::changeFOV(float deltaTime, bool running)
 {
+
+	// if player runs, fov will get bigger fast. But not bigger than 100.f. If player stopped running fov will go down to 75.f.
 	if (running) {
 		if (fov < 100.f) {
 			fov += 50.f * deltaTime;

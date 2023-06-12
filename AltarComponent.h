@@ -19,7 +19,7 @@ public:
 
 	inline bool endReached() { return bReachedEnd; }
 private:
-	const float minimalDistance = .5f;
+	const float minimalPlayerDistance = .5f;
 	bool bReachedEnd = false;
 	std::shared_ptr<GameObject> player;
 	ObjModel* model;

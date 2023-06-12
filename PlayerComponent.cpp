@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "BoundingBoxComponent.h"
 #include <GLFW/glfw3.h>
-#include <ctime>
 
 #define maxRunningTime 4
 #define maxRecoverTime 4
@@ -18,7 +17,6 @@ PlayerComponent::~PlayerComponent()
 
 }
 
-#include <iostream>
 void PlayerComponent::move(float angle, float fac, float deltaTime)
 {
 	this->bMoving = true;

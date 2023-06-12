@@ -28,16 +28,20 @@ EnemyComponent::~EnemyComponent()
 
 void EnemyComponent::update(float deltaTime)
 {
+
+	// if enemy isn't moving and isn't idle anymore
 	if (!bMoving && !bIdle) {
 		this->shortestPath = generateNewTarget();
 		posInList = 0;
 		bMoving = true;
 	}
 
+	// if enemy is moving and not idle
 	if (bMoving && !bIdle) {
 		moveTo(deltaTime);
 	}
 
+	// if player has reached destination it's idle for 'timeToBeidle' seconds.
 	if ((!bMoving && bIdle) && clock() - timeToBeidle > idleTime * CLOCKS_PER_SEC) {
 		bIdle = false;
 	}
@@ -50,6 +54,7 @@ void EnemyComponent::draw()
 	}
 }
 
+// move enemy to position
 void EnemyComponent::moveTo(float deltaTime) {
 	if (shortestPath.empty() || shortestPath.size() == 1) {
 		resetParams();

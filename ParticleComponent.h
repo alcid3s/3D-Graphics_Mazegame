@@ -43,8 +43,9 @@ private:
 
 	// variables used to calculate the parabola of the particle
 	const float a = -2.f, b = 0.f, c = .5f, particleXSpeed = .02f;
+
+	const float particleSize = 0.01f;
 private:
-	glm::vec4 generateColor();
 	float generateVelocity();
 	glm::mat4 changeModelMatrix(bool flag);
 	float calculateParabola(const float& x);
