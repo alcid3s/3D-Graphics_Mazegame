@@ -117,7 +117,7 @@ int main(void)
 
 	// prints stats of previous game to the console if a previous game exists.
 	if (fileIO)
-		fileIO->getStats();
+		fileIO->getStats(true);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -159,7 +159,7 @@ void update()
 
 	if (bFinishedLevel && fileIO) {
 		bFinishedLevel = false;
-		fileIO->writeStats();
+		fileIO->writeStats(false);
 	}
 
 	// Getting deltatime

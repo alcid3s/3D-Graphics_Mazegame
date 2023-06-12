@@ -8,8 +8,8 @@ public:
 	~FileEditor();
 
 	void begin();
-	void getStats();
-	void writeStats();
+	void writeStats(bool verbose);
+	std::string getStats(bool verbose);
 private:
 	int round = 1;
 	std::string fileName;
