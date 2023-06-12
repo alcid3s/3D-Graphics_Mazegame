@@ -85,6 +85,7 @@ TEST_F(FileIOTest, testFileIO) {
 
 			}
 		}
+		results.close();
 	}
 	else {
 		for (int i = 0; i < values.size(); i++) {

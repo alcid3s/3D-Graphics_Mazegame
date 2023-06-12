@@ -10,7 +10,8 @@ lib/glew-2.1.0/doc
 *.html
 
 
-
+Test/fakestats.txt
+Test/TestResult.txt
 #end custom
 
 # User-specific files
