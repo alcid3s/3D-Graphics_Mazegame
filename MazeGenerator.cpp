@@ -22,6 +22,7 @@ MazeGenerator::~MazeGenerator()
 	delete& altar;
 }
 
+// generates a random maze with the size given as input. Can unpack the maze by opening the cell and getting the gameObject from there.
 std::vector<std::vector<std::shared_ptr<Cell>>> MazeGenerator::Generate(const int& sizeOfMazeX, const int& sizeOfMazeZ)
 {
 	// maze must be atleast 5x5, otherwise it's not really a good maze.

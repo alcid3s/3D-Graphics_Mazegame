@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "../FileEditor.h"
 #include "../FileEditor.cpp"
+#include <chrono>
+#include <ctime>
 
 constexpr int character = 48;
 
@@ -17,7 +19,8 @@ protected:
 	const std::string fileName = "fakestats.txt";
 	FileEditor* fileIO;
 	clock_t timeRunning = 0;
-
+protected:
+	std::string getFormattedDateTime();
 };
 FileIOTest::FileIOTest()
 {
@@ -54,15 +57,41 @@ std::vector<int> FileIOTest::readData() {
 	return numbers;
 }
 
+std::string FileIOTest::getFormattedDateTime() {
+	auto now = std::chrono::system_clock::now();
+	std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+	std::tm* timeinfo = std::localtime(&currentTime);
+
+	std::ostringstream oss;
+	oss << std::put_time(timeinfo, "%d-%m-%y - %H-%M-%S");
+
+	return oss.str();
+}
+
 TEST_F(FileIOTest, testFileIO) {
 	writeDataToFile(4);
 	std::vector<int> values = readData();
 
 	EXPECT_FALSE(values.empty());
 
-	for (int i = 0; i < values.size(); i++) {
-		if (i % 2 == 1) {
-			EXPECT_EQ((values[i] - character <= 9 && values[i] - character >= 1), 1);
+	std::ofstream results("TestResults.txt", std::ios::app);
+	if (results.is_open()) {
+		results << "-------[" << getFormattedDateTime() << "]-------\n";
+		for (int i = 0; i < values.size(); i++) {
+			if (i % 2 == 1) {
+				bool passed = (values[i] - character <= 9 && values[i] - character >= 1);
+				EXPECT_EQ(passed, 1);
+				results << "FileIO test: " << (passed ? "passed\n" : "failed\n");
+
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < values.size(); i++) {
+			if (i % 2 == 1) {
+				bool passed = (values[i] - character <= 9 && values[i] - character >= 1);
+				EXPECT_EQ(passed, 1);
+			}
 		}
 	}
 }
