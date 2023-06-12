@@ -18,10 +18,10 @@
 #include "ParticleComponent.h"
 #include "GuiManager.h"
 #include "Texture.h"
+#include "FileEditor.h"
 #include <memory>
 #include <thread>
 #include <atomic>
-#include <fstream>
 
 #include <iostream>
 using tigl::Vertex;
@@ -72,19 +72,19 @@ const int screenX = 1400, screenY = 800;
 // width and length of maze
 int mazeWidth = 10, mazeLength = 10;
 
-// used for file IO.
-const std::string fileName = "stats.txt";
-clock_t applicationRunning = 0;
+// used to indicate when fileIO should be used.
 bool bFinishedLevel = false;
 
 // used to save maze. Will be cleared after maze is added to objects list.
 std::vector<std::vector<std::shared_ptr<Cell>>> maze;
 
+// File manager that handles fileIO
+FileEditor* fileIO;
+
 void init();
 void update();
 void draw();
 
-void getStats();
 void initObjects();
 void generateMaze();
 void enableFog(bool flag);
@@ -115,8 +115,9 @@ int main(void)
 		initObjects();
 	}
 
-	// prints stats of previous game to the console
-	getStats();
+	// prints stats of previous game to the console if a previous game exists.
+	if (fileIO)
+		fileIO->getStats(true);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -141,6 +142,8 @@ void init()
 
 	if (!activateGui)
 		generateMaze();
+
+	fileIO = new FileEditor("stats.txt");
 }
 
 void update()
@@ -150,21 +153,13 @@ void update()
 		if (guiManager->menuType != MenuType::Playing) {
 			return;
 		}
+		else if(fileIO)
+			fileIO->begin();
 	}
 
-	static bool bGameStarted = true;
-	if (bGameStarted) {
-		bGameStarted = false;
-		applicationRunning = clock();
-	}
-
-	if (bFinishedLevel) {
+	if (bFinishedLevel && fileIO) {
 		bFinishedLevel = false;
-		std::ofstream file;
-		file.open(fileName, std::ios::app);
-		file << "level: " << mazeWidth - 10 << " finished in " << (clock() - applicationRunning) / CLOCKS_PER_SEC << " seconds\n";
-		file.close();
-		applicationRunning = clock();
+		fileIO->writeStats(false);
 	}
 
 	// Getting deltatime
@@ -244,19 +239,6 @@ void draw()
 /*
 	Functions under here contain logic. But aren't convenient to put in a class.
 */
-
-void getStats() {
-	std::cout << "stats if last game:\n";
-	std::string line;
-	std::ifstream file(fileName);
-	if (file.is_open()) {
-		while (std::getline(file, line)) {
-			std::cout << line << "\n";
-		}
-		file.close();
-		std::remove(fileName.c_str());
-	}
-}
 
 // Gives maze textures and shapes. Also instantiates player, altar and ambience gameObjects.
 void initObjects() {
