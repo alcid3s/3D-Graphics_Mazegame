@@ -85,6 +85,9 @@
     <Filter Include="Source Files\Components\HUDComponent">
       <UniqueIdentifier>{fee460a5-d6cf-46e2-b9b4-459926e01653}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\FileIO">
+      <UniqueIdentifier>{bdf2125f-11fd-4622-b6f2-b6ad3c25aa1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tigl.cpp">
@@ -176,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="ParticleComponent.cpp">
       <Filter>Source Files\Components\ParticleComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="FIleEditor.cpp">
+      <Filter>Source Files\FileIO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="ParticleComponent.h">
       <Filter>Source Files\Components\ParticleComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="FileEditor.h">
+      <Filter>Source Files\FileIO</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
